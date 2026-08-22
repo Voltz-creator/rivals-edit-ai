@@ -1,86 +1,71 @@
 const generateButton = document.getElementById("generate");
 const montage = document.getElementById("montage");
 
-generateButton.addEventListener("click", generateMontage);
+generateButton.addEventListener("click", function () {
 
-function generateMontage() {
+    const clip = document.getElementById("clip").value.trim();
+    const style = document.getElementById("style").value;
 
-    const clip = document.getElementById("clip").value;
-        const style = document.getElementById("style").value;
+    if (clip === "") {
+        montage.innerHTML = "<p>⚠️ Décris d'abord ton clip.</p>";
+        return;
+    }
 
-            if (clip.trim() === "") {
-                    montage.innerHTML = `
-                                <p>⚠️ Décris d'abord ton clip.</p>
-                                        `;
-                                                return;
-                                                    }
+    let title = "";
+    let instructions = "";
 
-                                                        let result = "";
+    if (style === "dynamic") {
+        title = "⚡ Montage dynamique";
 
-                                                            if (style === "dynamic") {
+        instructions = `
+            <p>✂️ <strong>Coupures :</strong> garde uniquement les moments importants.</p>
+            <p>💥 <strong>Kills :</strong> ajoute un petit zoom et un shake au moment de l'action.</p>
+            <p>📝 <strong>Texte :</strong> ajoute un texte court après les moments importants.</p>
+            <p>🔄 <strong>Transitions :</strong> utilise des transitions rapides entre les clips.</p>
+            <p>🔊 <strong>Audio :</strong> synchronise les effets sonores avec les tirs et les kills.</p>
+            <p>🎵 <strong>Musique :</strong> coupe les séquences sur les beats.</p>
+        `;
+    }
 
-                                                                    result = `
-                                                                                <h3>⚡ Montage dynamique</h3>
+    if (style === "phonk") {
+        title = "🔥 Montage Phonk";
 
-                                                                                            <p><strong>✂️ Coupures :</strong> Coupe les moments inutiles et garde uniquement l'action.</p>
+        instructions = `
+            <p>✂️ <strong>Coupures :</strong> fais des cuts rapides sur les beats.</p>
+            <p>💥 <strong>Kills :</strong> zoom rapide + shake.</p>
+            <p>⚡ <strong>Flash :</strong> ajoute un flash très court sur les actions importantes.</p>
+            <p>📝 <strong>Texte :</strong> utilise des textes courts et rapides.</p>
+            <p>🎵 <strong>Musique :</strong> synchronise les kills avec les basses.</p>
+        `;
+    }
 
-                                                                                                        <p><strong>💥 Kill :</strong> Ajoute un léger zoom et un effet de shake au moment du kill.</p>
+    if (style === "clean") {
+        title = "✨ Montage Clean";
 
-                                                                                                                    <p><strong>📝 Texte :</strong> Affiche un texte court juste après chaque action importante.</p>
+        instructions = `
+            <p>✂️ <strong>Coupures :</strong> garde uniquement les meilleures actions.</p>
+            <p>💥 <strong>Kills :</strong> petit zoom discret.</p>
+            <p>📝 <strong>Texte :</strong> peu de texte pour garder une image propre.</p>
+            <p>🔄 <strong>Transitions :</strong> simples et rapides.</p>
+            <p>🔊 <strong>Audio :</strong> ajoute quelques effets sonores précis.</p>
+        `;
+    }
 
-                                                                                                                                <p><strong>🔄 Transition :</strong> Utilise une transition rapide entre les séquences.</p>
+    if (style === "cinematic") {
+        title = "🎬 Montage Cinematic";
 
-                                                                                                                                            <p><strong>🔊 Audio :</strong> Synchronise les effets sonores avec les tirs et les kills.</p>
+        instructions = `
+            <p>✂️ <strong>Coupures :</strong> utilise des plans plus longs.</p>
+            <p>🎥 <strong>Effets :</strong> ajoute quelques ralentis et mouvements de caméra.</p>
+            <p>📝 <strong>Texte :</strong> utilise un texte minimaliste.</p>
+            <p>🎵 <strong>Musique :</strong> fais monter l'intensité avant les moments importants.</p>
+        `;
+    }
 
-                                                                                                                                                        <p><strong>🎵 Musique :</strong> Fais correspondre les changements de scène avec les beats.</p>
-                                                                                                                                                                `;
-
-                                                                                                                                                                    } else if (style === "phonk") {
-
-                                                                                                                                                                            result = `
-                                                                                                                                                                                        <h3>🔥 Montage Phonk</h3>
-
-                                                                                                                                                                                                    <p><strong>✂️ Coupures :</strong> Coupe rapidement sur les beats.</p>
-
-                                                                                                                                                                                                                <p><strong>💥 Kill :</strong> Ajoute un zoom rapide + shake.</p>
-
-                                                                                                                                                                                                                            <p><strong>📝 Texte :</strong> Texte très court avec apparition rapide.</p>
-
-                                                                                                                                                                                                                                        <p><strong>⚡ Effet :</strong> Ajoute un flash très court sur les actions importantes.</p>
-
-                                                                                                                                                                                                                                                    <p><strong>🎵 Musique :</strong> Synchronise les kills avec les basses et les beats.</p>
-                                                                                                                                                                                                                                                            `;
-
-                                                                                                                                                                                                                                                                } else if (style === "clean") {
-
-                                                                                                                                                                                                                                                                        result = `
-                                                                                                                                                                                                                                                                                    <h3>✨ Montage Clean</h3>
-
-                                                                                                                                                                                                                                                                                                <p><strong>✂️ Coupures :</strong> Garde uniquement les meilleures séquences.</p>
-
-                                                                                                                                                                                                                                                                                                            <p><strong>📝 Texte :</strong> Utilise peu de texte pour garder l'écran propre.</p>
-
-                                                                                                                                                                                                                                                                                                                        <p><strong>💥 Kill :</strong> Petit zoom discret.</p>
-
-                                                                                                                                                                                                                                                                                                                                    <p><strong>🔄 Transition :</strong> Transition simple et rapide.</p>
-
-                                                                                                                                                                                                                                                                                                                                                <p><strong>🔊 Audio :</strong> Ajoute quelques effets sonores propres.</p>
-                                                                                                                                                                                                                                                                                                                                                        `;
-
-                                                                                                                                                                                                                                                                                                                                                            } else if (style === "cinematic") {
-
-                                                                                                                                                                                                                                                                                                                                                                    result = `
-                                                                                                                                                                                                                                                                                                                                                                                <h3>🎬 Montage Cinematic</h3>
-
-                                                                                                                                                                                                                                                                                                                                                                                            <p><strong>✂️ Coupures :</strong> Utilise des plans plus longs.</p>
-
-                                                                                                                                                                                                                                                                                                                                                                                                        <p><strong>🎥 Effets :</strong> Ajoute des mouvements de caméra et des ralentis légers.</p>
-
-                                                                                                                                                                                                                                                                                                                                                                                                                    <p><strong>📝 Texte :</strong> Texte minimaliste.</p>
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                <p><strong>🎵 Musique :</strong> Fais monter l'intensité avant les moments importants.</p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                        `;
-                                                                                                                                                                                                                                                                                                                                                                                                                                            }
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                montage.innerHTML = result;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                }
+    montage.innerHTML = `
+        <h3>${title}</h3>
+        ${instructions}
+        <hr>
+        <p>🎮 <strong>Ton clip :</strong> ${clip}</p>
+    `;
+});                                                                                                                                                                                                                                                                                                                                                                                                                                 
