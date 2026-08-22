@@ -1,4 +1,4 @@
-const generateButton = document.getElementById("generate");
+                                                                                                                                                                                                                                                                                                                                                                                                                             const generateButton = document.getElementById("generate");
 const montage = document.getElementById("montage");
 
 generateButton.addEventListener("click", function () {
@@ -7,7 +7,7 @@ generateButton.addEventListener("click", function () {
     const style = document.getElementById("style").value;
 
     if (clip === "") {
-        montage.innerHTML = "<p>⚠️ Décris d'abord ton clip.</p>";
+        montage.innerHTML = "<p>⚠️ Describe your clip first.</p>";
         return;
     }
 
@@ -15,50 +15,50 @@ generateButton.addEventListener("click", function () {
     let instructions = "";
 
     if (style === "dynamic") {
-        title = "⚡ Montage dynamique";
+        title = "⚡ Dynamic Edit";
 
         instructions = `
-            <p>✂️ <strong>Coupures :</strong> garde uniquement les moments importants.</p>
-            <p>💥 <strong>Kills :</strong> ajoute un petit zoom et un shake au moment de l'action.</p>
-            <p>📝 <strong>Texte :</strong> ajoute un texte court après les moments importants.</p>
-            <p>🔄 <strong>Transitions :</strong> utilise des transitions rapides entre les clips.</p>
-            <p>🔊 <strong>Audio :</strong> synchronise les effets sonores avec les tirs et les kills.</p>
-            <p>🎵 <strong>Musique :</strong> coupe les séquences sur les beats.</p>
+            <p>✂️ <strong>Cuts:</strong> keep only the important moments.</p>
+            <p>💥 <strong>Kills:</strong> add a small zoom and shake when the action happens.</p>
+            <p>📝 <strong>Text:</strong> add short text after important moments.</p>
+            <p>🔄 <strong>Transitions:</strong> use fast transitions between clips.</p>
+            <p>🔊 <strong>Audio:</strong> sync sound effects with shots and kills.</p>
+            <p>🎵 <strong>Music:</strong> cut the footage on the beats.</p>
         `;
     }
 
     if (style === "phonk") {
-        title = "🔥 Montage Phonk";
+        title = "🔥 Phonk Edit";
 
         instructions = `
-            <p>✂️ <strong>Coupures :</strong> fais des cuts rapides sur les beats.</p>
-            <p>💥 <strong>Kills :</strong> zoom rapide + shake.</p>
-            <p>⚡ <strong>Flash :</strong> ajoute un flash très court sur les actions importantes.</p>
-            <p>📝 <strong>Texte :</strong> utilise des textes courts et rapides.</p>
-            <p>🎵 <strong>Musique :</strong> synchronise les kills avec les basses.</p>
+            <p>✂️ <strong>Cuts:</strong> make fast cuts on the beats.</p>
+            <p>💥 <strong>Kills:</strong> add a quick zoom + shake.</p>
+            <p>⚡ <strong>Flash:</strong> add a very short flash on important actions.</p>
+            <p>📝 <strong>Text:</strong> use short and fast text animations.</p>
+            <p>🎵 <strong>Music:</strong> sync kills with the bass.</p>
         `;
     }
 
     if (style === "clean") {
-        title = "✨ Montage Clean";
+        title = "✨ Clean Edit";
 
         instructions = `
-            <p>✂️ <strong>Coupures :</strong> garde uniquement les meilleures actions.</p>
-            <p>💥 <strong>Kills :</strong> petit zoom discret.</p>
-            <p>📝 <strong>Texte :</strong> peu de texte pour garder une image propre.</p>
-            <p>🔄 <strong>Transitions :</strong> simples et rapides.</p>
-            <p>🔊 <strong>Audio :</strong> ajoute quelques effets sonores précis.</p>
+            <p>✂️ <strong>Cuts:</strong> keep only the best moments.</p>
+            <p>💥 <strong>Kills:</strong> add a subtle zoom.</p>
+            <p>📝 <strong>Text:</strong> use minimal text to keep the video clean.</p>
+            <p>🔄 <strong>Transitions:</strong> use simple and fast transitions.</p>
+            <p>🔊 <strong>Audio:</strong> add precise sound effects.</p>
         `;
     }
 
     if (style === "cinematic") {
-        title = "🎬 Montage Cinematic";
+        title = "🎬 Cinematic Edit";
 
         instructions = `
-            <p>✂️ <strong>Coupures :</strong> utilise des plans plus longs.</p>
-            <p>🎥 <strong>Effets :</strong> ajoute quelques ralentis et mouvements de caméra.</p>
-            <p>📝 <strong>Texte :</strong> utilise un texte minimaliste.</p>
-            <p>🎵 <strong>Musique :</strong> fais monter l'intensité avant les moments importants.</p>
+            <p>✂️ <strong>Cuts:</strong> use longer shots.</p>
+            <p>🎥 <strong>Effects:</strong> add slow motion and subtle camera movements.</p>
+            <p>📝 <strong>Text:</strong> use minimal text.</p>
+            <p>🎵 <strong>Music:</strong> build intensity before important moments.</p>
         `;
     }
 
@@ -66,6 +66,6 @@ generateButton.addEventListener("click", function () {
         <h3>${title}</h3>
         ${instructions}
         <hr>
-        <p>🎮 <strong>Ton clip :</strong> ${clip}</p>
+        <p>🎮 <strong>Your clip:</strong> ${clip}</p>
     `;
-});                                                                                                                                                                                                                                                                                                                                                                                                                                 
+});
