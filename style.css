@@ -26,7 +26,6 @@ body {
 }
 
 
-
 header {
 
     text-align: center;
@@ -37,7 +36,6 @@ header {
         35px;
 
 }
-
 
 
 .logo {
@@ -51,13 +49,11 @@ header {
 }
 
 
-
 .logo span {
 
     color: #8b5cf6;
 
 }
-
 
 
 header p {
@@ -71,7 +67,6 @@ header p {
 }
 
 
-
 main {
 
     width: 92%;
@@ -83,8 +78,8 @@ main {
 }
 
 
-
 .upload-box,
+.timeline-box,
 .editor-box,
 .result-box {
 
@@ -117,8 +112,8 @@ main {
 }
 
 
-
 .upload-box h2,
+.timeline-box h2,
 .editor-box h2,
 .result-box h2 {
 
@@ -127,36 +122,26 @@ main {
 }
 
 
+/* VIDEO */
 
-/* UPLOAD */
+#videoInput {
 
+    width: 100%;
 
-.upload-button {
+    padding: 12px;
 
-    display: inline-block;
+    background: #0d0d13;
 
-    padding:
-        13px
-        20px;
+    color: white;
 
-    background: #8b5cf6;
+    border:
+        1px solid #353541;
 
     border-radius: 10px;
-
-    font-weight: bold;
 
     cursor: pointer;
 
 }
-
-
-
-.upload-button:hover {
-
-    opacity: 0.85;
-
-}
-
 
 
 .file-name {
@@ -168,7 +153,6 @@ main {
     font-size: 14px;
 
 }
-
 
 
 video {
@@ -184,7 +168,6 @@ video {
     background: black;
 
 }
-
 
 
 .video-info {
@@ -204,7 +187,6 @@ video {
 }
 
 
-
 .video-info div {
 
     background: #0d0d13;
@@ -217,7 +199,6 @@ video {
     padding: 12px;
 
 }
-
 
 
 .video-info strong {
@@ -233,7 +214,6 @@ video {
 }
 
 
-
 .video-info span {
 
     font-size: 14px;
@@ -241,9 +221,268 @@ video {
 }
 
 
+/* TIMELINE */
+
+.section-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+}
+
+
+.section-header h2 {
+
+    margin-bottom: 0;
+
+}
+
+
+#currentTime {
+
+    color: #a78bfa;
+
+    font-weight: bold;
+
+}
+
+
+.timeline {
+
+    position: relative;
+
+    width: 100%;
+
+    height: 48px;
+
+    margin-top: 10px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #242432,
+            #171720
+        );
+
+    border:
+        1px solid #353541;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    overflow: visible;
+
+}
+
+
+.progress {
+
+    position: absolute;
+
+    left: 0;
+
+    top: 0;
+
+    height: 100%;
+
+    width: 0%;
+
+    background:
+        rgba(
+            139,
+            92,
+            246,
+            0.25
+        );
+
+    border-radius: 10px;
+
+    pointer-events: none;
+
+}
+
+
+.markers {
+
+    position: absolute;
+
+    inset: 0;
+
+}
+
+
+.marker {
+
+    position: absolute;
+
+    top: 50%;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    width: 14px;
+
+    height: 14px;
+
+    border-radius: 50%;
+
+    border: 2px solid white;
+
+    cursor: pointer;
+
+    z-index: 3;
+
+}
+
+
+.marker.kill {
+    background: #ef4444;
+}
+
+
+.marker.text {
+    background: #3b82f6;
+}
+
+
+.marker.transition {
+    background: #22c55e;
+}
+
+
+.marker.slowmo {
+    background: #eab308;
+}
+
+
+.marker.important {
+    background: #a855f7;
+}
+
+
+.timeline-times {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    color: #777;
+
+    font-size: 12px;
+
+    margin-top: 7px;
+
+}
+
+
+.timeline-help {
+
+    color: #777;
+
+    font-size: 13px;
+
+    margin-top: 15px;
+
+}
+
+
+.marker-controls {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 15px;
+
+}
+
+
+.marker-controls select {
+
+    flex: 1;
+
+}
+
+
+#addMarker {
+
+    padding:
+        12px
+        16px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #8b5cf6;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+
+.marker-list {
+
+    margin-top: 20px;
+
+}
+
+
+.marker-item {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 10px;
+
+    margin-bottom: 8px;
+
+    background: #0d0d13;
+
+    border:
+        1px solid #292934;
+
+    border-radius: 10px;
+
+}
+
+
+.marker-item button {
+
+    padding:
+        6px
+        9px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background: #292934;
+
+    color: white;
+
+    cursor: pointer;
+
+}
+
 
 /* FORM */
-
 
 label {
 
@@ -256,7 +495,6 @@ label {
     font-size: 14px;
 
 }
-
 
 
 textarea {
@@ -285,7 +523,6 @@ textarea {
 }
 
 
-
 textarea:focus {
 
     border-color: #8b5cf6;
@@ -293,13 +530,11 @@ textarea:focus {
 }
 
 
-
 textarea::placeholder {
 
     color: #666;
 
 }
-
 
 
 .grid {
@@ -317,7 +552,6 @@ textarea::placeholder {
     margin-top: 20px;
 
 }
-
 
 
 select {
@@ -342,16 +576,11 @@ select {
 }
 
 
-
 select:focus {
 
     border-color: #8b5cf6;
 
 }
-
-
-
-/* OPTIONS */
 
 
 .options-title {
@@ -361,7 +590,6 @@ select:focus {
     margin-bottom: 15px;
 
 }
-
 
 
 .options {
@@ -377,7 +605,6 @@ select:focus {
     gap: 10px;
 
 }
-
 
 
 .check {
@@ -404,13 +631,11 @@ select:focus {
 }
 
 
-
 .check:hover {
 
     border-color: #555566;
 
 }
-
 
 
 .check input {
@@ -420,10 +645,6 @@ select:focus {
     height: 17px;
 
 }
-
-
-
-/* GENERATE */
 
 
 #generate {
@@ -451,7 +672,6 @@ select:focus {
 }
 
 
-
 #generate:hover {
 
     opacity: 0.9;
@@ -459,9 +679,7 @@ select:focus {
 }
 
 
-
-/* RESULTS */
-
+/* RESULT */
 
 .result-header {
 
@@ -476,13 +694,11 @@ select:focus {
 }
 
 
-
 .result-header h2 {
 
     margin-bottom: 0;
 
 }
-
 
 
 #copy {
@@ -507,21 +723,11 @@ select:focus {
 }
 
 
-
-#copy:hover {
-
-    background: #272733;
-
-}
-
-
-
 #montage {
 
     margin-top: 25px;
 
 }
-
 
 
 #montage h3 {
@@ -531,7 +737,6 @@ select:focus {
     margin-bottom: 18px;
 
 }
-
 
 
 .step {
@@ -550,7 +755,6 @@ select:focus {
 }
 
 
-
 .step strong {
 
     color: white;
@@ -558,13 +762,11 @@ select:focus {
 }
 
 
-
 .step span {
 
     color: #aaa;
 
 }
-
 
 
 .summary {
@@ -584,7 +786,6 @@ select:focus {
 }
 
 
-
 .empty {
 
     color: #666;
@@ -594,10 +795,6 @@ select:focus {
     padding: 30px 10px;
 
 }
-
-
-
-/* FOOTER */
 
 
 footer {
@@ -613,63 +810,51 @@ footer {
 }
 
 
-
 /* MOBILE */
-
 
 @media (max-width: 650px) {
 
-
     header {
-
         padding-top: 35px;
-
     }
 
 
     .logo {
-
         font-size: 30px;
-
     }
 
 
     .upload-box,
+    .timeline-box,
     .editor-box,
     .result-box {
-
         padding: 20px;
-
     }
 
 
     .grid {
-
         grid-template-columns: 1fr;
-
     }
 
 
     .options {
-
         grid-template-columns: 1fr;
-
     }
 
 
     .video-info {
-
         grid-template-columns: 1fr;
-
     }
 
-}
-#videoInput {
-    width: 100%;
-    padding: 12px;
-    background: #0d0d13;
-    color: white;
-    border: 1px solid #353541;
-    border-radius: 10px;
-    cursor: pointer;
+
+    .marker-controls {
+        flex-direction: column;
+    }
+
+
+    .marker-controls select,
+    #addMarker {
+        width: 100%;
+    }
+
 }
