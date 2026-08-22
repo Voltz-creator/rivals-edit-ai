@@ -19,7 +19,7 @@
         </div>
 
         <p>
-            Create a complete edit plan in seconds.
+            Turn your gameplay into an edit plan in seconds.
         </p>
 
     </header>
@@ -27,18 +27,17 @@
 
     <main>
 
-
-        <!-- VIDEO UPLOAD -->
+        <!-- VIDEO -->
 
         <section class="upload-box">
 
             <h2>🎥 Your Clip</h2>
 
             <input
-    type="file"
-    id="videoInput"
-    accept="video/*"
->
+                type="file"
+                id="videoInput"
+                accept="video/*"
+            >
 
             <p id="fileName" class="file-name">
                 No video selected.
@@ -52,7 +51,11 @@
             ></video>
 
 
-            <div id="videoInfo" class="video-info" hidden>
+            <div
+                id="videoInfo"
+                class="video-info"
+                hidden
+            >
 
                 <div>
                     <strong>Duration</strong>
@@ -75,6 +78,109 @@
 
 
 
+        <!-- TIMELINE -->
+
+        <section
+            id="timelineSection"
+            class="timeline-box"
+            hidden
+        >
+
+            <div class="section-header">
+
+                <h2>📍 Edit Timeline</h2>
+
+                <span id="currentTime">
+                    00:00
+                </span>
+
+            </div>
+
+
+            <div
+                id="timeline"
+                class="timeline"
+            >
+
+                <div
+                    id="progress"
+                    class="progress"
+                ></div>
+
+                <div
+                    id="markers"
+                    class="markers"
+                ></div>
+
+            </div>
+
+
+            <div class="timeline-times">
+
+                <span>00:00</span>
+
+                <span id="timelineEnd">
+                    00:00
+                </span>
+
+            </div>
+
+
+            <p class="timeline-help">
+                Click anywhere on the timeline to jump to that moment.
+                Then add a marker.
+            </p>
+
+
+            <div class="marker-controls">
+
+                <select id="markerType">
+
+                    <option value="kill">
+                        💥 Kill
+                    </option>
+
+                    <option value="text">
+                        📝 Text
+                    </option>
+
+                    <option value="transition">
+                        🔄 Transition
+                    </option>
+
+                    <option value="slowmo">
+                        🐌 Slow Motion
+                    </option>
+
+                    <option value="important">
+                        ⭐ Important
+                    </option>
+
+                </select>
+
+
+                <button id="addMarker">
+                    + Add Marker
+                </button>
+
+            </div>
+
+
+            <div
+                id="markerList"
+                class="marker-list"
+            >
+
+                <p class="empty">
+                    No markers yet.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
         <!-- EDITOR -->
 
         <section class="editor-box">
@@ -85,6 +191,7 @@
             <label for="clip">
                 Describe your clip
             </label>
+
 
             <textarea
                 id="clip"
@@ -210,7 +317,6 @@
 
                 </div>
 
-
             </div>
 
 
@@ -317,13 +423,12 @@
 
 
 
-        <!-- RESULTS -->
+        <!-- RESULT -->
 
         <section
             id="result"
             class="result-box"
         >
-
 
             <div class="result-header">
 
@@ -346,9 +451,7 @@
 
             </div>
 
-
         </section>
-
 
     </main>
 
