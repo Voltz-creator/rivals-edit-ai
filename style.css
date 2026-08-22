@@ -88,7 +88,7 @@ main {
             21,
             21,
             30,
-            0.92
+            0.94
         );
 
     border:
@@ -122,24 +122,42 @@ main {
 }
 
 
-/* VIDEO */
 
-#videoInput {
+/* UPLOAD */
 
-    width: 100%;
+.choose-button {
 
-    padding: 12px;
+    display: inline-flex;
 
-    background: #0d0d13;
+    align-items: center;
 
-    color: white;
+    justify-content: center;
 
-    border:
-        1px solid #353541;
+    min-height: 48px;
+
+    padding:
+        12px
+        20px;
+
+    background: #8b5cf6;
 
     border-radius: 10px;
 
+    font-weight: bold;
+
     cursor: pointer;
+
+    user-select: none;
+
+    -webkit-tap-highlight-color:
+        transparent;
+
+}
+
+
+.choose-button:active {
+
+    transform: scale(0.98);
 
 }
 
@@ -151,6 +169,8 @@ main {
     color: #888;
 
     font-size: 14px;
+
+    overflow-wrap: anywhere;
 
 }
 
@@ -221,6 +241,7 @@ video {
 }
 
 
+
 /* TIMELINE */
 
 .section-header {
@@ -247,8 +268,17 @@ video {
 
     font-weight: bold;
 
+    font-variant-numeric:
+        tabular-nums;
+
 }
 
+
+/*
+    Large touch area.
+    This makes the timeline easier
+    to use with a finger.
+*/
 
 .timeline {
 
@@ -256,9 +286,9 @@ video {
 
     width: 100%;
 
-    height: 48px;
+    height: 64px;
 
-    margin-top: 10px;
+    margin-top: 15px;
 
     background:
         linear-gradient(
@@ -270,9 +300,11 @@ video {
     border:
         1px solid #353541;
 
-    border-radius: 10px;
+    border-radius: 12px;
 
     cursor: pointer;
+
+    touch-action: none;
 
     overflow: visible;
 
@@ -299,9 +331,42 @@ video {
             0.25
         );
 
-    border-radius: 10px;
+    border-radius: 12px;
 
     pointer-events: none;
+
+}
+
+
+.playhead {
+
+    position: absolute;
+
+    top: -5px;
+
+    left: 0%;
+
+    width: 4px;
+
+    height: 74px;
+
+    background: white;
+
+    border-radius: 5px;
+
+    transform:
+        translateX(-50%);
+
+    pointer-events: none;
+
+    box-shadow:
+        0 0 10px
+        rgba(
+            255,
+            255,
+            255,
+            0.5
+        );
 
 }
 
@@ -311,6 +376,8 @@ video {
     position: absolute;
 
     inset: 0;
+
+    pointer-events: none;
 
 }
 
@@ -327,17 +394,21 @@ video {
             -50%
         );
 
-    width: 14px;
+    width: 22px;
 
-    height: 14px;
+    height: 22px;
 
     border-radius: 50%;
 
-    border: 2px solid white;
+    border: 3px solid white;
 
     cursor: pointer;
 
-    z-index: 3;
+    z-index: 5;
+
+    pointer-events: auto;
+
+    touch-action: manipulation;
 
 }
 
@@ -377,7 +448,7 @@ video {
 
     font-size: 12px;
 
-    margin-top: 7px;
+    margin-top: 8px;
 
 }
 
@@ -389,6 +460,8 @@ video {
     font-size: 13px;
 
     margin-top: 15px;
+
+    line-height: 1.5;
 
 }
 
@@ -413,9 +486,11 @@ video {
 
 #addMarker {
 
+    min-height: 46px;
+
     padding:
-        12px
-        16px;
+        10px
+        18px;
 
     border: none;
 
@@ -428,6 +503,15 @@ video {
     font-weight: bold;
 
     cursor: pointer;
+
+    touch-action: manipulation;
+
+}
+
+
+#addMarker:active {
+
+    transform: scale(0.98);
 
 }
 
@@ -449,7 +533,7 @@ video {
 
     gap: 10px;
 
-    padding: 10px;
+    padding: 12px;
 
     margin-bottom: 8px;
 
@@ -466,12 +550,12 @@ video {
 .marker-item button {
 
     padding:
-        6px
-        9px;
+        8px
+        10px;
 
     border: none;
 
-    border-radius: 6px;
+    border-radius: 7px;
 
     background: #292934;
 
@@ -479,7 +563,10 @@ video {
 
     cursor: pointer;
 
+    touch-action: manipulation;
+
 }
+
 
 
 /* FORM */
@@ -576,13 +663,6 @@ select {
 }
 
 
-select:focus {
-
-    border-color: #8b5cf6;
-
-}
-
-
 .options-title {
 
     margin-top: 30px;
@@ -631,13 +711,6 @@ select:focus {
 }
 
 
-.check:hover {
-
-    border-color: #555566;
-
-}
-
-
 .check input {
 
     width: 17px;
@@ -646,6 +719,9 @@ select:focus {
 
 }
 
+
+
+/* GENERATE */
 
 #generate {
 
@@ -669,14 +745,17 @@ select:focus {
 
     cursor: pointer;
 
-}
-
-
-#generate:hover {
-
-    opacity: 0.9;
+    touch-action: manipulation;
 
 }
+
+
+#generate:active {
+
+    transform: scale(0.99);
+
+}
+
 
 
 /* RESULT */
@@ -752,12 +831,7 @@ select:focus {
 
     margin-bottom: 10px;
 
-}
-
-
-.step strong {
-
-    color: white;
+    line-height: 1.5;
 
 }
 
@@ -781,7 +855,7 @@ select:focus {
 
     color: #aaa;
 
-    line-height: 1.6;
+    line-height: 1.7;
 
 }
 
@@ -810,17 +884,23 @@ footer {
 }
 
 
-/* MOBILE */
+
+/* TABLET / MOBILE */
 
 @media (max-width: 650px) {
 
+
     header {
+
         padding-top: 35px;
+
     }
 
 
     .logo {
+
         font-size: 30px;
+
     }
 
 
@@ -828,33 +908,59 @@ footer {
     .timeline-box,
     .editor-box,
     .result-box {
+
         padding: 20px;
+
     }
 
 
     .grid {
+
         grid-template-columns: 1fr;
+
     }
 
 
     .options {
+
         grid-template-columns: 1fr;
+
     }
 
 
     .video-info {
+
         grid-template-columns: 1fr;
+
     }
 
 
     .marker-controls {
+
         flex-direction: column;
+
     }
 
 
     .marker-controls select,
     #addMarker {
+
         width: 100%;
+
+    }
+
+
+    .timeline {
+
+        height: 70px;
+
+    }
+
+
+    .playhead {
+
+        height: 80px;
+
     }
 
 }
