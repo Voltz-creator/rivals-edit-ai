@@ -13,48 +13,153 @@
 <body>
 
     <header>
-        <h1>Rivals Edit AI</h1>
-        <p>Create your edit plan in seconds.</p>
+        <div class="logo">RIVALS<span>EDIT AI</span></div>
+
+        <p>Create a complete edit plan in seconds.</p>
     </header>
 
     <main>
 
         <section class="editor-box">
 
+            <h2>🎬 Create your edit</h2>
+
             <label for="clip">Describe your clip</label>
 
             <textarea
                 id="clip"
-                placeholder="Example: I have 3 quick sniper kills. I want a fast edit with text, transitions and effects on the kills.">
-            </textarea>
+                placeholder="Example: I have 4 quick sniper kills and a final headshot..."
+            ></textarea>
 
-            <label for="style">Editing style</label>
 
-            <select id="style">
-                <option value="dynamic">Dynamic</option>
-                <option value="phonk">Phonk</option>
-                <option value="clean">Clean</option>
-                <option value="cinematic">Cinematic</option>
-            </select>
+            <div class="grid">
+
+                <div>
+                    <label for="game">🎮 Game</label>
+
+                    <select id="game">
+                        <option value="rivals">RIVALS</option>
+                        <option value="fortnite">Fortnite</option>
+                        <option value="valorant">Valorant</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+
+                <div>
+                    <label for="music">🎵 Music style</label>
+
+                    <select id="music">
+                        <option value="phonk">Phonk</option>
+                        <option value="trap">Trap</option>
+                        <option value="drill">Drill</option>
+                        <option value="electronic">Electronic</option>
+                        <option value="none">No music</option>
+                    </select>
+                </div>
+
+
+                <div>
+                    <label for="intensity">⚡ Edit intensity</label>
+
+                    <select id="intensity">
+                        <option value="chill">Chill</option>
+                        <option value="fast">Fast</option>
+                        <option value="insane">Insane</option>
+                    </select>
+                </div>
+
+
+                <div>
+                    <label for="format">📱 Format</label>
+
+                    <select id="format">
+                        <option value="short">YouTube Short</option>
+                        <option value="tiktok">TikTok</option>
+                        <option value="youtube">YouTube Video</option>
+                    </select>
+                </div>
+
+            </div>
+
+
+            <h3 class="options-title">Effects</h3>
+
+
+            <div class="options">
+
+                <label class="check">
+                    <input type="checkbox" id="text" checked>
+                    <span>📝 Text animations</span>
+                </label>
+
+
+                <label class="check">
+                    <input type="checkbox" id="kills" checked>
+                    <span>💥 Kill effects</span>
+                </label>
+
+
+                <label class="check">
+                    <input type="checkbox" id="transitions" checked>
+                    <span>🔄 Transitions</span>
+                </label>
+
+
+                <label class="check">
+                    <input type="checkbox" id="camera" checked>
+                    <span>🎥 Camera effects</span>
+                </label>
+
+
+                <label class="check">
+                    <input type="checkbox" id="slowmo">
+                    <span>🐌 Slow motion</span>
+                </label>
+
+            </div>
+
 
             <button id="generate">
-                ✨ Generate Edit
+                ✨ Generate Edit Plan
             </button>
 
         </section>
 
+
         <section id="result" class="result-box">
 
-            <h2>Your Edit Plan</h2>
+            <div class="result-header">
 
-            <div id="montage"></div>
+                <h2>📋 Your Edit Plan</h2>
+
+                <button id="copy">
+                    Copy
+                </button>
+
+            </div>
+
+
+            <div id="montage">
+
+                <p class="empty">
+                    Your edit plan will appear here.
+                </p>
+
+            </div>
 
         </section>
 
     </main>
 
+
+    <footer>
+        Rivals Edit AI • Free editing assistant
+    </footer>
+
+
     <script src="script.js"></script>
 
 </body>
 
-</html>                                                                                                                                                                                                                                                                                                         
+</html>                
