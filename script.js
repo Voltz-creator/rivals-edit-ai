@@ -1,33 +1,230 @@
-                                                                                                                                                                                                                                const generateButton = document.getElementById("generate");
-const montage = document.getElementById("montage");
-const copyButton = document.getElementById("copy");
+const generateButton =
+    document.getElementById("generate");
+
+const montage =
+    document.getElementById("montage");
+
+const copyButton =
+    document.getElementById("copy");
 
 
-generateButton.addEventListener("click", generateEdit);
+
+/* VIDEO UPLOAD */
+
+
+const videoInput =
+    document.getElementById("videoInput");
+
+const videoPreview =
+    document.getElementById("videoPreview");
+
+const fileName =
+    document.getElementById("fileName");
+
+const videoInfo =
+    document.getElementById("videoInfo");
+
+const duration =
+    document.getElementById("duration");
+
+const resolution =
+    document.getElementById("resolution");
+
+const fileSize =
+    document.getElementById("fileSize");
+
+
+
+videoInput.addEventListener(
+    "change",
+    function () {
+
+        const file =
+            videoInput.files[0];
+
+
+        if (!file) {
+            return;
+        }
+
+
+        fileName.textContent =
+            file.name;
+
+
+        const videoURL =
+            URL.createObjectURL(file);
+
+
+        videoPreview.src =
+            videoURL;
+
+
+        videoPreview.hidden =
+            false;
+
+
+        videoInfo.hidden =
+            false;
+
+
+        fileSize.textContent =
+            formatFileSize(file.size);
+
+
+        videoPreview.addEventListener(
+            "loadedmetadata",
+            function () {
+
+                duration.textContent =
+                    formatDuration(
+                        videoPreview.duration
+                    );
+
+
+                resolution.textContent =
+                    videoPreview.videoWidth +
+                    " × " +
+                    videoPreview.videoHeight;
+
+            },
+            {
+                once: true
+            }
+        );
+
+    }
+);
+
+
+
+function formatFileSize(bytes) {
+
+    if (bytes < 1024 * 1024) {
+
+        return (
+            (bytes / 1024).toFixed(1)
+            + " KB"
+        );
+
+    }
+
+
+    return (
+        (bytes / 1024 / 1024).toFixed(1)
+        + " MB"
+    );
+
+}
+
+
+
+function formatDuration(seconds) {
+
+    if (!isFinite(seconds)) {
+
+        return "-";
+
+    }
+
+
+    const minutes =
+        Math.floor(
+            seconds / 60
+        );
+
+
+    const remainingSeconds =
+        Math.floor(
+            seconds % 60
+        );
+
+
+    return (
+        minutes +
+        ":" +
+        String(
+            remainingSeconds
+        ).padStart(2, "0")
+    );
+
+}
+
+
+
+/* GENERATOR */
+
+
+generateButton.addEventListener(
+    "click",
+    generateEdit
+);
+
 
 
 function generateEdit() {
 
-    const clip = document.getElementById("clip").value.trim();
 
-    const game = document.getElementById("game").value;
-
-    const music = document.getElementById("music").value;
-
-    const intensity = document.getElementById("intensity").value;
-
-    const format = document.getElementById("format").value;
+    const clip =
+        document
+        .getElementById("clip")
+        .value
+        .trim();
 
 
-    const text = document.getElementById("text").checked;
+    const game =
+        document
+        .getElementById("game")
+        .value;
 
-    const kills = document.getElementById("kills").checked;
 
-    const transitions = document.getElementById("transitions").checked;
+    const music =
+        document
+        .getElementById("music")
+        .value;
 
-    const camera = document.getElementById("camera").checked;
 
-    const slowmo = document.getElementById("slowmo").checked;
+    const intensity =
+        document
+        .getElementById("intensity")
+        .value;
+
+
+    const format =
+        document
+        .getElementById("format")
+        .value;
+
+
+    const text =
+        document
+        .getElementById("text")
+        .checked;
+
+
+    const kills =
+        document
+        .getElementById("kills")
+        .checked;
+
+
+    const transitions =
+        document
+        .getElementById("transitions")
+        .checked;
+
+
+    const camera =
+        document
+        .getElementById("camera")
+        .checked;
+
+
+    const slowmo =
+        document
+        .getElementById("slowmo")
+        .checked;
+
 
 
     if (clip === "") {
@@ -39,230 +236,400 @@ function generateEdit() {
         `;
 
         return;
+
     }
 
 
-    let intensityText = "";
+
+    let intensityText;
+
 
     if (intensity === "chill") {
-        intensityText = "Use smooth cuts and subtle effects.";
+
+        intensityText =
+            "Use smooth cuts and subtle effects.";
+
     }
+
 
     if (intensity === "fast") {
-        intensityText = "Use fast cuts and strong beat synchronization.";
+
+        intensityText =
+            "Use fast cuts and strong beat synchronization.";
+
     }
+
 
     if (intensity === "insane") {
-        intensityText = "Use very fast cuts, aggressive effects and intense beat synchronization.";
+
+        intensityText =
+            "Use very fast cuts, aggressive effects and intense beat synchronization.";
+
     }
 
 
-    let formatText = "";
 
-    if (format === "short") {
-        formatText = "Keep the edit vertical and optimized for YouTube Shorts.";
-    }
+    let musicText;
 
-    if (format === "tiktok") {
-        formatText = "Keep the edit vertical and optimized for TikTok.";
-    }
-
-    if (format === "youtube") {
-        formatText = "Use a wider YouTube format and give the clips more breathing room.";
-    }
-
-
-    let musicText = "";
 
     if (music === "phonk") {
-        musicText = "Sync important actions with the bass and strongest beats.";
+
+        musicText =
+            "Sync important actions with the bass and strongest beats.";
+
     }
+
 
     if (music === "trap") {
-        musicText = "Sync cuts with the drums and bass hits.";
+
+        musicText =
+            "Sync cuts with the drums and bass hits.";
+
     }
+
 
     if (music === "drill") {
-        musicText = "Use sharp cuts synchronized with the rhythm.";
+
+        musicText =
+            "Use sharp cuts synchronized with the rhythm.";
+
     }
+
 
     if (music === "electronic") {
-        musicText = "Use beat drops and electronic rhythm changes for transitions.";
+
+        musicText =
+            "Use beat drops and electronic rhythm changes for transitions.";
+
     }
 
+
     if (music === "none") {
-        musicText = "Focus on gameplay audio and sound effects.";
+
+        musicText =
+            "Focus on gameplay audio and sound effects.";
+
     }
+
+
+
+    let formatText;
+
+
+    if (format === "short") {
+
+        formatText =
+            "Keep the edit vertical and optimized for YouTube Shorts.";
+
+    }
+
+
+    if (format === "tiktok") {
+
+        formatText =
+            "Keep the edit vertical and optimized for TikTok.";
+
+    }
+
+
+    if (format === "youtube") {
+
+        formatText =
+            "Use a wider YouTube format.";
+
+    }
+
 
 
     let steps = [];
 
 
-    /* INTRO */
 
     steps.push(`
+
         <div class="step">
-            <strong>00:00 — INTRO</strong><br>
-            <span>Start immediately with the most interesting moment of the clip. Avoid a long intro.</span>
+
+            <strong>
+                00:00 — HOOK
+            </strong>
+
+            <br>
+
+            <span>
+                Start immediately with the most interesting moment. Avoid a long intro.
+            </span>
+
         </div>
+
     `);
 
 
-    /* CUTS */
 
     steps.push(`
+
         <div class="step">
-            <strong>00:01 — CUTS</strong><br>
-            <span>${intensityText}</span>
+
+            <strong>
+                00:01 — CUTS
+            </strong>
+
+            <br>
+
+            <span>
+                ${intensityText}
+            </span>
+
         </div>
+
     `);
 
 
-    /* KILL EFFECTS */
 
     if (kills) {
 
         steps.push(`
+
             <div class="step">
-                <strong>💥 ON EACH KILL</strong><br>
-                <span>Add a quick zoom, subtle shake and a short impact sound.</span>
+
+                <strong>
+                    💥 KILL EFFECTS
+                </strong>
+
+                <br>
+
+                <span>
+                    Add a quick zoom, subtle shake and a short impact sound on important kills.
+                </span>
+
             </div>
+
         `);
 
     }
 
 
-    /* TEXT */
 
     if (text) {
 
         steps.push(`
+
             <div class="step">
-                <strong>📝 TEXT</strong><br>
-                <span>Use short animated text for important moments. Keep the text readable and on screen for a short time.</span>
+
+                <strong>
+                    📝 TEXT ANIMATIONS
+                </strong>
+
+                <br>
+
+                <span>
+                    Use short animated text for important moments. Keep it readable and fast.
+                </span>
+
             </div>
+
         `);
 
     }
 
 
-    /* TRANSITIONS */
 
     if (transitions) {
 
         steps.push(`
+
             <div class="step">
-                <strong>🔄 TRANSITIONS</strong><br>
-                <span>Use fast transitions between major sections. Avoid using too many different transitions.</span>
+
+                <strong>
+                    🔄 TRANSITIONS
+                </strong>
+
+                <br>
+
+                <span>
+                    Use fast transitions between major sections. Avoid excessive transitions.
+                </span>
+
             </div>
+
         `);
 
     }
 
 
-    /* CAMERA */
 
     if (camera) {
 
         steps.push(`
+
             <div class="step">
-                <strong>🎥 CAMERA EFFECTS</strong><br>
-                <span>Add subtle zooms and movement during important gameplay moments.</span>
+
+                <strong>
+                    🎥 CAMERA EFFECTS
+                </strong>
+
+                <br>
+
+                <span>
+                    Add subtle zooms and camera movement during important gameplay moments.
+                </span>
+
             </div>
+
         `);
 
     }
 
 
-    /* SLOW MOTION */
 
     if (slowmo) {
 
         steps.push(`
+
             <div class="step">
-                <strong>🐌 SLOW MOTION</strong><br>
-                <span>Use slow motion briefly before or during the strongest moment, then return to normal speed.</span>
+
+                <strong>
+                    🐌 SLOW MOTION
+                </strong>
+
+                <br>
+
+                <span>
+                    Use slow motion briefly before or during the strongest moment.
+                </span>
+
             </div>
+
         `);
 
     }
 
 
-    /* MUSIC */
 
     steps.push(`
+
         <div class="step">
-            <strong>🎵 MUSIC</strong><br>
-            <span>${musicText}</span>
+
+            <strong>
+                🎵 MUSIC
+            </strong>
+
+            <br>
+
+            <span>
+                ${musicText}
+            </span>
+
         </div>
+
     `);
 
 
-    /* END */
 
     steps.push(`
+
         <div class="step">
-            <strong>🏁 ENDING</strong><br>
-            <span>End immediately after the final important action. Avoid unnecessary outro footage.</span>
+
+            <strong>
+                🏁 ENDING
+            </strong>
+
+            <br>
+
+            <span>
+                End immediately after the final important action.
+            </span>
+
         </div>
+
     `);
+
 
 
     montage.innerHTML = `
 
-        <h3>⚡ Your ${game.toUpperCase()} Edit Plan</h3>
+        <h3>
+            ⚡ Your ${game.toUpperCase()} Edit Plan
+        </h3>
+
 
         ${steps.join("")}
 
+
         <div class="summary">
 
-            <strong>🎯 Final settings</strong><br><br>
+            <strong>
+                🎯 Final settings
+            </strong>
 
-            🎮 Game: ${game.toUpperCase()}<br>
+            <br><br>
 
-            🎵 Music: ${music}<br>
+            🎮 Game:
+            ${game.toUpperCase()}
 
-            ⚡ Intensity: ${intensity}<br>
+            <br>
 
-            📱 Format: ${format}<br><br>
+            🎵 Music:
+            ${music}
+
+            <br>
+
+            ⚡ Intensity:
+            ${intensity}
+
+            <br>
+
+            📱 Format:
+            ${format}
+
+            <br><br>
 
             ${formatText}
 
         </div>
 
     `;
+
 }
 
 
-/* COPY BUTTON */
 
-copyButton.addEventListener("click", function () {
+/* COPY */
 
-    const text = montage.innerText;
 
-    if (!text.trim()) {
-        return;
+copyButton.addEventListener(
+    "click",
+    function () {
+
+
+        const text =
+            montage.innerText;
+
+
+        if (!text.trim()) {
+            return;
+        }
+
+
+        navigator.clipboard
+            .writeText(text)
+            .then(function () {
+
+
+                copyButton.innerText =
+                    "Copied!";
+
+
+                setTimeout(
+                    function () {
+
+                        copyButton.innerText =
+                            "Copy";
+
+                    },
+                    1500
+                );
+
+            });
+
     }
-
-
-    navigator.clipboard.writeText(text)
-        .then(function () {
-
-            copyButton.innerText = "Copied!";
-
-            setTimeout(function () {
-                copyButton.innerText = "Copy";
-            }, 1500);
-
-        })
-        .catch(function () {
-
-            copyButton.innerText = "Copy failed";
-
-            setTimeout(function () {
-                copyButton.innerText = "Copy";
-            }, 1500);
-
-        });
-
-});                                                                                                                                                   
+);
