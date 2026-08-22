@@ -15,8 +15,8 @@ body {
     background:
         radial-gradient(
             circle at top,
-            #242438 0%,
-            #0b0b10 45%
+            #242438,
+            #0b0b10 50%
         );
 
     color: white;
@@ -31,7 +31,7 @@ header {
     text-align: center;
 
     padding:
-        50px
+        45px
         20px
         35px;
 
@@ -43,8 +43,6 @@ header {
     font-size: 38px;
 
     font-weight: 900;
-
-    letter-spacing: -1px;
 
 }
 
@@ -62,8 +60,6 @@ header p {
 
     color: #999;
 
-    font-size: 16px;
-
 }
 
 
@@ -79,8 +75,8 @@ main {
 
 
 .upload-box,
-.timeline-box,
 .editor-box,
+.timeline-box,
 .result-box {
 
     background:
@@ -88,7 +84,7 @@ main {
             21,
             21,
             30,
-            0.94
+            0.95
         );
 
     border:
@@ -100,38 +96,16 @@ main {
 
     margin-bottom: 22px;
 
-    box-shadow:
-        0 15px 40px
-        rgba(
-            0,
-            0,
-            0,
-            0.25
-        );
-
 }
 
-
-.upload-box h2,
-.timeline-box h2,
-.editor-box h2,
-.result-box h2 {
-
-    margin-bottom: 24px;
-
-}
-
-
-
-/* UPLOAD */
 
 .choose-button {
 
     display: inline-flex;
 
-    align-items: center;
-
     justify-content: center;
+
+    align-items: center;
 
     min-height: 48px;
 
@@ -149,15 +123,12 @@ main {
 
     user-select: none;
 
-    -webkit-tap-highlight-color:
-        transparent;
-
 }
 
 
 .choose-button:active {
 
-    transform: scale(0.98);
+    transform: scale(.98);
 
 }
 
@@ -168,8 +139,6 @@ main {
 
     color: #888;
 
-    font-size: 14px;
-
     overflow-wrap: anywhere;
 
 }
@@ -179,7 +148,7 @@ video {
 
     width: 100%;
 
-    max-height: 450px;
+    max-height: 480px;
 
     margin-top: 20px;
 
@@ -195,10 +164,7 @@ video {
     display: grid;
 
     grid-template-columns:
-        repeat(
-            3,
-            1fr
-        );
+        repeat(3, 1fr);
 
     gap: 10px;
 
@@ -225,24 +191,17 @@ video {
 
     display: block;
 
-    font-size: 12px;
-
     color: #777;
+
+    font-size: 12px;
 
     margin-bottom: 5px;
 
 }
 
 
-.video-info span {
 
-    font-size: 14px;
-
-}
-
-
-
-/* TIMELINE */
+/* EDITOR */
 
 .section-header {
 
@@ -252,33 +211,395 @@ video {
 
     align-items: center;
 
+    gap: 15px;
+
 }
 
 
 .section-header h2 {
 
-    margin-bottom: 0;
+    margin-bottom: 6px;
 
 }
 
 
-#currentTime {
+.subtitle {
+
+    color: #777;
+
+    font-size: 13px;
+
+}
+
+
+.duration-badge {
+
+    background: #181823;
+
+    border:
+        1px solid #39394a;
+
+    padding:
+        9px
+        13px;
+
+    border-radius: 9px;
 
     color: #a78bfa;
 
     font-weight: bold;
 
-    font-variant-numeric:
-        tabular-nums;
+}
+
+
+/* RANGE */
+
+.range-editor {
+
+    margin-top: 25px;
 
 }
 
 
-/*
-    Large touch area.
-    This makes the timeline easier
-    to use with a finger.
-*/
+.range-labels {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 12px;
+
+    color: #888;
+
+    font-size: 13px;
+
+}
+
+
+.range-labels strong {
+
+    color: white;
+
+    margin-left: 5px;
+
+}
+
+
+.range-track {
+
+    position: relative;
+
+    height: 58px;
+
+    background: #0c0c12;
+
+    border:
+        1px solid #343441;
+
+    border-radius: 12px;
+
+}
+
+
+.range-selected {
+
+    position: absolute;
+
+    top: 0;
+
+    bottom: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    background:
+        rgba(
+            139,
+            92,
+            246,
+            .25
+        );
+
+    border-radius: 12px;
+
+    pointer-events: none;
+
+}
+
+
+.range-track input {
+
+    position: absolute;
+
+    width: 100%;
+
+    height: 58px;
+
+    margin: 0;
+
+    appearance: none;
+
+    background: transparent;
+
+    pointer-events: none;
+
+}
+
+
+.range-track input::-webkit-slider-thumb {
+
+    appearance: none;
+
+    width: 28px;
+
+    height: 58px;
+
+    border-radius: 8px;
+
+    background: #8b5cf6;
+
+    border:
+        3px solid white;
+
+    cursor: grab;
+
+    pointer-events: auto;
+
+}
+
+
+.range-track input::-moz-range-thumb {
+
+    width: 28px;
+
+    height: 58px;
+
+    border-radius: 8px;
+
+    background: #8b5cf6;
+
+    border:
+        3px solid white;
+
+    cursor: grab;
+
+    pointer-events: auto;
+
+}
+
+
+/* QUICK ACTIONS */
+
+.quick-actions {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 10px;
+
+    margin-top: 18px;
+
+}
+
+
+.quick-actions button {
+
+    min-height: 45px;
+
+    border:
+        1px solid #343441;
+
+    border-radius: 9px;
+
+    background: #14141d;
+
+    color: white;
+
+    cursor: pointer;
+
+}
+
+
+.quick-actions button:active {
+
+    transform: scale(.98);
+
+}
+
+
+/* STYLES */
+
+.options-title {
+
+    margin-top: 28px;
+
+    margin-bottom: 14px;
+
+}
+
+
+.style-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 10px;
+
+}
+
+
+.style-button {
+
+    padding: 14px 8px;
+
+    border:
+        1px solid #343441;
+
+    border-radius: 10px;
+
+    background: #0d0d13;
+
+    color: white;
+
+    cursor: pointer;
+
+}
+
+
+.style-button.active {
+
+    border-color: #8b5cf6;
+
+    background: #211a35;
+
+}
+
+
+/* EFFECTS */
+
+.options {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 10px;
+
+}
+
+
+.check {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 13px;
+
+    background: #0d0d13;
+
+    border:
+        1px solid #292934;
+
+    border-radius: 10px;
+
+    font-weight: normal;
+
+}
+
+
+.check input {
+
+    width: 18px;
+
+    height: 18px;
+
+}
+
+
+/* BUTTONS */
+
+.editor-buttons {
+
+    display: grid;
+
+    grid-template-columns:
+        2fr 1fr;
+
+    gap: 10px;
+
+    margin-top: 25px;
+
+}
+
+
+.primary-button {
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 11px;
+
+    background: #8b5cf6;
+
+    color: white;
+
+    font-weight: bold;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+}
+
+
+.secondary-button {
+
+    padding: 15px;
+
+    border:
+        1px solid #343441;
+
+    border-radius: 11px;
+
+    background: #15151f;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+
+.editor-status {
+
+    margin-top: 14px;
+
+    padding: 12px;
+
+    border-radius: 9px;
+
+    background: #0d0d13;
+
+    color: #888;
+
+    font-size: 13px;
+
+}
+
+
+/* TIMELINE */
 
 .timeline {
 
@@ -290,23 +611,16 @@ video {
 
     margin-top: 15px;
 
-    background:
-        linear-gradient(
-            90deg,
-            #242432,
-            #171720
-        );
+    background: #181821;
 
     border:
         1px solid #353541;
 
     border-radius: 12px;
 
-    cursor: pointer;
+    overflow: visible;
 
     touch-action: none;
-
-    overflow: visible;
 
 }
 
@@ -315,11 +629,7 @@ video {
 
     position: absolute;
 
-    left: 0;
-
-    top: 0;
-
-    height: 100%;
+    inset: 0 auto 0 0;
 
     width: 0%;
 
@@ -328,12 +638,10 @@ video {
             139,
             92,
             246,
-            0.25
+            .25
         );
 
     border-radius: 12px;
-
-    pointer-events: none;
 
 }
 
@@ -344,29 +652,18 @@ video {
 
     top: -5px;
 
-    left: 0%;
-
     width: 4px;
 
     height: 74px;
 
     background: white;
 
-    border-radius: 5px;
-
     transform:
         translateX(-50%);
 
-    pointer-events: none;
+    border-radius: 5px;
 
-    box-shadow:
-        0 0 10px
-        rgba(
-            255,
-            255,
-            255,
-            0.5
-        );
+    pointer-events: none;
 
 }
 
@@ -388,27 +685,22 @@ video {
 
     top: 50%;
 
+    width: 22px;
+
+    height: 22px;
+
     transform:
         translate(
             -50%,
             -50%
         );
 
-    width: 22px;
-
-    height: 22px;
+    border:
+        3px solid white;
 
     border-radius: 50%;
 
-    border: 3px solid white;
-
-    cursor: pointer;
-
-    z-index: 5;
-
     pointer-events: auto;
-
-    touch-action: manipulation;
 
 }
 
@@ -444,11 +736,11 @@ video {
 
     justify-content: space-between;
 
+    margin-top: 8px;
+
     color: #777;
 
     font-size: 12px;
-
-    margin-top: 8px;
 
 }
 
@@ -459,7 +751,7 @@ video {
 
     font-size: 13px;
 
-    margin-top: 15px;
+    margin-top: 14px;
 
     line-height: 1.5;
 
@@ -484,9 +776,9 @@ video {
 }
 
 
-#addMarker {
+.marker-controls button {
 
-    min-height: 46px;
+    min-height: 45px;
 
     padding:
         10px
@@ -502,93 +794,18 @@ video {
 
     font-weight: bold;
 
-    cursor: pointer;
-
-    touch-action: manipulation;
-
 }
 
 
-#addMarker:active {
-
-    transform: scale(0.98);
-
-}
-
-
-.marker-list {
-
-    margin-top: 20px;
-
-}
-
-
-.marker-item {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    gap: 10px;
-
-    padding: 12px;
-
-    margin-bottom: 8px;
-
-    background: #0d0d13;
-
-    border:
-        1px solid #292934;
-
-    border-radius: 10px;
-
-}
-
-
-.marker-item button {
-
-    padding:
-        8px
-        10px;
-
-    border: none;
-
-    border-radius: 7px;
-
-    background: #292934;
-
-    color: white;
-
-    cursor: pointer;
-
-    touch-action: manipulation;
-
-}
-
-
-
-/* FORM */
-
-label {
-
-    display: block;
-
-    margin-bottom: 8px;
-
-    font-weight: bold;
-
-    font-size: 14px;
-
-}
-
+/* OLD PLANNER */
 
 textarea {
 
     width: 100%;
 
-    min-height: 140px;
+    min-height: 130px;
+
+    margin-top: 8px;
 
     background: #0c0c12;
 
@@ -600,8 +817,6 @@ textarea {
     border-radius: 12px;
 
     padding: 15px;
-
-    font-size: 15px;
 
     resize: vertical;
 
@@ -617,22 +832,12 @@ textarea:focus {
 }
 
 
-textarea::placeholder {
-
-    color: #666;
-
-}
-
-
 .grid {
 
     display: grid;
 
     grid-template-columns:
-        repeat(
-            2,
-            1fr
-        );
+        repeat(2, 1fr);
 
     gap: 18px;
 
@@ -641,9 +846,24 @@ textarea::placeholder {
 }
 
 
+.grid label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 14px;
+
+    font-weight: bold;
+
+}
+
+
 select {
 
     width: 100%;
+
+    padding: 13px;
 
     background: #0c0c12;
 
@@ -654,108 +874,7 @@ select {
 
     border-radius: 10px;
 
-    padding: 13px;
-
-    font-size: 14px;
-
-    outline: none;
-
 }
-
-
-.options-title {
-
-    margin-top: 30px;
-
-    margin-bottom: 15px;
-
-}
-
-
-.options {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            2,
-            1fr
-        );
-
-    gap: 10px;
-
-}
-
-
-.check {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 10px;
-
-    background: #0d0d13;
-
-    border:
-        1px solid #292934;
-
-    border-radius: 10px;
-
-    padding: 13px;
-
-    cursor: pointer;
-
-    font-weight: normal;
-
-}
-
-
-.check input {
-
-    width: 17px;
-
-    height: 17px;
-
-}
-
-
-
-/* GENERATE */
-
-#generate {
-
-    width: 100%;
-
-    margin-top: 25px;
-
-    padding: 16px;
-
-    border: none;
-
-    border-radius: 12px;
-
-    background: #8b5cf6;
-
-    color: white;
-
-    font-size: 16px;
-
-    font-weight: bold;
-
-    cursor: pointer;
-
-    touch-action: manipulation;
-
-}
-
-
-#generate:active {
-
-    transform: scale(0.99);
-
-}
-
 
 
 /* RESULT */
@@ -768,68 +887,53 @@ select {
 
     align-items: center;
 
-    gap: 15px;
-
 }
 
 
 .result-header h2 {
 
-    margin-bottom: 0;
+    margin: 0;
 
 }
 
 
 #copy {
 
-    width: auto;
-
     padding:
         9px
         15px;
 
     border:
-        1px solid #3b3b49;
+        1px solid #343441;
 
     border-radius: 8px;
 
-    background: #1b1b25;
+    background: #171720;
 
     color: white;
-
-    cursor: pointer;
 
 }
 
 
 #montage {
 
-    margin-top: 25px;
-
-}
-
-
-#montage h3 {
-
-    color: #a78bfa;
-
-    margin-bottom: 18px;
+    margin-top: 22px;
 
 }
 
 
 .step {
 
+    padding: 15px;
+
+    margin-bottom: 10px;
+
     background: #0d0d13;
 
     border:
         1px solid #292934;
 
-    border-radius: 12px;
-
-    padding: 15px;
-
-    margin-bottom: 10px;
+    border-radius: 11px;
 
     line-height: 1.5;
 
@@ -845,13 +949,13 @@ select {
 
 .summary {
 
-    margin-top: 20px;
-
     padding: 15px;
 
-    border-radius: 12px;
+    margin-top: 20px;
 
     background: #11111a;
+
+    border-radius: 11px;
 
     color: #aaa;
 
@@ -866,7 +970,7 @@ select {
 
     text-align: center;
 
-    padding: 30px 10px;
+    padding: 25px;
 
 }
 
@@ -875,92 +979,62 @@ footer {
 
     text-align: center;
 
-    color: #555;
+    padding: 30px;
 
-    padding: 30px 20px;
+    color: #555;
 
     font-size: 13px;
 
 }
 
 
-
-/* TABLET / MOBILE */
+/* TABLET */
 
 @media (max-width: 650px) {
 
-
     header {
-
-        padding-top: 35px;
-
+        padding-top: 30px;
     }
 
 
     .logo {
-
         font-size: 30px;
-
     }
 
 
     .upload-box,
-    .timeline-box,
     .editor-box,
+    .timeline-box,
     .result-box {
-
         padding: 20px;
-
     }
 
 
-    .grid {
-
-        grid-template-columns: 1fr;
-
-    }
-
-
+    .video-info,
+    .grid,
     .options {
-
         grid-template-columns: 1fr;
-
     }
 
 
-    .video-info {
+    .style-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
 
+
+    .quick-actions {
         grid-template-columns: 1fr;
+    }
 
+
+    .editor-buttons {
+        grid-template-columns: 1fr;
     }
 
 
     .marker-controls {
-
         flex-direction: column;
-
-    }
-
-
-    .marker-controls select,
-    #addMarker {
-
-        width: 100%;
-
-    }
-
-
-    .timeline {
-
-        height: 70px;
-
-    }
-
-
-    .playhead {
-
-        height: 80px;
-
     }
 
 }
