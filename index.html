@@ -1,61 +1,60 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-            <title>Rivals Edit AI</title>
+    <title>Rivals Edit AI</title>
 
-                <link rel="stylesheet" href="style.css">
-                </head>
+    <link rel="stylesheet" href="style.css">
+</head>
 
-                <body>
+<body>
 
-                    <header>
-                            <h1>Rivals Edit AI</h1>
-                                    <p>Crée ton plan de montage en quelques secondes.</p>
-                                        </header>
+    <header>
+        <h1>Rivals Edit AI</h1>
+        <p>Create your edit plan in seconds.</p>
+    </header>
 
-                                            <main>
+    <main>
 
-                                                    <section class="editor-box">
+        <section class="editor-box">
 
-                                                                <label for="clip">Décris ton clip</label>
+            <label for="clip">Describe your clip</label>
 
-                                                                            <textarea
-                                                                                            id="clip"
-                                                                                                            placeholder="Exemple : J'ai un clip RIVALS avec 3 kills rapides. Je veux un montage dynamique avec du texte, des transitions et des effets sur les kills.">
-                                                                                                                        </textarea>
+            <textarea
+                id="clip"
+                placeholder="Example: I have 3 quick sniper kills. I want a fast edit with text, transitions and effects on the kills.">
+            </textarea>
 
-                                                                                                                                    <label for="style">Style du montage</label>
+            <label for="style">Editing style</label>
 
-                                                                                                                                                <select id="style">
-                                                                                                                                                                <option value="dynamic">Dynamique</option>
-                                                                                                                                                                                <option value="phonk">Phonk</option>
-                                                                                                                                                                                                <option value="clean">Clean</option>
-                                                                                                                                                                                                                <option value="cinematic">Cinematic</option>
-                                                                                                                                                                                                                            </select>
+            <select id="style">
+                <option value="dynamic">Dynamic</option>
+                <option value="phonk">Phonk</option>
+                <option value="clean">Clean</option>
+                <option value="cinematic">Cinematic</option>
+            </select>
 
-                                                                                                                                                                                                                                        <button id="generate">
-                                                                                                                                                                                                                                                        ✨ Générer le montage
-                                                                                                                                                                                                                                                                    </button>
+            <button id="generate">
+                ✨ Generate Edit
+            </button>
 
-                                                                                                                                                                                                                                                                            </section>
+        </section>
 
-                                                                                                                                                                                                                                                                                    <section id="result" class="result-box">
+        <section id="result" class="result-box">
 
-                                                                                                                                                                                                                                                                                                <h2>Ton plan de montage</h2>
+            <h2>Your Edit Plan</h2>
 
-                                                                                                                                                                                                                                                                                                            <div id="montage"></div>
+            <div id="montage"></div>
 
-                                                                                                                                                                                                                                                                                                                    </section>
+        </section>
 
-                                                                                                                                                                                                                                                                                                                        </main>
+    </main>
 
-                                                                                                                                                                                                                                                                                                                            <script src="script.js"></script>
+    <script src="script.js"></script>
 
-                                                                                                                                                                                                                                                                                                                            </body>
+</body>
 
-                                                                                                                                                                                                                                                                                                                            </html>
-                                                                                                                                                                                                                                                                                                                        
+</html>                                                                                                                                                                                                                                                                                                         
