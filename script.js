@@ -65,6 +65,42 @@ const markerList =
     document.getElementById("markerList");
 
 
+/* V6.1 EFFECTS */
+
+const zoomEffect =
+    document.getElementById("zoomEffect");
+
+const shakeEffect =
+    document.getElementById("shakeEffect");
+
+const slowEffect =
+    document.getElementById("slowEffect");
+
+const textEffect =
+    document.getElementById("textEffect");
+
+const textSettings =
+    document.getElementById("textSettings");
+
+const overlayText =
+    document.getElementById("overlayText");
+
+const textPosition =
+    document.getElementById("textPosition");
+
+const editTextOverlay =
+    document.getElementById("editTextOverlay");
+
+const previewEdit =
+    document.getElementById("previewEdit");
+
+const stopEdit =
+    document.getElementById("stopEdit");
+
+const editorStatus =
+    document.getElementById("editorStatus");
+
+
 let videoDuration = 0;
 
 let selectedTime = 0;
@@ -73,8 +109,14 @@ let markers = [];
 
 let timelineDragging = false;
 
+let editingPreview = false;
 
-/* VIDEO UPLOAD */
+let animationFrame = null;
+
+
+/* =========================
+   VIDEO UPLOAD
+========================= */
 
 videoInput.addEventListener(
     "change",
@@ -154,6 +196,8 @@ videoInput.addEventListener(
 
                 renderMarkers();
 
+                resetEffects();
+
             },
             {
                 once: true
@@ -164,7 +208,9 @@ videoInput.addEventListener(
 );
 
 
-/* VIDEO TIME */
+/* =========================
+   VIDEO TIME
+========================= */
 
 videoPreview.addEventListener(
     "timeupdate",
@@ -181,11 +227,26 @@ videoPreview.addEventListener(
 
         updateTimeline();
 
+
+        /* Stop preview at the end */
+
+        if (
+            editingPreview &&
+            videoPreview.currentTime >=
+            videoDuration
+        ) {
+
+            stopPreview();
+
+        }
+
     }
 );
 
 
-/* UPDATE TIMELINE */
+/* =========================
+   TIMELINE
+========================= */
 
 function updateTimeline() {
 
@@ -217,16 +278,13 @@ function updateTimeline() {
 }
 
 
-/* TIMELINE POINTER */
+/* =========================
+   TIMELINE POINTER
+========================= */
 
 timeline.addEventListener(
     "pointerdown",
     function (event) {
-
-        /*
-            Prevent accidental scrolling
-            while touching the timeline.
-        */
 
         event.preventDefault();
 
@@ -236,9 +294,7 @@ timeline.addEventListener(
             event.pointerId
         );
 
-        moveTimeline(
-            event
-        );
+        moveTimeline(event);
 
     }
 );
@@ -254,9 +310,7 @@ timeline.addEventListener(
 
         event.preventDefault();
 
-        moveTimeline(
-            event
-        );
+        moveTimeline(event);
 
     }
 );
@@ -290,7 +344,9 @@ timeline.addEventListener(
 );
 
 
-/* MOVE TIMELINE */
+/* =========================
+   MOVE TIMELINE
+========================= */
 
 function moveTimeline(event) {
 
@@ -337,7 +393,9 @@ function moveTimeline(event) {
 }
 
 
-/* ADD MARKER */
+/* =========================
+   MARKERS
+========================= */
 
 addMarkerButton.addEventListener(
     "click",
@@ -350,7 +408,8 @@ addMarkerButton.addEventListener(
 
         markers.push({
 
-            time: selectedTime,
+            time:
+                selectedTime,
 
             type:
                 markerType.value
@@ -376,13 +435,17 @@ addMarkerButton.addEventListener(
 );
 
 
-/* RENDER MARKERS */
+/* =========================
+   RENDER MARKERS
+========================= */
 
 function renderMarkers() {
 
-    markersContainer.innerHTML = "";
+    markersContainer.innerHTML =
+        "";
 
-    markerList.innerHTML = "";
+    markerList.innerHTML =
+        "";
 
 
     if (markers.length === 0) {
@@ -422,8 +485,7 @@ function renderMarkers() {
 
 
             markerElement.className =
-                "marker "
-                +
+                "marker " +
                 marker.type;
 
 
@@ -480,13 +542,19 @@ function renderMarkers() {
 
                 <span>
 
-                    ${getMarkerEmoji(marker.type)}
+                    ${getMarkerEmoji(
+                        marker.type
+                    )}
 
-                    ${capitalize(marker.type)}
+                    ${capitalize(
+                        marker.type
+                    )}
 
                     —
 
-                    ${formatTime(marker.time)}
+                    ${formatTime(
+                        marker.time
+                    )}
 
                 </span>
 
@@ -531,7 +599,377 @@ function renderMarkers() {
 }
 
 
-/* GENERATOR */
+/* =========================
+   EFFECT SETTINGS
+========================= */
+
+if (textEffect) {
+
+    textEffect.addEventListener(
+        "change",
+        function () {
+
+            if (textSettings) {
+
+                textSettings.hidden =
+                    !textEffect.checked;
+
+            }
+
+            updateText();
+
+        }
+    );
+
+}
+
+
+if (overlayText) {
+
+    overlayText.addEventListener(
+        "input",
+        updateText
+    );
+
+}
+
+
+if (textPosition) {
+
+    textPosition.addEventListener(
+        "change",
+        updateText
+    );
+
+}
+
+
+/* =========================
+   TEXT
+========================= */
+
+function updateText() {
+
+    if (
+        !textEffect ||
+        !textEffect.checked
+    ) {
+
+        if (editTextOverlay) {
+            editTextOverlay.hidden = true;
+        }
+
+        return;
+    }
+
+
+    const text =
+        overlayText
+            ? overlayText.value.trim()
+            : "";
+
+
+    if (!text) {
+
+        editTextOverlay.hidden =
+            true;
+
+        return;
+    }
+
+
+    editTextOverlay.hidden =
+        false;
+
+
+    editTextOverlay.textContent =
+        text;
+
+
+    editTextOverlay.className =
+        "edit-text-overlay " +
+        (
+            textPosition
+                ? textPosition.value
+                : "center"
+        );
+
+}
+
+
+/* =========================
+   PREVIEW EDIT
+========================= */
+
+if (previewEdit) {
+
+    previewEdit.addEventListener(
+        "click",
+        function () {
+
+            if (!videoDuration) {
+
+                if (editorStatus) {
+
+                    editorStatus.textContent =
+                        "Choose a video first.";
+
+                }
+
+                return;
+            }
+
+
+            editingPreview = true;
+
+
+            videoPreview.currentTime =
+                0;
+
+
+            applySpeed();
+
+
+            videoPreview.play();
+
+
+            startEffects();
+
+
+            if (editorStatus) {
+
+                editorStatus.textContent =
+                    "▶ Playing edit preview...";
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================
+   STOP PREVIEW
+========================= */
+
+if (stopEdit) {
+
+    stopEdit.addEventListener(
+        "click",
+        stopPreview
+    );
+
+}
+
+
+function stopPreview() {
+
+    editingPreview = false;
+
+
+    videoPreview.pause();
+
+
+    stopEffects();
+
+
+    resetEffects();
+
+
+    if (editorStatus) {
+
+        editorStatus.textContent =
+            "Preview stopped.";
+
+    }
+
+}
+
+
+/* =========================
+   SLOW MOTION
+========================= */
+
+if (slowEffect) {
+
+    slowEffect.addEventListener(
+        "change",
+        applySpeed
+    );
+
+}
+
+
+function applySpeed() {
+
+    if (
+        slowEffect &&
+        slowEffect.checked
+    ) {
+
+        videoPreview.playbackRate =
+            0.55;
+
+    } else {
+
+        videoPreview.playbackRate =
+            1;
+
+    }
+
+}
+
+
+/* =========================
+   EFFECT ANIMATION
+========================= */
+
+function startEffects() {
+
+    stopEffects();
+
+
+    function animate() {
+
+        if (!editingPreview) {
+            return;
+        }
+
+
+        let scale = 1;
+
+        let x = 0;
+
+        let y = 0;
+
+        let rotation = 0;
+
+
+        /* ZOOM */
+
+        if (
+            zoomEffect &&
+            zoomEffect.checked
+        ) {
+
+            const progress =
+                videoDuration > 0
+                    ? videoPreview.currentTime /
+                      videoDuration
+                    : 0;
+
+
+            scale =
+                1 +
+                (
+                    Math.min(
+                        progress,
+                        1
+                    ) * 0.15
+                );
+
+        }
+
+
+        /* SHAKE */
+
+        if (
+            shakeEffect &&
+            shakeEffect.checked
+        ) {
+
+            const strength = 5;
+
+
+            x =
+                (
+                    Math.random() -
+                    0.5
+                ) *
+                strength;
+
+
+            y =
+                (
+                    Math.random() -
+                    0.5
+                ) *
+                strength;
+
+
+            rotation =
+                (
+                    Math.random() -
+                    0.5
+                ) *
+                1.5;
+
+        }
+
+
+        videoPreview.style.transform =
+            `
+            translate(${x}px, ${y}px)
+            scale(${scale})
+            rotate(${rotation}deg)
+            `;
+
+
+        animationFrame =
+            requestAnimationFrame(
+                animate
+            );
+
+    }
+
+
+    animate();
+
+}
+
+
+/* =========================
+   STOP EFFECT ANIMATION
+========================= */
+
+function stopEffects() {
+
+    if (animationFrame) {
+
+        cancelAnimationFrame(
+            animationFrame
+        );
+
+        animationFrame = null;
+
+    }
+
+}
+
+
+/* =========================
+   RESET EFFECTS
+========================= */
+
+function resetEffects() {
+
+    videoPreview.style.transform =
+        "translate(0, 0) scale(1) rotate(0deg)";
+
+
+    videoPreview.playbackRate =
+        1;
+
+
+    updateText();
+
+}
+
+
+/* =========================
+   GENERATOR
+========================= */
 
 generateButton.addEventListener(
     "click",
@@ -628,8 +1066,6 @@ function generateEdit() {
     let steps = [];
 
 
-    /* HOOK */
-
     steps.push(`
 
         <div class="step">
@@ -652,8 +1088,6 @@ function generateEdit() {
     `);
 
 
-    /* MARKERS */
-
     markers.forEach(
         function (marker) {
 
@@ -663,13 +1097,19 @@ function generateEdit() {
 
                     <strong>
 
-                        ${formatTime(marker.time)}
+                        ${formatTime(
+                            marker.time
+                        )}
 
                         —
 
-                        ${getMarkerEmoji(marker.type)}
+                        ${getMarkerEmoji(
+                            marker.type
+                        )}
 
-                        ${capitalize(marker.type)}
+                        ${capitalize(
+                            marker.type
+                        )}
 
                     </strong>
 
@@ -691,8 +1131,6 @@ function generateEdit() {
     );
 
 
-    /* AUTOMATIC TIMING */
-
     if (
         markers.length === 0
         &&
@@ -709,7 +1147,9 @@ function generateEdit() {
 
                 <strong>
 
-                    ${formatTime(quarter)}
+                    ${formatTime(
+                        quarter
+                    )}
 
                     — FIRST SECTION
 
@@ -735,7 +1175,9 @@ function generateEdit() {
 
                 <strong>
 
-                    ${formatTime(quarter * 2)}
+                    ${formatTime(
+                        quarter * 2
+                    )}
 
                     — MAIN ACTION
 
@@ -746,8 +1188,8 @@ function generateEdit() {
                 <span>
 
                     Increase the intensity and
-                    synchronize the action with
-                    the music.
+                    synchronize the action
+                    with the music.
 
                 </span>
 
@@ -762,7 +1204,9 @@ function generateEdit() {
 
                 <strong>
 
-                    ${formatTime(quarter * 3)}
+                    ${formatTime(
+                        quarter * 3
+                    )}
 
                     — FINAL BUILD
 
@@ -783,8 +1227,6 @@ function generateEdit() {
 
     }
 
-
-    /* EFFECTS */
 
     if (kills) {
 
@@ -918,8 +1360,6 @@ function generateEdit() {
     }
 
 
-    /* MUSIC */
-
     steps.push(`
 
         <div class="step">
@@ -944,8 +1384,6 @@ function generateEdit() {
 
     `);
 
-
-    /* END */
 
     steps.push(`
 
@@ -1026,7 +1464,9 @@ function generateEdit() {
 }
 
 
-/* COPY */
+/* =========================
+   COPY
+========================= */
 
 copyButton.addEventListener(
     "click",
@@ -1067,7 +1507,9 @@ copyButton.addEventListener(
 );
 
 
-/* HELPERS */
+/* =========================
+   HELPERS
+========================= */
 
 function formatTime(seconds) {
 
@@ -1230,4 +1672,4 @@ function getMarkerInstruction(type) {
 
     return "Highlight this moment in the edit.";
 
-                          }
+}
