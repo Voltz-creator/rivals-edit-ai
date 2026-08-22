@@ -1,0 +1,94 @@
+* {
+        box-sizing: border-box;
+            margin: 0;
+                padding: 0;
+                }
+
+                body {
+                    font-family: Arial, sans-serif;
+                        background: #0b0b0f;
+                            color: white;
+                                min-height: 100vh;
+                                }
+
+                                header {
+                                    text-align: center;
+                                        padding: 50px 20px 30px;
+                                        }
+
+                                        header h1 {
+                                            font-size: 42px;
+                                                margin-bottom: 10px;
+                                                }
+
+                                                header p {
+                                                    color: #999;
+                                                        font-size: 17px;
+                                                        }
+
+                                                        main {
+                                                            width: 90%;
+                                                                max-width: 900px;
+                                                                    margin: auto;
+                                                                    }
+
+                                                                    .editor-box,
+                                                                    .result-box {
+                                                                        background: #15151c;
+                                                                            border: 1px solid #292933;
+                                                                                border-radius: 16px;
+                                                                                    padding: 25px;
+                                                                                        margin-bottom: 20px;
+                                                                                        }
+
+                                                                                        label {
+                                                                                            display: block;
+                                                                                                margin-bottom: 8px;
+                                                                                                    font-weight: bold;
+                                                                                                    }
+
+                                                                                                    textarea,
+                                                                                                    select {
+                                                                                                        width: 100%;
+                                                                                                            background: #0d0d12;
+                                                                                                                color: white;
+                                                                                                                    border: 1px solid #30303a;
+                                                                                                                        border-radius: 10px;
+                                                                                                                            padding: 14px;
+                                                                                                                                margin-bottom: 20px;
+                                                                                                                                    font-size: 15px;
+                                                                                                                                    }
+
+                                                                                                                                    textarea {
+                                                                                                                                        min-height: 130px;
+                                                                                                                                            resize: vertical;
+                                                                                                                                            }
+
+                                                                                                                                            select {
+                                                                                                                                                cursor: pointer;
+                                                                                                                                                }
+
+                                                                                                                                                button {
+                                                                                                                                                    width: 100%;
+                                                                                                                                                        padding: 15px;
+                                                                                                                                                            border: none;
+                                                                                                                                                                border-radius: 10px;
+                                                                                                                                                                    background: #ffffff;
+                                                                                                                                                                        color: #0b0b0f;
+                                                                                                                                                                            font-size: 16px;
+                                                                                                                                                                                font-weight: bold;
+                                                                                                                                                                                    cursor: pointer;
+                                                                                                                                                                                    }
+
+                                                                                                                                                                                    button:hover {
+                                                                                                                                                                                        opacity: 0.85;
+                                                                                                                                                                                        }
+
+                                                                                                                                                                                        .result-box h2 {
+                                                                                                                                                                                            margin-bottom: 20px;
+                                                                                                                                                                                            }
+
+                                                                                                                                                                                            #montage {
+                                                                                                                                                                                                color: #bbb;
+                                                                                                                                                                                                    line-height: 1.6;
+                                                                                                                                                                                                    }
