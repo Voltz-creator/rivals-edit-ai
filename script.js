@@ -795,89 +795,106 @@ function startEffects() {
 
         /* TIMELINE EFFECTS */
 
-        markers.forEach(
-            function (marker) {
+       markers.forEach(
+    function (marker) {
 
-                const distance =
-                    Math.abs(
-                        time -
-                        marker.time
-                    );
-
-
-                /*
-                    Effects activate
-                    for a short moment
-                    around their marker.
-                */
-
-                if (distance <= 0.45) {
-
-                    if (
-                        marker.type ===
-                        "zoom"
-                    ) {
-
-                        scale = 1.18;
-
-                    }
-
-
-                    if (
-                        marker.type ===
-                        "shake"
-                    ) {
-
-                        x =
-                            (
-                                Math.random()
-                                -
-                                0.5
-                            ) * 15;
-
-
-                        y =
-                            (
-                                Math.random()
-                                -
-                                0.5
-                            ) * 15;
-
-
-                        rotation =
-                            (
-                                Math.random()
-                                -
-                                0.5
-                            ) * 3;
-
-                    }
-
-                }
-
-            }
-        );
-
-
-        videoPreview.style.transform =
-            `
-            translate(${x}px, ${y}px)
-            scale(${scale})
-            rotate(${rotation}deg)
-            `;
-
-
-        animationFrame =
-            requestAnimationFrame(
-                animate
+        const distance =
+            Math.abs(
+                time -
+                marker.time
             );
 
+
+        /*
+            ZOOM
+            Strong zoom only around
+            the selected marker.
+        */
+
+        if (
+            marker.type === "zoom" &&
+            distance <= 0.6
+        ) {
+
+            const intensity =
+                1 -
+                (
+                    distance / 0.6
+                );
+
+            scale =
+                1 +
+                (
+                    0.40 *
+                    intensity
+                );
+
+        }
+
+
+        /*
+            SHAKE
+        */
+
+        if (
+            marker.type === "shake" &&
+            distance <= 0.45
+        ) {
+
+            const intensity =
+                1 -
+                (
+                    distance / 0.45
+                );
+
+
+            x =
+                (
+                    Math.random() -
+                    0.5
+                ) *
+                18 *
+                intensity;
+
+
+            y =
+                (
+                    Math.random() -
+                    0.5
+                ) *
+                18 *
+                intensity;
+
+
+            rotation =
+                (
+                    Math.random() -
+                    0.5
+                ) *
+                4 *
+                intensity;
+
+        }
+
+
+        /*
+            SLOW MOTION
+            Only active around
+            the slowmo marker.
+        */
+
+        if (
+            marker.type === "slowmo" &&
+            distance <= 1.0
+        ) {
+
+            videoPreview.playbackRate =
+                0.4;
+
+        }
+
     }
-
-
-    animate();
-
-}
+);
 
 
 /* =========================
