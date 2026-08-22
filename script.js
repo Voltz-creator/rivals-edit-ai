@@ -43,6 +43,9 @@ const timeline =
 const progress =
     document.getElementById("progress");
 
+const playhead =
+    document.getElementById("playhead");
+
 const currentTimeElement =
     document.getElementById("currentTime");
 
@@ -64,9 +67,11 @@ const markerList =
 
 let videoDuration = 0;
 
+let selectedTime = 0;
+
 let markers = [];
 
-let selectedTime = 0;
+let timelineDragging = false;
 
 
 /* VIDEO UPLOAD */
@@ -82,28 +87,36 @@ videoInput.addEventListener(
             return;
         }
 
+
         fileName.textContent =
             file.name;
+
 
         const videoURL =
             URL.createObjectURL(file);
 
+
         videoPreview.src =
             videoURL;
+
 
         videoPreview.hidden =
             false;
 
+
         videoInfo.hidden =
             false;
 
+
         timelineSection.hidden =
             false;
+
 
         fileSize.textContent =
             formatFileSize(
                 file.size
             );
+
 
         videoPreview.addEventListener(
             "loadedmetadata",
@@ -112,22 +125,32 @@ videoInput.addEventListener(
                 videoDuration =
                     videoPreview.duration;
 
+
                 durationElement.textContent =
                     formatTime(
                         videoDuration
                     );
+
 
                 timelineEnd.textContent =
                     formatTime(
                         videoDuration
                     );
 
+
                 resolution.textContent =
-                    videoPreview.videoWidth +
-                    " × " +
+                    videoPreview.videoWidth
+                    +
+                    " × "
+                    +
                     videoPreview.videoHeight;
 
+
                 markers = [];
+
+                selectedTime = 0;
+
+                updateTimeline();
 
                 renderMarkers();
 
@@ -141,7 +164,7 @@ videoInput.addEventListener(
 );
 
 
-/* VIDEO PROGRESS */
+/* VIDEO TIME */
 
 videoPreview.addEventListener(
     "timeupdate",
@@ -151,63 +174,167 @@ videoPreview.addEventListener(
             return;
         }
 
-        const percentage =
-            (
-                videoPreview.currentTime /
-                videoDuration
-            ) * 100;
 
-        progress.style.width =
-            percentage + "%";
+        selectedTime =
+            videoPreview.currentTime;
 
-        currentTimeElement.textContent =
-            formatTime(
-                videoPreview.currentTime
-            );
+
+        updateTimeline();
 
     }
 );
 
 
-/* TIMELINE CLICK */
+/* UPDATE TIMELINE */
+
+function updateTimeline() {
+
+    if (!videoDuration) {
+        return;
+    }
+
+
+    const percentage =
+        (
+            selectedTime /
+            videoDuration
+        ) * 100;
+
+
+    progress.style.width =
+        percentage + "%";
+
+
+    playhead.style.left =
+        percentage + "%";
+
+
+    currentTimeElement.textContent =
+        formatTime(
+            selectedTime
+        );
+
+}
+
+
+/* TIMELINE POINTER */
 
 timeline.addEventListener(
-    "click",
+    "pointerdown",
     function (event) {
 
-        if (!videoDuration) {
+        /*
+            Prevent accidental scrolling
+            while touching the timeline.
+        */
+
+        event.preventDefault();
+
+        timelineDragging = true;
+
+        timeline.setPointerCapture(
+            event.pointerId
+        );
+
+        moveTimeline(
+            event
+        );
+
+    }
+);
+
+
+timeline.addEventListener(
+    "pointermove",
+    function (event) {
+
+        if (!timelineDragging) {
             return;
         }
 
-        const rect =
-            timeline.getBoundingClientRect();
+        event.preventDefault();
 
-        const position =
-            event.clientX -
-            rect.left;
-
-        let percentage =
-            position /
-            rect.width;
-
-        percentage =
-            Math.max(
-                0,
-                Math.min(
-                    1,
-                    percentage
-                )
-            );
-
-        selectedTime =
-            percentage *
-            videoDuration;
-
-        videoPreview.currentTime =
-            selectedTime;
+        moveTimeline(
+            event
+        );
 
     }
 );
+
+
+timeline.addEventListener(
+    "pointerup",
+    function (event) {
+
+        timelineDragging = false;
+
+        try {
+
+            timeline.releasePointerCapture(
+                event.pointerId
+            );
+
+        } catch (error) {}
+
+    }
+);
+
+
+timeline.addEventListener(
+    "pointercancel",
+    function () {
+
+        timelineDragging = false;
+
+    }
+);
+
+
+/* MOVE TIMELINE */
+
+function moveTimeline(event) {
+
+    if (!videoDuration) {
+        return;
+    }
+
+
+    const rect =
+        timeline.getBoundingClientRect();
+
+
+    let position =
+        event.clientX -
+        rect.left;
+
+
+    position =
+        Math.max(
+            0,
+            Math.min(
+                rect.width,
+                position
+            )
+        );
+
+
+    const percentage =
+        position /
+        rect.width;
+
+
+    selectedTime =
+        percentage *
+        videoDuration;
+
+
+    videoPreview.currentTime =
+        selectedTime;
+
+
+    updateTimeline();
+
+}
 
 
 /* ADD MARKER */
@@ -220,19 +347,28 @@ addMarkerButton.addEventListener(
             return;
         }
 
-        const type =
-            markerType.value;
 
         markers.push({
+
             time: selectedTime,
-            type: type
+
+            type:
+                markerType.value
+
         });
+
 
         markers.sort(
             function (a, b) {
-                return a.time - b.time;
+
+                return (
+                    a.time -
+                    b.time
+                );
+
             }
         );
+
 
         renderMarkers();
 
@@ -252,9 +388,13 @@ function renderMarkers() {
     if (markers.length === 0) {
 
         markerList.innerHTML = `
+
             <p class="empty">
+
                 No markers yet.
+
             </p>
+
         `;
 
         return;
@@ -262,7 +402,11 @@ function renderMarkers() {
 
 
     markers.forEach(
-        function (marker, index) {
+        function (
+            marker,
+            index
+        ) {
+
 
             const percentage =
                 (
@@ -278,7 +422,8 @@ function renderMarkers() {
 
 
             markerElement.className =
-                "marker " +
+                "marker "
+                +
                 marker.type;
 
 
@@ -287,21 +432,30 @@ function renderMarkers() {
 
 
             markerElement.title =
-                marker.type +
-                " - " +
+                capitalize(
+                    marker.type
+                )
+                +
+                " - "
+                +
                 formatTime(
                     marker.time
                 );
 
 
             markerElement.addEventListener(
-                "click",
+                "pointerdown",
                 function (event) {
 
                     event.stopPropagation();
 
                     videoPreview.currentTime =
                         marker.time;
+
+                    selectedTime =
+                        marker.time;
+
+                    updateTimeline();
 
                 }
             );
@@ -325,14 +479,22 @@ function renderMarkers() {
             item.innerHTML = `
 
                 <span>
+
                     ${getMarkerEmoji(marker.type)}
+
                     ${capitalize(marker.type)}
+
                     —
+
                     ${formatTime(marker.time)}
+
                 </span>
 
+
                 <button>
+
                     Remove
+
                 </button>
 
             `;
@@ -443,9 +605,13 @@ function generateEdit() {
     if (clip === "") {
 
         montage.innerHTML = `
+
             <p class="empty">
+
                 ⚠️ Describe your clip first.
+
             </p>
+
         `;
 
         return;
@@ -453,7 +619,7 @@ function generateEdit() {
     }
 
 
-    let durationText =
+    const durationText =
         videoDuration
             ? formatTime(videoDuration)
             : "Unknown";
@@ -462,9 +628,10 @@ function generateEdit() {
     let steps = [];
 
 
-    /* INTRO */
+    /* HOOK */
 
     steps.push(`
+
         <div class="step">
 
             <strong>
@@ -474,40 +641,46 @@ function generateEdit() {
             <br>
 
             <span>
-                Start with the most interesting moment.
-                Keep the intro short.
+
+                Start with the most interesting
+                moment and avoid a long intro.
+
             </span>
 
         </div>
+
     `);
 
 
-    /* USER MARKERS */
+    /* MARKERS */
 
     markers.forEach(
         function (marker) {
-
-            let instruction =
-                getMarkerInstruction(
-                    marker.type
-                );
-
 
             steps.push(`
 
                 <div class="step">
 
                     <strong>
+
                         ${formatTime(marker.time)}
+
                         —
+
                         ${getMarkerEmoji(marker.type)}
+
                         ${capitalize(marker.type)}
+
                     </strong>
 
                     <br>
 
                     <span>
-                        ${instruction}
+
+                        ${getMarkerInstruction(
+                            marker.type
+                        )}
+
                     </span>
 
                 </div>
@@ -518,76 +691,95 @@ function generateEdit() {
     );
 
 
-    /* DEFAULT TIMING */
+    /* AUTOMATIC TIMING */
 
-    if (markers.length === 0) {
+    if (
+        markers.length === 0
+        &&
+        videoDuration
+    ) {
 
-        if (videoDuration) {
-
-            const quarter =
-                videoDuration / 4;
-
-
-            steps.push(`
-
-                <div class="step">
-
-                    <strong>
-                        ${formatTime(quarter)}
-                        — FIRST SECTION
-                    </strong>
-
-                    <br>
-
-                    <span>
-                        Build the edit and introduce the first important gameplay moment.
-                    </span>
-
-                </div>
-
-            `);
+        const quarter =
+            videoDuration / 4;
 
 
-            steps.push(`
+        steps.push(`
 
-                <div class="step">
+            <div class="step">
 
-                    <strong>
-                        ${formatTime(quarter * 2)}
-                        — MAIN ACTION
-                    </strong>
+                <strong>
 
-                    <br>
+                    ${formatTime(quarter)}
 
-                    <span>
-                        Increase the intensity and sync the action with the music.
-                    </span>
+                    — FIRST SECTION
 
-                </div>
+                </strong>
 
-            `);
+                <br>
+
+                <span>
+
+                    Introduce the first important
+                    gameplay moment.
+
+                </span>
+
+            </div>
+
+        `);
 
 
-            steps.push(`
+        steps.push(`
 
-                <div class="step">
+            <div class="step">
 
-                    <strong>
-                        ${formatTime(quarter * 3)}
-                        — FINAL BUILD
-                    </strong>
+                <strong>
 
-                    <br>
+                    ${formatTime(quarter * 2)}
 
-                    <span>
-                        Prepare the strongest moment for the ending.
-                    </span>
+                    — MAIN ACTION
 
-                </div>
+                </strong>
 
-            `);
+                <br>
 
-        }
+                <span>
+
+                    Increase the intensity and
+                    synchronize the action with
+                    the music.
+
+                </span>
+
+            </div>
+
+        `);
+
+
+        steps.push(`
+
+            <div class="step">
+
+                <strong>
+
+                    ${formatTime(quarter * 3)}
+
+                    — FINAL BUILD
+
+                </strong>
+
+                <br>
+
+                <span>
+
+                    Build toward the strongest
+                    moment of the clip.
+
+                </span>
+
+            </div>
+
+        `);
 
     }
 
@@ -607,7 +799,11 @@ function generateEdit() {
                 <br>
 
                 <span>
-                    Add a quick zoom, subtle shake and impact sound on important kills.
+
+                    Add a quick zoom,
+                    subtle shake and
+                    impact sound on important kills.
+
                 </span>
 
             </div>
@@ -630,7 +826,10 @@ function generateEdit() {
                 <br>
 
                 <span>
-                    Use short animated text for important moments.
+
+                    Use short animated text
+                    for important moments.
+
                 </span>
 
             </div>
@@ -653,7 +852,10 @@ function generateEdit() {
                 <br>
 
                 <span>
-                    Use fast transitions between major sections.
+
+                    Use fast transitions
+                    between major sections.
+
                 </span>
 
             </div>
@@ -676,7 +878,11 @@ function generateEdit() {
                 <br>
 
                 <span>
-                    Add subtle zooms and camera movement during important moments.
+
+                    Add subtle zooms and
+                    camera movement during
+                    important moments.
+
                 </span>
 
             </div>
@@ -699,7 +905,10 @@ function generateEdit() {
                 <br>
 
                 <span>
-                    Use slow motion briefly around the strongest moment.
+
+                    Use slow motion briefly
+                    around the strongest moment.
+
                 </span>
 
             </div>
@@ -708,6 +917,8 @@ function generateEdit() {
 
     }
 
+
+    /* MUSIC */
 
     steps.push(`
 
@@ -720,14 +931,21 @@ function generateEdit() {
             <br>
 
             <span>
-                Sync important actions with the strongest beats.
-                Selected style: ${music}.
+
+                Synchronize important actions
+                with the strongest beats.
+
+                Selected style:
+                ${music}.
+
             </span>
 
         </div>
 
     `);
 
+
+    /* END */
 
     steps.push(`
 
@@ -740,7 +958,10 @@ function generateEdit() {
             <br>
 
             <span>
-                End immediately after the final important action.
+
+                End immediately after
+                the final important action.
+
             </span>
 
         </div>
@@ -751,7 +972,11 @@ function generateEdit() {
     montage.innerHTML = `
 
         <h3>
-            ⚡ Your ${game.toUpperCase()} Edit Plan
+
+            ⚡ Your
+            ${game.toUpperCase()}
+            Edit Plan
+
         </h3>
 
 
@@ -847,7 +1072,9 @@ copyButton.addEventListener(
 function formatTime(seconds) {
 
     if (!isFinite(seconds)) {
+
         return "00:00";
+
     }
 
 
@@ -864,13 +1091,20 @@ function formatTime(seconds) {
 
 
     return (
-        String(minutes).padStart(2, "0")
+
+        String(minutes)
+            .padStart(2, "0")
+
         +
+
         ":"
+
         +
+
         String(
             remainingSeconds
         ).padStart(2, "0")
+
     );
 
 }
@@ -878,21 +1112,38 @@ function formatTime(seconds) {
 
 function formatFileSize(bytes) {
 
-    if (bytes < 1024 * 1024) {
+    if (
+        bytes <
+        1024 * 1024
+    ) {
 
         return (
-            (bytes / 1024).toFixed(1)
+
+            (
+                bytes / 1024
+            ).toFixed(1)
+
             +
+
             " KB"
+
         );
 
     }
 
 
     return (
-        (bytes / 1024 / 1024).toFixed(1)
+
+        (
+            bytes /
+            1024 /
+            1024
+        ).toFixed(1)
+
         +
+
         " MB"
+
     );
 
 }
@@ -901,9 +1152,13 @@ function formatFileSize(bytes) {
 function capitalize(text) {
 
     return (
+
         text.charAt(0).toUpperCase()
+
         +
+
         text.slice(1)
+
     );
 
 }
@@ -944,11 +1199,13 @@ function getMarkerInstruction(type) {
 
     }
 
+
     if (type === "text") {
 
         return "Add a short animated text overlay at this moment.";
 
     }
+
 
     if (type === "transition") {
 
@@ -956,17 +1213,20 @@ function getMarkerInstruction(type) {
 
     }
 
+
     if (type === "slowmo") {
 
         return "Slow the footage down briefly around this moment.";
 
     }
 
+
     if (type === "important") {
 
         return "Treat this as a key moment and make it visually stand out.";
 
     }
+
 
     return "Highlight this moment in the edit.";
 
