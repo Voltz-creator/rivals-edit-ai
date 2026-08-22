@@ -1,94 +1,367 @@
 * {
-        box-sizing: border-box;
-            margin: 0;
-                padding: 0;
-                }
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-                body {
-                    font-family: Arial, sans-serif;
-                        background: #0b0b0f;
-                            color: white;
-                                min-height: 100vh;
-                                }
 
-                                header {
-                                    text-align: center;
-                                        padding: 50px 20px 30px;
-                                        }
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background:
+        radial-gradient(circle at top, #242438 0%, #0b0b10 45%);
+    color: white;
+    min-height: 100vh;
+}
 
-                                        header h1 {
-                                            font-size: 42px;
-                                                margin-bottom: 10px;
-                                                }
 
-                                                header p {
-                                                    color: #999;
-                                                        font-size: 17px;
-                                                        }
+/* HEADER */
 
-                                                        main {
-                                                            width: 90%;
-                                                                max-width: 900px;
-                                                                    margin: auto;
-                                                                    }
+header {
+    text-align: center;
+    padding: 50px 20px 35px;
+}
 
-                                                                    .editor-box,
-                                                                    .result-box {
-                                                                        background: #15151c;
-                                                                            border: 1px solid #292933;
-                                                                                border-radius: 16px;
-                                                                                    padding: 25px;
-                                                                                        margin-bottom: 20px;
-                                                                                        }
 
-                                                                                        label {
-                                                                                            display: block;
-                                                                                                margin-bottom: 8px;
-                                                                                                    font-weight: bold;
-                                                                                                    }
+.logo {
+    font-size: 38px;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
 
-                                                                                                    textarea,
-                                                                                                    select {
-                                                                                                        width: 100%;
-                                                                                                            background: #0d0d12;
-                                                                                                                color: white;
-                                                                                                                    border: 1px solid #30303a;
-                                                                                                                        border-radius: 10px;
-                                                                                                                            padding: 14px;
-                                                                                                                                margin-bottom: 20px;
-                                                                                                                                    font-size: 15px;
-                                                                                                                                    }
 
-                                                                                                                                    textarea {
-                                                                                                                                        min-height: 130px;
-                                                                                                                                            resize: vertical;
-                                                                                                                                            }
+.logo span {
+    color: #8b5cf6;
+}
 
-                                                                                                                                            select {
-                                                                                                                                                cursor: pointer;
-                                                                                                                                                }
 
-                                                                                                                                                button {
-                                                                                                                                                    width: 100%;
-                                                                                                                                                        padding: 15px;
-                                                                                                                                                            border: none;
-                                                                                                                                                                border-radius: 10px;
-                                                                                                                                                                    background: #ffffff;
-                                                                                                                                                                        color: #0b0b0f;
-                                                                                                                                                                            font-size: 16px;
-                                                                                                                                                                                font-weight: bold;
-                                                                                                                                                                                    cursor: pointer;
-                                                                                                                                                                                    }
+header p {
+    margin-top: 10px;
+    color: #999;
+    font-size: 16px;
+}
 
-                                                                                                                                                                                    button:hover {
-                                                                                                                                                                                        opacity: 0.85;
-                                                                                                                                                                                        }
 
-                                                                                                                                                                                        .result-box h2 {
-                                                                                                                                                                                            margin-bottom: 20px;
-                                                                                                                                                                                            }
+/* MAIN */
 
-                                                                                                                                                                                            #montage {
-                                                                                                                                                                                                color: #bbb;
-                                                                                                                                                                                                    line-height: 1.6;
-                                                                                                                                                                                                    }
+main {
+    width: 92%;
+    max-width: 950px;
+    margin: auto;
+}
+
+
+/* BOXES */
+
+.editor-box,
+.result-box {
+    background: rgba(21, 21, 30, 0.92);
+    border: 1px solid #30303d;
+    border-radius: 18px;
+    padding: 28px;
+    margin-bottom: 22px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+
+.editor-box h2,
+.result-box h2 {
+    margin-bottom: 24px;
+}
+
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+
+/* TEXTAREA */
+
+textarea {
+    width: 100%;
+    min-height: 140px;
+
+    background: #0c0c12;
+    color: white;
+
+    border: 1px solid #353541;
+    border-radius: 12px;
+
+    padding: 15px;
+
+    font-size: 15px;
+
+    resize: vertical;
+
+    outline: none;
+}
+
+
+textarea:focus {
+    border-color: #8b5cf6;
+}
+
+
+textarea::placeholder {
+    color: #666;
+}
+
+
+/* SELECTS */
+
+.grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 18px;
+
+    margin-top: 20px;
+}
+
+
+select {
+    width: 100%;
+
+    background: #0c0c12;
+    color: white;
+
+    border: 1px solid #353541;
+    border-radius: 10px;
+
+    padding: 13px;
+
+    font-size: 14px;
+
+    outline: none;
+}
+
+
+select:focus {
+    border-color: #8b5cf6;
+}
+
+
+/* OPTIONS */
+
+.options-title {
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+
+.options {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 10px;
+}
+
+
+.check {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    background: #0d0d13;
+
+    border: 1px solid #292934;
+
+    border-radius: 10px;
+
+    padding: 13px;
+
+    cursor: pointer;
+
+    font-weight: normal;
+}
+
+
+.check:hover {
+    border-color: #555566;
+}
+
+
+.check input {
+    width: 17px;
+    height: 17px;
+}
+
+
+/* GENERATE BUTTON */
+
+#generate {
+    width: 100%;
+
+    margin-top: 25px;
+
+    padding: 16px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #8b5cf6;
+
+    color: white;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+#generate:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+
+/* RESULT */
+
+.result-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+}
+
+
+.result-header h2 {
+    margin-bottom: 0;
+}
+
+
+#copy {
+    width: auto;
+
+    padding: 9px 15px;
+
+    border: 1px solid #3b3b49;
+
+    border-radius: 8px;
+
+    background: #1b1b25;
+
+    color: white;
+
+    cursor: pointer;
+}
+
+
+#copy:hover {
+    background: #272733;
+}
+
+
+#montage {
+    margin-top: 25px;
+}
+
+
+#montage h3 {
+    color: #a78bfa;
+
+    margin-bottom: 18px;
+}
+
+
+.step {
+    background: #0d0d13;
+
+    border: 1px solid #292934;
+
+    border-radius: 12px;
+
+    padding: 15px;
+
+    margin-bottom: 10px;
+}
+
+
+.step strong {
+    color: white;
+}
+
+
+.step span {
+    color: #aaa;
+}
+
+
+.summary {
+    margin-top: 20px;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    background: #11111a;
+
+    color: #aaa;
+
+    line-height: 1.6;
+}
+
+
+.empty {
+    color: #666;
+
+    text-align: center;
+
+    padding: 30px 10px;
+}
+
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+
+    color: #555;
+
+    padding: 30px 20px;
+
+    font-size: 13px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+
+    header {
+        padding-top: 35px;
+    }
+
+
+    .logo {
+        font-size: 30px;
+    }
+
+
+    .editor-box,
+    .result-box {
+        padding: 20px;
+    }
+
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .options {
+        grid-template-columns: 1fr;
+    }
+
+}
