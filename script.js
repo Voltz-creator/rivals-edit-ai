@@ -23,6 +23,12 @@ const resolution =
 const fileSize =
     document.getElementById("fileSize");
 
+const videoWrapper =
+    document.querySelector(".video-wrapper");
+
+const textOverlay =
+    document.getElementById("editTextOverlay");
+
 
 /* =========================
    EDITOR
@@ -68,6 +74,32 @@ const editorStatus =
     document.getElementById("editorStatus");
 
 
+/* =========================
+   EFFECT CONTROLS
+========================= */
+
+const zoomEffect =
+    document.getElementById("zoomEffect");
+
+const shakeEffect =
+    document.getElementById("shakeEffect");
+
+const slowEffect =
+    document.getElementById("slowEffect");
+
+const textEffect =
+    document.getElementById("textEffect");
+
+const textSettings =
+    document.getElementById("textSettings");
+
+const overlayText =
+    document.getElementById("overlayText");
+
+const textPosition =
+    document.getElementById("textPosition");
+
+
 let videoDuration = 0;
 
 let cutStart = 0;
@@ -78,15 +110,15 @@ let selectedStyle = "clean";
 
 let editingPreview = false;
 
+let animationFrame = null;
+
 
 /* =========================
    TIMELINE
 ========================= */
 
 const timelineSection =
-    document.getElementById(
-        "timelineSection"
-    );
+    document.getElementById("timelineSection");
 
 const timeline =
     document.getElementById("timeline");
@@ -98,34 +130,22 @@ const playhead =
     document.getElementById("playhead");
 
 const currentTimeElement =
-    document.getElementById(
-        "currentTime"
-    );
+    document.getElementById("currentTime");
 
 const timelineEnd =
-    document.getElementById(
-        "timelineEnd"
-    );
+    document.getElementById("timelineEnd");
 
 const markerType =
-    document.getElementById(
-        "markerType"
-    );
+    document.getElementById("markerType");
 
 const addMarkerButton =
-    document.getElementById(
-        "addMarker"
-    );
+    document.getElementById("addMarker");
 
 const markersContainer =
-    document.getElementById(
-        "markers"
-    );
+    document.getElementById("markers");
 
 const markerList =
-    document.getElementById(
-        "markerList"
-    );
+    document.getElementById("markerList");
 
 
 let selectedTime = 0;
@@ -157,26 +177,17 @@ videoInput.addEventListener(
             URL.createObjectURL(file);
 
 
-        video.hidden =
-            false;
+        video.hidden = false;
 
+        videoInfo.hidden = false;
 
-        videoInfo.hidden =
-            false;
+        editorSection.hidden = false;
 
-
-        editorSection.hidden =
-            false;
-
-
-        timelineSection.hidden =
-            false;
+        timelineSection.hidden = false;
 
 
         fileSize.textContent =
-            formatFileSize(
-                file.size
-            );
+            formatFileSize(file.size);
 
 
         video.addEventListener(
@@ -186,12 +197,10 @@ videoInput.addEventListener(
                 videoDuration =
                     video.duration;
 
-
                 cutStart = 0;
 
                 cutEnd =
                     videoDuration;
-
 
                 startRange.max =
                     videoDuration;
@@ -199,37 +208,27 @@ videoInput.addEventListener(
                 endRange.max =
                     videoDuration;
 
-
-                startRange.value =
-                    0;
+                startRange.value = 0;
 
                 endRange.value =
                     videoDuration;
 
-
                 durationElement.textContent =
-                    formatTime(
-                        videoDuration
-                    );
-
+                    formatTime(videoDuration);
 
                 timelineEnd.textContent =
-                    formatTime(
-                        videoDuration
-                    );
-
+                    formatTime(videoDuration);
 
                 resolution.textContent =
-                    video.videoWidth
-                    +
-                    " × "
-                    +
+                    video.videoWidth +
+                    " × " +
                     video.videoHeight;
-
 
                 updateCutUI();
 
                 updateTimeline();
+
+                resetVisualEffects();
 
             },
             {
@@ -250,14 +249,9 @@ startRange.addEventListener(
     function () {
 
         cutStart =
-            Number(
-                startRange.value
-            );
+            Number(startRange.value);
 
-
-        if (
-            cutStart >= cutEnd
-        ) {
+        if (cutStart >= cutEnd) {
 
             cutStart =
                 Math.max(
@@ -267,15 +261,12 @@ startRange.addEventListener(
 
             startRange.value =
                 cutStart;
-
         }
-
 
         updateCutUI();
 
         video.currentTime =
             cutStart;
-
     }
 );
 
@@ -285,14 +276,9 @@ endRange.addEventListener(
     function () {
 
         cutEnd =
-            Number(
-                endRange.value
-            );
+            Number(endRange.value);
 
-
-        if (
-            cutEnd <= cutStart
-        ) {
+        if (cutEnd <= cutStart) {
 
             cutEnd =
                 Math.min(
@@ -302,21 +288,18 @@ endRange.addEventListener(
 
             endRange.value =
                 cutEnd;
-
         }
-
 
         updateCutUI();
 
         video.currentTime =
             cutEnd;
-
     }
 );
 
 
 /* =========================
-   UPDATE CUT UI
+   CUT UI
 ========================= */
 
 function updateCutUI() {
@@ -324,46 +307,37 @@ function updateCutUI() {
     startTime.textContent =
         formatTime(cutStart);
 
-
     endTime.textContent =
         formatTime(cutEnd);
-
 
     selectedDuration.textContent =
         formatTime(
             cutEnd - cutStart
         );
 
-
     if (!videoDuration) return;
 
 
     const left =
-        (
-            cutStart /
-            videoDuration
-        ) * 100;
-
+        (cutStart / videoDuration) *
+        100;
 
     const width =
-        (
-            (cutEnd - cutStart) /
-            videoDuration
-        ) * 100;
+        ((cutEnd - cutStart) /
+        videoDuration) *
+        100;
 
 
     rangeSelected.style.left =
         left + "%";
 
-
     rangeSelected.style.width =
         width + "%";
-
 }
 
 
 /* =========================
-   SET START / END
+   START / END
 ========================= */
 
 setStart.addEventListener(
@@ -372,24 +346,19 @@ setStart.addEventListener(
 
         if (!videoDuration) return;
 
-
         cutStart =
             Math.min(
                 video.currentTime,
                 cutEnd - 0.1
             );
 
-
         startRange.value =
             cutStart;
 
-
         updateCutUI();
-
 
         editorStatus.textContent =
             "Start point updated.";
-
     }
 );
 
@@ -400,13 +369,11 @@ setEnd.addEventListener(
 
         if (!videoDuration) return;
 
-
         cutEnd =
             Math.max(
                 video.currentTime,
                 cutStart + 0.1
             );
-
 
         cutEnd =
             Math.min(
@@ -414,17 +381,13 @@ setEnd.addEventListener(
                 videoDuration
             );
 
-
         endRange.value =
             cutEnd;
 
-
         updateCutUI();
-
 
         editorStatus.textContent =
             "End point updated.";
-
     }
 );
 
@@ -438,20 +401,15 @@ resetCut.addEventListener(
         cutEnd =
             videoDuration;
 
-
-        startRange.value =
-            0;
+        startRange.value = 0;
 
         endRange.value =
             videoDuration;
 
-
         updateCutUI();
-
 
         editorStatus.textContent =
             "Cut reset.";
-
     }
 );
 
@@ -483,28 +441,76 @@ document
                             }
                         );
 
-
                     button.classList.add(
                         "active"
                     );
 
-
                     selectedStyle =
                         button.dataset.style;
 
-
                     editorStatus.textContent =
-                        "Style selected: "
-                        +
+                        "Style selected: " +
                         capitalize(
                             selectedStyle
                         );
 
                 }
             );
-
         }
     );
+
+
+/* =========================
+   TEXT SETTINGS
+========================= */
+
+textEffect.addEventListener(
+    "change",
+    function () {
+
+        textSettings.hidden =
+            !textEffect.checked;
+
+        updateTextOverlay();
+
+    }
+);
+
+
+overlayText.addEventListener(
+    "input",
+    updateTextOverlay
+);
+
+
+textPosition.addEventListener(
+    "change",
+    updateTextOverlay
+);
+
+
+function updateTextOverlay() {
+
+    if (
+        !textEffect.checked ||
+        !overlayText.value.trim()
+    ) {
+
+        textOverlay.hidden = true;
+
+        return;
+    }
+
+
+    textOverlay.hidden = false;
+
+    textOverlay.textContent =
+        overlayText.value;
+
+    textOverlay.className =
+        "edit-text-overlay " +
+        textPosition.value;
+}
 
 
 /* =========================
@@ -520,16 +526,20 @@ previewEdit.addEventListener(
 
         editingPreview = true;
 
-
         video.currentTime =
             cutStart;
 
 
+        applyPlaybackSpeed();
+
         video.play();
 
 
+        startEffectAnimation();
+
+
         editorStatus.textContent =
-            "▶ Playing your selected edit...";
+            "▶ Playing your edited preview...";
 
     }
 );
@@ -547,16 +557,46 @@ stopEdit.addEventListener(
 
         video.pause();
 
+        stopEffectAnimation();
+
+        resetVisualEffects();
 
         editorStatus.textContent =
             "Preview stopped.";
+    }
+);
+
+
+/* =========================
+   SLOW MOTION
+========================= */
+
+function applyPlaybackSpeed() {
+
+    if (slowEffect.checked) {
+
+        video.playbackRate = 0.55;
+
+    } else {
+
+        video.playbackRate = 1;
+
+    }
+}
+
+
+slowEffect.addEventListener(
+    "change",
+    function () {
+
+        applyPlaybackSpeed();
 
     }
 );
 
 
 /* =========================
-   STOP AT CUT END
+   VIDEO TIME UPDATE
 ========================= */
 
 video.addEventListener(
@@ -566,13 +606,11 @@ video.addEventListener(
         selectedTime =
             video.currentTime;
 
-
         updateTimeline();
 
 
         if (
-            editingPreview
-            &&
+            editingPreview &&
             video.currentTime >= cutEnd
         ) {
 
@@ -580,17 +618,144 @@ video.addEventListener(
 
             editingPreview = false;
 
+            stopEffectAnimation();
+
+            resetVisualEffects();
+
             video.currentTime =
                 cutStart;
 
-
             editorStatus.textContent =
                 "Preview finished.";
-
         }
 
     }
 );
+
+
+/* =========================
+   EFFECT ANIMATION
+========================= */
+
+function startEffectAnimation() {
+
+    stopEffectAnimation();
+
+
+    function animate() {
+
+        if (!editingPreview) return;
+
+
+        const progress =
+            video.currentTime /
+            Math.max(
+                cutEnd - cutStart,
+                0.01
+            );
+
+
+        let scale = 1;
+
+        let x = 0;
+
+        let y = 0;
+
+        let rotation = 0;
+
+
+        /* ZOOM */
+
+        if (zoomEffect.checked) {
+
+            const zoomProgress =
+                Math.min(
+                    Math.max(
+                        (video.currentTime -
+                        cutStart) /
+                        Math.max(
+                            cutEnd -
+                            cutStart,
+                            0.01
+                        ),
+                        0
+                    ),
+                    1
+                );
+
+
+            scale =
+                1 +
+                zoomProgress * 0.13;
+
+        }
+
+
+        /* SHAKE */
+
+        if (shakeEffect.checked) {
+
+            const strength =
+                selectedStyle ===
+                "aggressive"
+                    ? 9
+                    : 5;
+
+
+            x =
+                (Math.random() - 0.5) *
+                strength;
+
+            y =
+                (Math.random() - 0.5) *
+                strength;
+
+            rotation =
+                (Math.random() - 0.5) *
+                1.4;
+
+        }
+
+
+        video.style.transform =
+            `translate(${x}px, ${y}px)
+             scale(${scale})
+             rotate(${rotation}deg)`;
+
+
+        animationFrame =
+            requestAnimationFrame(
+                animate
+            );
+    }
+
+
+    animate();
+}
+
+
+function stopEffectAnimation() {
+
+    if (animationFrame) {
+
+        cancelAnimationFrame(
+            animationFrame
+        );
+
+        animationFrame = null;
+    }
+}
+
+
+function resetVisualEffects() {
+
+    video.style.transform =
+        "translate(0, 0) scale(1) rotate(0deg)";
+
+    video.playbackRate = 1;
+
+    updateTextOverlay();
+}
 
 
 /* =========================
@@ -609,9 +774,7 @@ timeline.addEventListener(
             event.pointerId
         );
 
-
         moveTimeline(event);
-
     }
 );
 
@@ -623,11 +786,9 @@ timeline.addEventListener(
         if (!draggingTimeline)
             return;
 
-
         event.preventDefault();
 
         moveTimeline(event);
-
     }
 );
 
@@ -638,7 +799,6 @@ timeline.addEventListener(
 
         draggingTimeline = false;
 
-
         try {
 
             timeline.releasePointerCapture(
@@ -646,7 +806,6 @@ timeline.addEventListener(
             );
 
         } catch (error) {}
-
     }
 );
 
@@ -660,10 +819,6 @@ timeline.addEventListener(
     }
 );
 
-
-/* =========================
-   MOVE TIMELINE
-========================= */
 
 function moveTimeline(event) {
 
@@ -690,8 +845,7 @@ function moveTimeline(event) {
 
 
     const percentage =
-        position /
-        rect.width;
+        position / rect.width;
 
 
     selectedTime =
@@ -704,13 +858,8 @@ function moveTimeline(event) {
 
 
     updateTimeline();
-
 }
 
-
-/* =========================
-   UPDATE TIMELINE
-========================= */
 
 function updateTimeline() {
 
@@ -718,10 +867,9 @@ function updateTimeline() {
 
 
     const percentage =
-        (
-            selectedTime /
-            videoDuration
-        ) * 100;
+        (selectedTime /
+        videoDuration) *
+        100;
 
 
     progress.style.width =
@@ -733,10 +881,7 @@ function updateTimeline() {
 
 
     currentTimeElement.textContent =
-        formatTime(
-            selectedTime
-        );
-
+        formatTime(selectedTime);
 }
 
 
@@ -756,8 +901,7 @@ addMarkerButton.addEventListener(
 
             time: selectedTime,
 
-            type:
-                markerType.value
+            type: markerType.value
 
         });
 
@@ -772,7 +916,6 @@ addMarkerButton.addEventListener(
 
 
         renderMarkers();
-
     }
 );
 
@@ -792,7 +935,6 @@ function renderMarkers() {
             </p>`;
 
         return;
-
     }
 
 
@@ -803,10 +945,9 @@ function renderMarkers() {
         ) {
 
             const percentage =
-                (
-                    marker.time /
-                    videoDuration
-                ) * 100;
+                (marker.time /
+                videoDuration) *
+                100;
 
 
             const markerElement =
@@ -816,8 +957,7 @@ function renderMarkers() {
 
 
             markerElement.className =
-                "marker "
-                +
+                "marker " +
                 marker.type;
 
 
@@ -831,17 +971,13 @@ function renderMarkers() {
 
                     event.stopPropagation();
 
-
                     video.currentTime =
                         marker.time;
-
 
                     selectedTime =
                         marker.time;
 
-
                     updateTimeline();
-
                 }
             );
 
@@ -862,23 +998,16 @@ function renderMarkers() {
 
 
             item.innerHTML = `
-
                 <span>
-
                     ${getEmoji(marker.type)}
-
                     ${capitalize(marker.type)}
-
                     —
-
                     ${formatTime(marker.time)}
-
                 </span>
 
                 <button>
                     Remove
                 </button>
-
             `;
 
 
@@ -893,9 +1022,7 @@ function renderMarkers() {
                             1
                         );
 
-
                         renderMarkers();
-
                     }
                 );
 
@@ -903,15 +1030,13 @@ function renderMarkers() {
             markerList.appendChild(
                 item
             );
-
         }
     );
-
 }
 
 
 /* =========================
-   OLD AI PLANNER
+   AI PLANNER
 ========================= */
 
 const generate =
@@ -949,7 +1074,6 @@ generate.addEventListener(
                 </p>`;
 
             return;
-
         }
 
 
@@ -964,7 +1088,7 @@ generate.addEventListener(
 
                 <br><br>
 
-                Your selected clip:
+                Selected clip:
 
                 <strong>
                     ${formatTime(cutStart)}
@@ -1011,13 +1135,16 @@ generate.addEventListener(
 
                 <br>
 
+                ✨ Effects:
+                ${getActiveEffects()}
+
+                <br>
+
                 📍 Markers:
                 ${markers.length}
 
             </div>
-
         `;
-
     }
 );
 
@@ -1048,110 +1175,4 @@ copy.addEventListener(
                                 "Copy";
 
                         },
-                        1500
-                    );
-
-                }
-            );
-
-    }
-);
-
-
-/* =========================
-   HELPERS
-========================= */
-
-function formatTime(seconds) {
-
-    if (!isFinite(seconds))
-        return "00:00";
-
-
-    const minutes =
-        Math.floor(
-            seconds / 60
-        );
-
-
-    const secondsPart =
-        Math.floor(
-            seconds % 60
-        );
-
-
-    return (
-        String(minutes)
-            .padStart(2, "0")
-        +
-        ":"
-        +
-        String(secondsPart)
-            .padStart(2, "0")
-    );
-
-}
-
-
-function formatFileSize(bytes) {
-
-    if (
-        bytes <
-        1024 * 1024
-    ) {
-
-        return (
-            (
-                bytes / 1024
-            ).toFixed(1)
-            +
-            " KB"
-        );
-
-    }
-
-
-    return (
-        (
-            bytes /
-            1024 /
-            1024
-        ).toFixed(1)
-        +
-        " MB"
-    );
-
-}
-
-
-function capitalize(text) {
-
-    return (
-        text.charAt(0).toUpperCase()
-        +
-        text.slice(1)
-    );
-
-}
-
-
-function getEmoji(type) {
-
-    const emojis = {
-
-        kill: "💥",
-
-        text: "📝",
-
-        transition: "🔄",
-
-        slowmo: "🐌",
-
-        important: "⭐"
-
-    };
-
-
-    return emojis[type] || "📍";
-
-}
+                        1
