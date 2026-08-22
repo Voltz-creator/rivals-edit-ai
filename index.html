@@ -13,18 +13,83 @@
 <body>
 
     <header>
-        <div class="logo">RIVALS<span>EDIT AI</span></div>
 
-        <p>Create a complete edit plan in seconds.</p>
+        <div class="logo">
+            RIVALS<span>EDIT AI</span>
+        </div>
+
+        <p>
+            Create a complete edit plan in seconds.
+        </p>
+
     </header>
 
+
     <main>
+
+
+        <!-- VIDEO UPLOAD -->
+
+        <section class="upload-box">
+
+            <h2>🎥 Your Clip</h2>
+
+            <label for="videoInput" class="upload-button">
+                📁 Choose Video
+            </label>
+
+            <input
+                type="file"
+                id="videoInput"
+                accept="video/*"
+                hidden
+            >
+
+            <p id="fileName" class="file-name">
+                No video selected.
+            </p>
+
+
+            <video
+                id="videoPreview"
+                controls
+                hidden
+            ></video>
+
+
+            <div id="videoInfo" class="video-info" hidden>
+
+                <div>
+                    <strong>Duration</strong>
+                    <span id="duration">-</span>
+                </div>
+
+                <div>
+                    <strong>Resolution</strong>
+                    <span id="resolution">-</span>
+                </div>
+
+                <div>
+                    <strong>File size</strong>
+                    <span id="fileSize">-</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- EDITOR -->
 
         <section class="editor-box">
 
             <h2>🎬 Create your edit</h2>
 
-            <label for="clip">Describe your clip</label>
+
+            <label for="clip">
+                Describe your clip
+            </label>
 
             <textarea
                 id="clip"
@@ -32,106 +97,244 @@
             ></textarea>
 
 
+
             <div class="grid">
 
+
                 <div>
-                    <label for="game">🎮 Game</label>
+
+                    <label for="game">
+                        🎮 Game
+                    </label>
 
                     <select id="game">
-                        <option value="rivals">RIVALS</option>
-                        <option value="fortnite">Fortnite</option>
-                        <option value="valorant">Valorant</option>
-                        <option value="other">Other</option>
+
+                        <option value="rivals">
+                            RIVALS
+                        </option>
+
+                        <option value="fortnite">
+                            Fortnite
+                        </option>
+
+                        <option value="valorant">
+                            Valorant
+                        </option>
+
+                        <option value="other">
+                            Other
+                        </option>
+
                     </select>
+
                 </div>
 
 
+
                 <div>
-                    <label for="music">🎵 Music style</label>
+
+                    <label for="music">
+                        🎵 Music style
+                    </label>
 
                     <select id="music">
-                        <option value="phonk">Phonk</option>
-                        <option value="trap">Trap</option>
-                        <option value="drill">Drill</option>
-                        <option value="electronic">Electronic</option>
-                        <option value="none">No music</option>
+
+                        <option value="phonk">
+                            Phonk
+                        </option>
+
+                        <option value="trap">
+                            Trap
+                        </option>
+
+                        <option value="drill">
+                            Drill
+                        </option>
+
+                        <option value="electronic">
+                            Electronic
+                        </option>
+
+                        <option value="none">
+                            No music
+                        </option>
+
                     </select>
+
                 </div>
 
 
+
                 <div>
-                    <label for="intensity">⚡ Edit intensity</label>
+
+                    <label for="intensity">
+                        ⚡ Edit intensity
+                    </label>
 
                     <select id="intensity">
-                        <option value="chill">Chill</option>
-                        <option value="fast">Fast</option>
-                        <option value="insane">Insane</option>
+
+                        <option value="chill">
+                            Chill
+                        </option>
+
+                        <option value="fast">
+                            Fast
+                        </option>
+
+                        <option value="insane">
+                            Insane
+                        </option>
+
                     </select>
+
                 </div>
+
 
 
                 <div>
-                    <label for="format">📱 Format</label>
+
+                    <label for="format">
+                        📱 Format
+                    </label>
 
                     <select id="format">
-                        <option value="short">YouTube Short</option>
-                        <option value="tiktok">TikTok</option>
-                        <option value="youtube">YouTube Video</option>
+
+                        <option value="short">
+                            YouTube Short
+                        </option>
+
+                        <option value="tiktok">
+                            TikTok
+                        </option>
+
+                        <option value="youtube">
+                            YouTube Video
+                        </option>
+
                     </select>
+
                 </div>
+
 
             </div>
 
 
-            <h3 class="options-title">Effects</h3>
+
+            <h3 class="options-title">
+                Effects
+            </h3>
+
 
 
             <div class="options">
 
+
                 <label class="check">
-                    <input type="checkbox" id="text" checked>
-                    <span>📝 Text animations</span>
+
+                    <input
+                        type="checkbox"
+                        id="text"
+                        checked
+                    >
+
+                    <span>
+                        📝 Text animations
+                    </span>
+
                 </label>
 
 
+
                 <label class="check">
-                    <input type="checkbox" id="kills" checked>
-                    <span>💥 Kill effects</span>
+
+                    <input
+                        type="checkbox"
+                        id="kills"
+                        checked
+                    >
+
+                    <span>
+                        💥 Kill effects
+                    </span>
+
                 </label>
 
 
+
                 <label class="check">
-                    <input type="checkbox" id="transitions" checked>
-                    <span>🔄 Transitions</span>
+
+                    <input
+                        type="checkbox"
+                        id="transitions"
+                        checked
+                    >
+
+                    <span>
+                        🔄 Transitions
+                    </span>
+
                 </label>
 
 
+
                 <label class="check">
-                    <input type="checkbox" id="camera" checked>
-                    <span>🎥 Camera effects</span>
+
+                    <input
+                        type="checkbox"
+                        id="camera"
+                        checked
+                    >
+
+                    <span>
+                        🎥 Camera effects
+                    </span>
+
                 </label>
 
 
+
                 <label class="check">
-                    <input type="checkbox" id="slowmo">
-                    <span>🐌 Slow motion</span>
+
+                    <input
+                        type="checkbox"
+                        id="slowmo"
+                    >
+
+                    <span>
+                        🐌 Slow motion
+                    </span>
+
                 </label>
+
 
             </div>
 
 
+
             <button id="generate">
+
                 ✨ Generate Edit Plan
+
             </button>
+
 
         </section>
 
 
-        <section id="result" class="result-box">
+
+        <!-- RESULTS -->
+
+        <section
+            id="result"
+            class="result-box"
+        >
+
 
             <div class="result-header">
 
-                <h2>📋 Your Edit Plan</h2>
+                <h2>
+                    📋 Your Edit Plan
+                </h2>
 
                 <button id="copy">
                     Copy
@@ -148,18 +351,24 @@
 
             </div>
 
+
         </section>
+
 
     </main>
 
 
+
     <footer>
+
         Rivals Edit AI • Free editing assistant
+
     </footer>
+
 
 
     <script src="script.js"></script>
 
 </body>
 
-</html>                
+</html>
