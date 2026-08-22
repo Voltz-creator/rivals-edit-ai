@@ -688,11 +688,6 @@ previewEdit.addEventListener(
             0;
 
 
-        videoPreview.playbackRate =
-            slowEffect.checked
-                ? 0.55
-                : 1;
-
 
         videoPreview.play();
 
@@ -766,7 +761,7 @@ function startEffects() {
 
         if (zoomEffect.checked) {
 
-            scale = 1.08;
+            scale = 1.12;
 
         }
 
