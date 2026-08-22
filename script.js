@@ -1230,4 +1230,4 @@ function getMarkerInstruction(type) {
 
     return "Highlight this moment in the edit.";
 
-  }
+                          }
