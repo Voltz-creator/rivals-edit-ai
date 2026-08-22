@@ -664,3 +664,12 @@ footer {
     }
 
 }
+#videoInput {
+    width: 100%;
+    padding: 12px;
+    background: #0d0d13;
+    color: white;
+    border: 1px solid #353541;
+    border-radius: 10px;
+    cursor: pointer;
+}
