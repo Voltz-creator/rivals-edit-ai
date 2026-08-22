@@ -65,7 +65,7 @@ const markerList =
     document.getElementById("markerList");
 
 
-/* V6.1 EFFECTS */
+/* EFFECTS */
 
 const zoomEffect =
     document.getElementById("zoomEffect");
@@ -100,6 +100,8 @@ const stopEdit =
 const editorStatus =
     document.getElementById("editorStatus");
 
+
+/* STATE */
 
 let videoDuration = 0;
 
@@ -226,19 +228,6 @@ videoPreview.addEventListener(
 
 
         updateTimeline();
-
-
-        /* Stop preview at the end */
-
-        if (
-            editingPreview &&
-            videoPreview.currentTime >=
-            videoDuration
-        ) {
-
-            stopPreview();
-
-        }
 
     }
 );
@@ -374,13 +363,11 @@ function moveTimeline(event) {
         );
 
 
-    const percentage =
-        position /
-        rect.width;
-
-
     selectedTime =
-        percentage *
+        (
+            position /
+            rect.width
+        ) *
         videoDuration;
 
 
@@ -394,7 +381,7 @@ function moveTimeline(event) {
 
 
 /* =========================
-   MARKERS
+   ADD MARKER
 ========================= */
 
 addMarkerButton.addEventListener(
@@ -402,8 +389,16 @@ addMarkerButton.addEventListener(
     function () {
 
         if (!videoDuration) {
+
+            editorStatus.textContent =
+                "Choose a video first.";
+
             return;
         }
+
+
+        const type =
+            markerType.value;
 
 
         markers.push({
@@ -412,7 +407,16 @@ addMarkerButton.addEventListener(
                 selectedTime,
 
             type:
-                markerType.value
+                type,
+
+            text:
+                type === "text"
+                    ? (
+                        overlayText.value.trim()
+                        ||
+                        "TEXT"
+                    )
+                    : ""
 
         });
 
@@ -420,16 +424,19 @@ addMarkerButton.addEventListener(
         markers.sort(
             function (a, b) {
 
-                return (
-                    a.time -
-                    b.time
-                );
+                return a.time - b.time;
 
             }
         );
 
 
         renderMarkers();
+
+
+        editorStatus.textContent =
+            capitalize(type) +
+            " added at " +
+            formatTime(selectedTime);
 
     }
 );
@@ -453,9 +460,7 @@ function renderMarkers() {
         markerList.innerHTML = `
 
             <p class="empty">
-
-                No markers yet.
-
+                No effects yet.
             </p>
 
         `;
@@ -465,11 +470,7 @@ function renderMarkers() {
 
 
     markers.forEach(
-        function (
-            marker,
-            index
-        ) {
-
+        function (marker, index) {
 
             const percentage =
                 (
@@ -494,15 +495,11 @@ function renderMarkers() {
 
 
             markerElement.title =
-                capitalize(
-                    marker.type
-                )
+                capitalize(marker.type)
                 +
-                " - "
+                " — "
                 +
-                formatTime(
-                    marker.time
-                );
+                formatTime(marker.time);
 
 
             markerElement.addEventListener(
@@ -511,10 +508,10 @@ function renderMarkers() {
 
                     event.stopPropagation();
 
-                    videoPreview.currentTime =
+                    selectedTime =
                         marker.time;
 
-                    selectedTime =
+                    videoPreview.currentTime =
                         marker.time;
 
                     updateTimeline();
@@ -538,6 +535,12 @@ function renderMarkers() {
                 "marker-item";
 
 
+            const label =
+                marker.type === "text"
+                    ? marker.text
+                    : capitalize(marker.type);
+
+
             item.innerHTML = `
 
                 <span>
@@ -546,9 +549,7 @@ function renderMarkers() {
                         marker.type
                     )}
 
-                    ${capitalize(
-                        marker.type
-                    )}
+                    ${label}
 
                     —
 
@@ -558,35 +559,28 @@ function renderMarkers() {
 
                 </span>
 
-
                 <button>
-
                     Remove
-
                 </button>
 
             `;
 
 
-            const removeButton =
-                item.querySelector(
-                    "button"
+            item
+                .querySelector("button")
+                .addEventListener(
+                    "click",
+                    function () {
+
+                        markers.splice(
+                            index,
+                            1
+                        );
+
+                        renderMarkers();
+
+                    }
                 );
-
-
-            removeButton.addEventListener(
-                "click",
-                function () {
-
-                    markers.splice(
-                        index,
-                        1
-                    );
-
-                    renderMarkers();
-
-                }
-            );
 
 
             markerList.appendChild(
@@ -603,70 +597,45 @@ function renderMarkers() {
    EFFECT SETTINGS
 ========================= */
 
-if (textEffect) {
+textEffect.addEventListener(
+    "change",
+    function () {
 
-    textEffect.addEventListener(
-        "change",
-        function () {
+        textSettings.hidden =
+            !textEffect.checked;
 
-            if (textSettings) {
+        updateText();
 
-                textSettings.hidden =
-                    !textEffect.checked;
-
-            }
-
-            updateText();
-
-        }
-    );
-
-}
+    }
+);
 
 
-if (overlayText) {
-
-    overlayText.addEventListener(
-        "input",
-        updateText
-    );
-
-}
+overlayText.addEventListener(
+    "input",
+    updateText
+);
 
 
-if (textPosition) {
+textPosition.addEventListener(
+    "change",
+    updateText
+);
 
-    textPosition.addEventListener(
-        "change",
-        updateText
-    );
-
-}
-
-
-/* =========================
-   TEXT
-========================= */
 
 function updateText() {
 
-    if (
-        !textEffect ||
-        !textEffect.checked
-    ) {
+    if (!textEffect.checked) {
 
-        if (editTextOverlay) {
-            editTextOverlay.hidden = true;
-        }
+        editTextOverlay.hidden =
+            true;
 
         return;
+
     }
 
 
     const text =
-        overlayText
-            ? overlayText.value.trim()
-            : "";
+        overlayText.value.trim();
 
 
     if (!text) {
@@ -675,6 +644,7 @@ function updateText() {
             true;
 
         return;
+
     }
 
 
@@ -688,141 +658,83 @@ function updateText() {
 
     editTextOverlay.className =
         "edit-text-overlay " +
-        (
-            textPosition
-                ? textPosition.value
-                : "center"
-        );
+        textPosition.value;
 
 }
 
 
 /* =========================
-   PREVIEW EDIT
+   PREVIEW
 ========================= */
 
-if (previewEdit) {
+previewEdit.addEventListener(
+    "click",
+    function () {
 
-    previewEdit.addEventListener(
-        "click",
-        function () {
+        if (!videoDuration) {
 
-            if (!videoDuration) {
+            editorStatus.textContent =
+                "Choose a video first.";
 
-                if (editorStatus) {
-
-                    editorStatus.textContent =
-                        "Choose a video first.";
-
-                }
-
-                return;
-            }
-
-
-            editingPreview = true;
-
-
-            videoPreview.currentTime =
-                0;
-
-
-            applySpeed();
-
-
-            videoPreview.play();
-
-
-            startEffects();
-
-
-            if (editorStatus) {
-
-                editorStatus.textContent =
-                    "▶ Playing edit preview...";
-
-            }
+            return;
 
         }
-    );
 
-}
+
+        editingPreview = true;
+
+
+        videoPreview.currentTime =
+            0;
+
+
+        videoPreview.playbackRate =
+            slowEffect.checked
+                ? 0.55
+                : 1;
+
+
+        videoPreview.play();
+
+
+        startEffects();
+
+
+        editorStatus.textContent =
+            "▶ Previewing your edit...";
+
+    }
+);
 
 
 /* =========================
-   STOP PREVIEW
+   STOP
 ========================= */
 
-if (stopEdit) {
-
-    stopEdit.addEventListener(
-        "click",
-        stopPreview
-    );
-
-}
+stopEdit.addEventListener(
+    "click",
+    stopPreview
+);
 
 
 function stopPreview() {
 
     editingPreview = false;
 
-
     videoPreview.pause();
-
 
     stopEffects();
 
-
     resetEffects();
 
-
-    if (editorStatus) {
-
-        editorStatus.textContent =
-            "Preview stopped.";
-
-    }
+    editorStatus.textContent =
+        "Preview stopped.";
 
 }
 
 
 /* =========================
-   SLOW MOTION
-========================= */
-
-if (slowEffect) {
-
-    slowEffect.addEventListener(
-        "change",
-        applySpeed
-    );
-
-}
-
-
-function applySpeed() {
-
-    if (
-        slowEffect &&
-        slowEffect.checked
-    ) {
-
-        videoPreview.playbackRate =
-            0.55;
-
-    } else {
-
-        videoPreview.playbackRate =
-            1;
-
-    }
-
-}
-
-
-/* =========================
-   EFFECT ANIMATION
+   EFFECT ENGINE
 ========================= */
 
 function startEffects() {
@@ -846,66 +758,110 @@ function startEffects() {
         let rotation = 0;
 
 
-        /* ZOOM */
-
-        if (
-            zoomEffect &&
-            zoomEffect.checked
-        ) {
-
-            const progress =
-                videoDuration > 0
-                    ? videoPreview.currentTime /
-                      videoDuration
-                    : 0;
+        const time =
+            videoPreview.currentTime;
 
 
-            scale =
-                1 +
-                (
-                    Math.min(
-                        progress,
-                        1
-                    ) * 0.15
-                );
+        /* GLOBAL ZOOM */
+
+        if (zoomEffect.checked) {
+
+            scale = 1.08;
 
         }
 
 
-        /* SHAKE */
+        /* GLOBAL SHAKE */
 
-        if (
-            shakeEffect &&
-            shakeEffect.checked
-        ) {
-
-            const strength = 5;
-
+        if (shakeEffect.checked) {
 
             x =
                 (
                     Math.random() -
                     0.5
-                ) *
-                strength;
+                ) * 7;
 
 
             y =
                 (
                     Math.random() -
                     0.5
-                ) *
-                strength;
+                ) * 7;
 
 
             rotation =
                 (
                     Math.random() -
                     0.5
-                ) *
-                1.5;
+                ) * 1.5;
 
         }
+
+
+        /* TIMELINE EFFECTS */
+
+        markers.forEach(
+            function (marker) {
+
+                const distance =
+                    Math.abs(
+                        time -
+                        marker.time
+                    );
+
+
+                /*
+                    Effects activate
+                    for a short moment
+                    around their marker.
+                */
+
+                if (distance <= 0.45) {
+
+                    if (
+                        marker.type ===
+                        "zoom"
+                    ) {
+
+                        scale = 1.18;
+
+                    }
+
+
+                    if (
+                        marker.type ===
+                        "shake"
+                    ) {
+
+                        x =
+                            (
+                                Math.random()
+                                -
+                                0.5
+                            ) * 15;
+
+
+                        y =
+                            (
+                                Math.random()
+                                -
+                                0.5
+                            ) * 15;
+
+
+                        rotation =
+                            (
+                                Math.random()
+                                -
+                                0.5
+                            ) * 3;
+
+                    }
+
+                }
+
+            }
+        );
 
 
         videoPreview.style.transform =
@@ -930,7 +886,7 @@ function startEffects() {
 
 
 /* =========================
-   STOP EFFECT ANIMATION
+   STOP EFFECTS
 ========================= */
 
 function stopEffects() {
@@ -949,20 +905,16 @@ function stopEffects() {
 
 
 /* =========================
-   RESET EFFECTS
+   RESET
 ========================= */
 
 function resetEffects() {
 
     videoPreview.style.transform =
-        "translate(0, 0) scale(1) rotate(0deg)";
-
+        "translate(0,0) scale(1) rotate(0deg)";
 
     videoPreview.playbackRate =
         1;
-
-
-    updateText();
 
 }
 
@@ -1040,14 +992,12 @@ function generateEdit() {
         .checked;
 
 
-    if (clip === "") {
+    if (!clip) {
 
         montage.innerHTML = `
 
             <p class="empty">
-
                 ⚠️ Describe your clip first.
-
             </p>
 
         `;
@@ -1057,17 +1007,10 @@ function generateEdit() {
     }
 
 
-    const durationText =
-        videoDuration
-            ? formatTime(videoDuration)
-            : "Unknown";
-
-
     let steps = [];
 
 
     steps.push(`
-
         <div class="step">
 
             <strong>
@@ -1077,14 +1020,11 @@ function generateEdit() {
             <br>
 
             <span>
-
-                Start with the most interesting
-                moment and avoid a long intro.
-
+                Start with the strongest
+                part of the clip.
             </span>
 
         </div>
-
     `);
 
 
@@ -1131,107 +1071,9 @@ function generateEdit() {
     );
 
 
-    if (
-        markers.length === 0
-        &&
-        videoDuration
-    ) {
-
-        const quarter =
-            videoDuration / 4;
-
-
-        steps.push(`
-
-            <div class="step">
-
-                <strong>
-
-                    ${formatTime(
-                        quarter
-                    )}
-
-                    — FIRST SECTION
-
-                </strong>
-
-                <br>
-
-                <span>
-
-                    Introduce the first important
-                    gameplay moment.
-
-                </span>
-
-            </div>
-
-        `);
-
-
-        steps.push(`
-
-            <div class="step">
-
-                <strong>
-
-                    ${formatTime(
-                        quarter * 2
-                    )}
-
-                    — MAIN ACTION
-
-                </strong>
-
-                <br>
-
-                <span>
-
-                    Increase the intensity and
-                    synchronize the action
-                    with the music.
-
-                </span>
-
-            </div>
-
-        `);
-
-
-        steps.push(`
-
-            <div class="step">
-
-                <strong>
-
-                    ${formatTime(
-                        quarter * 3
-                    )}
-
-                    — FINAL BUILD
-
-                </strong>
-
-                <br>
-
-                <span>
-
-                    Build toward the strongest
-                    moment of the clip.
-
-                </span>
-
-            </div>
-
-        `);
-
-    }
-
-
     if (kills) {
 
         steps.push(`
-
             <div class="step">
 
                 <strong>
@@ -1241,15 +1083,12 @@ function generateEdit() {
                 <br>
 
                 <span>
-
-                    Add a quick zoom,
-                    subtle shake and
-                    impact sound on important kills.
-
+                    Add quick zooms,
+                    impact effects and
+                    subtle shake on kills.
                 </span>
 
             </div>
-
         `);
 
     }
@@ -1258,24 +1097,21 @@ function generateEdit() {
     if (text) {
 
         steps.push(`
-
             <div class="step">
 
                 <strong>
-                    📝 TEXT ANIMATIONS
+                    📝 TEXT
                 </strong>
 
                 <br>
 
                 <span>
-
-                    Use short animated text
-                    for important moments.
-
+                    Add short animated
+                    captions to important
+                    moments.
                 </span>
 
             </div>
-
         `);
 
     }
@@ -1284,7 +1120,6 @@ function generateEdit() {
     if (transitions) {
 
         steps.push(`
-
             <div class="step">
 
                 <strong>
@@ -1294,14 +1129,11 @@ function generateEdit() {
                 <br>
 
                 <span>
-
                     Use fast transitions
-                    between major sections.
-
+                    between important sections.
                 </span>
 
             </div>
-
         `);
 
     }
@@ -1310,25 +1142,21 @@ function generateEdit() {
     if (camera) {
 
         steps.push(`
-
             <div class="step">
 
                 <strong>
-                    🎥 CAMERA EFFECTS
+                    🎥 CAMERA
                 </strong>
 
                 <br>
 
                 <span>
-
-                    Add subtle zooms and
-                    camera movement during
-                    important moments.
-
+                    Use subtle zoom and
+                    movement to emphasize
+                    gameplay.
                 </span>
 
             </div>
-
         `);
 
     }
@@ -1337,7 +1165,6 @@ function generateEdit() {
     if (slowmo) {
 
         steps.push(`
-
             <div class="step">
 
                 <strong>
@@ -1347,21 +1174,17 @@ function generateEdit() {
                 <br>
 
                 <span>
-
-                    Use slow motion briefly
-                    around the strongest moment.
-
+                    Slow the strongest moment
+                    briefly before the final action.
                 </span>
 
             </div>
-
         `);
 
     }
 
 
     steps.push(`
-
         <div class="step">
 
             <strong>
@@ -1371,22 +1194,15 @@ function generateEdit() {
             <br>
 
             <span>
-
-                Synchronize important actions
-                with the strongest beats.
-
-                Selected style:
-                ${music}.
-
+                Use ${music} and synchronize
+                important actions with the beat.
             </span>
 
         </div>
-
     `);
 
 
     steps.push(`
-
         <div class="step">
 
             <strong>
@@ -1396,46 +1212,41 @@ function generateEdit() {
             <br>
 
             <span>
-
-                End immediately after
-                the final important action.
-
+                Cut immediately after
+                the strongest final moment.
             </span>
 
         </div>
-
     `);
 
 
     montage.innerHTML = `
 
         <h3>
-
-            ⚡ Your
-            ${game.toUpperCase()}
-            Edit Plan
-
+            ⚡ ${game.toUpperCase()} Edit Plan
         </h3>
 
-
         ${steps.join("")}
-
 
         <div class="summary">
 
             <strong>
-                🎯 Clip information
+                🎯 Clip Information
             </strong>
 
             <br><br>
 
             🎮 Game:
-            ${game.toUpperCase()}
+            ${game}
 
             <br>
 
             ⏱️ Duration:
-            ${durationText}
+            ${
+                videoDuration
+                    ? formatTime(videoDuration)
+                    : "Unknown"
+            }
 
             <br>
 
@@ -1454,7 +1265,7 @@ function generateEdit() {
 
             <br>
 
-            📍 Markers:
+            📍 Timeline Effects:
             ${markers.length}
 
         </div>
@@ -1486,14 +1297,14 @@ copyButton.addEventListener(
             .then(
                 function () {
 
-                    copyButton.innerText =
+                    copyButton.textContent =
                         "Copied!";
 
 
                     setTimeout(
                         function () {
 
-                            copyButton.innerText =
+                            copyButton.textContent =
                                 "Copy";
 
                         },
@@ -1514,9 +1325,7 @@ copyButton.addEventListener(
 function formatTime(seconds) {
 
     if (!isFinite(seconds)) {
-
         return "00:00";
-
     }
 
 
@@ -1533,20 +1342,13 @@ function formatTime(seconds) {
 
 
     return (
-
         String(minutes)
             .padStart(2, "0")
-
         +
-
         ":"
-
         +
-
-        String(
-            remainingSeconds
-        ).padStart(2, "0")
-
+        String(remainingSeconds)
+            .padStart(2, "0")
     );
 
 }
@@ -1560,32 +1362,24 @@ function formatFileSize(bytes) {
     ) {
 
         return (
-
             (
                 bytes / 1024
             ).toFixed(1)
-
             +
-
             " KB"
-
         );
 
     }
 
 
     return (
-
         (
             bytes /
             1024 /
             1024
         ).toFixed(1)
-
         +
-
         " MB"
-
     );
 
 }
@@ -1594,13 +1388,9 @@ function formatFileSize(bytes) {
 function capitalize(text) {
 
     return (
-
         text.charAt(0).toUpperCase()
-
         +
-
         text.slice(1)
-
     );
 
 }
@@ -1608,68 +1398,62 @@ function capitalize(text) {
 
 function getMarkerEmoji(type) {
 
-    if (type === "kill") {
-        return "💥";
-    }
+    const emojis = {
 
-    if (type === "text") {
-        return "📝";
-    }
+        kill: "💥",
 
-    if (type === "transition") {
-        return "🔄";
-    }
+        zoom: "🔍",
 
-    if (type === "slowmo") {
-        return "🐌";
-    }
+        shake: "📳",
 
-    if (type === "important") {
-        return "⭐";
-    }
+        slowmo: "🐌",
 
-    return "📍";
+        text: "📝",
+
+        transition: "🔄",
+
+        important: "⭐"
+
+    };
+
+
+    return emojis[type] || "📍";
 
 }
 
 
 function getMarkerInstruction(type) {
 
-    if (type === "kill") {
+    const instructions = {
 
-        return "Add a quick zoom, shake and impact sound at this moment.";
+        kill:
+            "Add a quick zoom, shake and impact effect at this moment.",
 
-    }
+        zoom:
+            "Zoom into this moment to make the action stand out.",
 
+        shake:
+            "Add a short camera shake around this moment.",
 
-    if (type === "text") {
+        slowmo:
+            "Slow the footage briefly around this important moment.",
 
-        return "Add a short animated text overlay at this moment.";
+        text:
+            "Add an animated text overlay here.",
 
-    }
+        transition:
+            "Use a fast transition into the next section.",
 
+        important:
+            "Make this moment visually stand out."
 
-    if (type === "transition") {
-
-        return "Use a fast transition to move into the next section.";
-
-    }
-
-
-    if (type === "slowmo") {
-
-        return "Slow the footage down briefly around this moment.";
-
-    }
+    };
 
 
-    if (type === "important") {
-
-        return "Treat this as a key moment and make it visually stand out.";
-
-    }
-
-
-    return "Highlight this moment in the edit.";
+    return (
+        instructions[type]
+        ||
+        "Highlight this moment in the edit."
+    );
 
 }
