@@ -3,635 +3,628 @@
 
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Rivals Edit AI</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+    <link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
 <header>
-
     <div class="logo">
         RIVALS<span>EDIT AI</span>
     </div>
 
-    <p>
-        Turn your gameplay into a real edit.
-    </p>
-
+    <p>Turn your gameplay into a real edit.</p>
 </header>
 
 
 <main>
 
+    <!-- VIDEO UPLOAD -->
 
-<!-- UPLOAD -->
+    <section class="upload-box">
 
-<section class="upload-box">
+        <h2>🎥 Your Clip</h2>
 
-    <h2>🎥 Your Clip</h2>
+        <label for="videoInput" class="choose-button">
+            📁 Choose your clip
+        </label>
 
-    <label
-        for="videoInput"
-        class="choose-button"
-    >
-        📁 Choose your clip
-    </label>
+        <input
+            type="file"
+            id="videoInput"
+            accept="video/*"
+            hidden
+        >
 
-    <input
-        type="file"
-        id="videoInput"
-        accept="video/*"
+        <p id="fileName" class="file-name">
+            No video selected.
+        </p>
+
+        <div class="video-wrapper">
+
+            <video
+                id="videoPreview"
+                controls
+                playsinline
+                hidden
+            ></video>
+
+            <div
+                id="editTextOverlay"
+                class="edit-text-overlay"
+                hidden
+            >
+                RIVALS
+            </div>
+
+        </div>
+
+        <div id="videoInfo" class="video-info" hidden>
+
+            <div>
+                <strong>Duration</strong>
+                <span id="duration">-</span>
+            </div>
+
+            <div>
+                <strong>Resolution</strong>
+                <span id="resolution">-</span>
+            </div>
+
+            <div>
+                <strong>File size</strong>
+                <span id="fileSize">-</span>
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- VIDEO EDITOR -->
+
+    <section id="editorSection" class="editor-box" hidden>
+
+        <div class="section-header">
+
+            <div>
+                <h2>🎬 Mini Video Editor</h2>
+
+                <p class="subtitle">
+                    Select the part of your clip you want to edit.
+                </p>
+            </div>
+
+            <span
+                id="selectedDuration"
+                class="duration-badge"
+            >
+                00:00
+            </span>
+
+        </div>
+
+
+
+        <!-- CUT -->
+
+        <div class="range-editor">
+
+            <div class="range-labels">
+
+                <span>
+                    Start
+                    <strong id="startTime">00:00</strong>
+                </span>
+
+                <span>
+                    End
+                    <strong id="endTime">00:00</strong>
+                </span>
+
+            </div>
+
+
+            <div class="range-track">
+
+                <div
+                    id="rangeSelected"
+                    class="range-selected"
+                ></div>
+
+                <input
+                    type="range"
+                    id="startRange"
+                    min="0"
+                    max="100"
+                    value="0"
+                    step="0.01"
+                >
+
+                <input
+                    type="range"
+                    id="endRange"
+                    min="0"
+                    max="100"
+                    value="100"
+                    step="0.01"
+                >
+
+            </div>
+
+        </div>
+
+
+
+        <div class="quick-actions">
+
+            <button id="setStart">
+                ⏮ Set Start Here
+            </button>
+
+            <button id="setEnd">
+                Set End Here ⏭
+            </button>
+
+            <button id="resetCut">
+                ↩ Reset
+            </button>
+
+        </div>
+
+
+
+        <!-- STYLE -->
+
+        <h3 class="options-title">
+            🎨 Edit Style
+        </h3>
+
+        <div class="style-grid">
+
+            <button
+                class="style-button active"
+                data-style="clean"
+            >
+                🎮 Clean
+            </button>
+
+            <button
+                class="style-button"
+                data-style="fast"
+            >
+                ⚡ Fast
+            </button>
+
+            <button
+                class="style-button"
+                data-style="phonk"
+            >
+                🔥 Phonk
+            </button>
+
+            <button
+                class="style-button"
+                data-style="aggressive"
+            >
+                💀 Aggressive
+            </button>
+
+        </div>
+
+
+
+        <!-- EFFECTS -->
+
+        <h3 class="options-title">
+            ✨ Effects
+        </h3>
+
+        <div class="options">
+
+            <label class="check">
+
+                <input
+                    type="checkbox"
+                    id="zoomEffect"
+                >
+
+                <span>🔍 Zoom</span>
+
+            </label>
+
+
+            <label class="check">
+
+                <input
+                    type="checkbox"
+                    id="shakeEffect"
+                >
+
+                <span>📳 Shake</span>
+
+            </label>
+
+
+            <label class="check">
+
+                <input
+                    type="checkbox"
+                    id="slowEffect"
+                >
+
+                <span>🐌 Slow Motion</span>
+
+            </label>
+
+
+            <label class="check">
+
+                <input
+                    type="checkbox"
+                    id="textEffect"
+                >
+
+                <span>📝 Text</span>
+
+            </label>
+
+        </div>
+
+
+
+        <!-- TEXT -->
+
+        <div id="textSettings" class="text-settings" hidden>
+
+            <label for="overlayText">
+                Text to display
+            </label>
+
+            <input
+                type="text"
+                id="overlayText"
+                placeholder="YOUR TEXT"
+                maxlength="35"
+            >
+
+            <label for="textPosition">
+                Position
+            </label>
+
+            <select id="textPosition">
+
+                <option value="top">
+                    Top
+                </option>
+
+                <option value="center">
+                    Center
+                </option>
+
+                <option value="bottom">
+                    Bottom
+                </option>
+
+            </select>
+
+        </div>
+
+
+
+        <!-- PREVIEW -->
+
+        <div class="editor-buttons">
+
+            <button
+                id="previewEdit"
+                class="primary-button"
+            >
+                ▶ Preview Edit
+            </button>
+
+            <button
+                id="stopEdit"
+                class="secondary-button"
+            >
+                ⏹ Stop
+            </button>
+
+        </div>
+
+
+        <div
+            id="editorStatus"
+            class="editor-status"
+        >
+            Ready to edit your clip.
+        </div>
+
+    </section>
+
+
+
+    <!-- TIMELINE -->
+
+    <section
+        id="timelineSection"
+        class="timeline-box"
         hidden
     >
 
-    <p
-        id="fileName"
-        class="file-name"
-    >
-        No video selected.
-    </p>
+        <div class="section-header">
 
-    <video
-        id="videoPreview"
-        controls
-        playsinline
-        hidden
-    ></video>
+            <h2>📍 Edit Timeline</h2>
 
+            <span id="currentTime">
+                00:00
+            </span>
 
-    <div
-        id="videoInfo"
-        class="video-info"
-        hidden
-    >
-
-        <div>
-            <strong>Duration</strong>
-            <span id="duration">-</span>
         </div>
 
-        <div>
-            <strong>Resolution</strong>
-            <span id="resolution">-</span>
+
+        <div id="timeline" class="timeline">
+
+            <div
+                id="progress"
+                class="progress"
+            ></div>
+
+            <div
+                id="playhead"
+                class="playhead"
+            ></div>
+
+            <div
+                id="markers"
+                class="markers"
+            ></div>
+
         </div>
 
-        <div>
-            <strong>File size</strong>
-            <span id="fileSize">-</span>
+
+        <div class="timeline-times">
+
+            <span>00:00</span>
+
+            <span id="timelineEnd">
+                00:00
+            </span>
+
         </div>
 
-    </div>
 
-</section>
+        <p class="timeline-help">
+            Tap the timeline to move through your clip.
+            Add markers at important moments.
+        </p>
 
 
+        <div class="marker-controls">
 
-<!-- EDITOR -->
+            <select id="markerType">
 
-<section
-    id="editorSection"
-    class="editor-box"
-    hidden
->
+                <option value="kill">
+                    💥 Kill
+                </option>
 
-    <div class="section-header">
+                <option value="text">
+                    📝 Text
+                </option>
 
-        <div>
-            <h2>🎬 Mini Video Editor</h2>
+                <option value="transition">
+                    🔄 Transition
+                </option>
 
-            <p class="subtitle">
-                Select the part of your clip you want to edit.
+                <option value="slowmo">
+                    🐌 Slow Motion
+                </option>
+
+                <option value="important">
+                    ⭐ Important
+                </option>
+
+            </select>
+
+
+            <button id="addMarker">
+                + Add Marker
+            </button>
+
+        </div>
+
+
+        <div
+            id="markerList"
+            class="marker-list"
+        >
+            <p class="empty">
+                No markers yet.
             </p>
         </div>
 
-        <span
-            id="selectedDuration"
-            class="duration-badge"
-        >
-            00:00
-        </span>
-
-    </div>
+    </section>
 
 
-    <!-- RANGE -->
 
-    <div class="range-editor">
+    <!-- AI PLANNER -->
 
-        <div class="range-labels">
+    <section class="editor-box">
 
-            <span>
-                Start
-                <strong id="startTime">
-                    00:00
-                </strong>
-            </span>
+        <h2>🤖 AI Edit Planner</h2>
 
-            <span>
-                End
-                <strong id="endTime">
-                    00:00
-                </strong>
-            </span>
+        <label for="clip">
+            Describe your clip
+        </label>
+
+        <textarea
+            id="clip"
+            placeholder="Example: I have 4 quick sniper kills and a final headshot..."
+        ></textarea>
+
+
+        <div class="grid">
+
+            <div>
+
+                <label for="game">
+                    🎮 Game
+                </label>
+
+                <select id="game">
+
+                    <option value="rivals">
+                        RIVALS
+                    </option>
+
+                    <option value="fortnite">
+                        Fortnite
+                    </option>
+
+                    <option value="valorant">
+                        Valorant
+                    </option>
+
+                    <option value="other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label for="music">
+                    🎵 Music style
+                </label>
+
+                <select id="music">
+
+                    <option value="phonk">
+                        Phonk
+                    </option>
+
+                    <option value="trap">
+                        Trap
+                    </option>
+
+                    <option value="drill">
+                        Drill
+                    </option>
+
+                    <option value="electronic">
+                        Electronic
+                    </option>
+
+                    <option value="none">
+                        No music
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label for="intensity">
+                    ⚡ Edit intensity
+                </label>
+
+                <select id="intensity">
+
+                    <option value="chill">
+                        Chill
+                    </option>
+
+                    <option value="fast">
+                        Fast
+                    </option>
+
+                    <option value="insane">
+                        Insane
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label for="format">
+                    📱 Format
+                </label>
+
+                <select id="format">
+
+                    <option value="short">
+                        YouTube Short
+                    </option>
+
+                    <option value="tiktok">
+                        TikTok
+                    </option>
+
+                    <option value="youtube">
+                        YouTube Video
+                    </option>
+
+                </select>
+
+            </div>
 
         </div>
 
 
-        <div class="range-track">
-
-            <div
-                id="rangeSelected"
-                class="range-selected"
-            ></div>
-
-
-            <input
-                type="range"
-                id="startRange"
-                min="0"
-                max="100"
-                value="0"
-                step="0.01"
-            >
-
-
-            <input
-                type="range"
-                id="endRange"
-                min="0"
-                max="100"
-                value="100"
-                step="0.01"
-            >
-
-        </div>
-
-    </div>
-
-
-    <!-- QUICK ACTIONS -->
-
-    <div class="quick-actions">
-
-        <button id="setStart">
-            ⏮ Set Start Here
-        </button>
-
-        <button id="setEnd">
-            Set End Here ⏭
-        </button>
-
-        <button id="resetCut">
-            ↩ Reset
-        </button>
-
-    </div>
-
-
-    <!-- STYLE -->
-
-    <h3 class="options-title">
-        🎨 Edit Style
-    </h3>
-
-
-    <div class="style-grid">
-
         <button
-            class="style-button active"
-            data-style="clean"
-        >
-            🎮 Clean
-        </button>
-
-        <button
-            class="style-button"
-            data-style="fast"
-        >
-            ⚡ Fast
-        </button>
-
-        <button
-            class="style-button"
-            data-style="phonk"
-        >
-            🔥 Phonk
-        </button>
-
-        <button
-            class="style-button"
-            data-style="aggressive"
-        >
-            💀 Aggressive
-        </button>
-
-    </div>
-
-
-    <!-- EFFECTS -->
-
-    <h3 class="options-title">
-        ✨ Effects
-    </h3>
-
-
-    <div class="options">
-
-        <label class="check">
-
-            <input
-                type="checkbox"
-                id="zoomEffect"
-            >
-
-            <span>
-                🔍 Zoom
-            </span>
-
-        </label>
-
-
-        <label class="check">
-
-            <input
-                type="checkbox"
-                id="shakeEffect"
-            >
-
-            <span>
-                📳 Shake
-            </span>
-
-        </label>
-
-
-        <label class="check">
-
-            <input
-                type="checkbox"
-                id="slowEffect"
-            >
-
-            <span>
-                🐌 Slow Motion
-            </span>
-
-        </label>
-
-
-        <label class="check">
-
-            <input
-                type="checkbox"
-                id="textEffect"
-            >
-
-            <span>
-                📝 Text
-            </span>
-
-        </label>
-
-    </div>
-
-
-    <div class="editor-buttons">
-
-        <button
-            id="previewEdit"
+            id="generate"
             class="primary-button"
         >
-            ▶ Preview Edit
+            ✨ Generate Edit Plan
         </button>
 
+    </section>
 
-        <button
-            id="stopEdit"
-            class="secondary-button"
-        >
-            ⏹ Stop
-        </button>
 
-    </div>
 
+    <!-- RESULT -->
 
-    <div
-        id="editorStatus"
-        class="editor-status"
-    >
-        Ready to edit your clip.
-    </div>
+    <section class="result-box">
 
-</section>
+        <div class="result-header">
 
+            <h2>📋 Edit Plan</h2>
 
-
-<!-- TIMELINE -->
-
-<section
-    id="timelineSection"
-    class="timeline-box"
-    hidden
->
-
-    <div class="section-header">
-
-        <h2>
-            📍 Edit Timeline
-        </h2>
-
-        <span id="currentTime">
-            00:00
-        </span>
-
-    </div>
-
-
-    <div
-        id="timeline"
-        class="timeline"
-    >
-
-        <div
-            id="progress"
-            class="progress"
-        ></div>
-
-        <div
-            id="playhead"
-            class="playhead"
-        ></div>
-
-        <div
-            id="markers"
-            class="markers"
-        ></div>
-
-    </div>
-
-
-    <div class="timeline-times">
-
-        <span>00:00</span>
-
-        <span id="timelineEnd">
-            00:00
-        </span>
-
-    </div>
-
-
-    <p class="timeline-help">
-
-        Tap the timeline to move through your clip.
-        Add markers at important moments.
-
-    </p>
-
-
-    <div class="marker-controls">
-
-        <select id="markerType">
-
-            <option value="kill">
-                💥 Kill
-            </option>
-
-            <option value="text">
-                📝 Text
-            </option>
-
-            <option value="transition">
-                🔄 Transition
-            </option>
-
-            <option value="slowmo">
-                🐌 Slow Motion
-            </option>
-
-            <option value="important">
-                ⭐ Important
-            </option>
-
-        </select>
-
-
-        <button id="addMarker">
-            + Add Marker
-        </button>
-
-    </div>
-
-
-    <div
-        id="markerList"
-        class="marker-list"
-    >
-
-        <p class="empty">
-            No markers yet.
-        </p>
-
-    </div>
-
-</section>
-
-
-
-<!-- OLD AI PLANNER -->
-
-<section class="editor-box">
-
-    <h2>
-        🤖 AI Edit Planner
-    </h2>
-
-
-    <label for="clip">
-        Describe your clip
-    </label>
-
-
-    <textarea
-        id="clip"
-        placeholder="Example: I have 4 quick sniper kills and a final headshot..."
-    ></textarea>
-
-
-    <div class="grid">
-
-        <div>
-
-            <label for="game">
-                🎮 Game
-            </label>
-
-            <select id="game">
-
-                <option value="rivals">
-                    RIVALS
-                </option>
-
-                <option value="fortnite">
-                    Fortnite
-                </option>
-
-                <option value="valorant">
-                    Valorant
-                </option>
-
-                <option value="other">
-                    Other
-                </option>
-
-            </select>
+            <button id="copy">
+                Copy
+            </button>
 
         </div>
 
 
-        <div>
+        <div id="montage">
 
-            <label for="music">
-                🎵 Music style
-            </label>
-
-            <select id="music">
-
-                <option value="phonk">
-                    Phonk
-                </option>
-
-                <option value="trap">
-                    Trap
-                </option>
-
-                <option value="drill">
-                    Drill
-                </option>
-
-                <option value="electronic">
-                    Electronic
-                </option>
-
-                <option value="none">
-                    No music
-                </option>
-
-            </select>
+            <p class="empty">
+                Your edit plan will appear here.
+            </p>
 
         </div>
 
-
-        <div>
-
-            <label for="intensity">
-                ⚡ Edit intensity
-            </label>
-
-            <select id="intensity">
-
-                <option value="chill">
-                    Chill
-                </option>
-
-                <option value="fast">
-                    Fast
-                </option>
-
-                <option value="insane">
-                    Insane
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <div>
-
-            <label for="format">
-                📱 Format
-            </label>
-
-            <select id="format">
-
-                <option value="short">
-                    YouTube Short
-                </option>
-
-                <option value="tiktok">
-                    TikTok
-                </option>
-
-                <option value="youtube">
-                    YouTube Video
-                </option>
-
-            </select>
-
-        </div>
-
-    </div>
-
-
-    <button
-        id="generate"
-        class="primary-button"
-    >
-        ✨ Generate Edit Plan
-    </button>
-
-</section>
-
-
-
-<!-- RESULT -->
-
-<section class="result-box">
-
-    <div class="result-header">
-
-        <h2>
-            📋 Edit Plan
-        </h2>
-
-        <button id="copy">
-            Copy
-        </button>
-
-    </div>
-
-
-    <div id="montage">
-
-        <p class="empty">
-            Your edit plan will appear here.
-        </p>
-
-    </div>
-
-</section>
-
+    </section>
 
 </main>
 
 
 <footer>
-
-    Rivals Edit AI • V6.0
-
+    Rivals Edit AI • V6.1
 </footer>
 
 
@@ -639,4 +632,4 @@
 
 </body>
 
-</html>
+    </html>
