@@ -794,7 +794,7 @@ function startEffects() {
 
 
         /* TIMELINE EFFECTS */
-
+videoPreview.playbackRate = 1;
        markers.forEach(
     function (marker) {
 
