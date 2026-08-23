@@ -1,124 +1,235 @@
-const generateButton =
-    document.getElementById("generate");
-
-const montage =
-    document.getElementById("montage");
-
-const copyButton =
-    document.getElementById("copy");
+/* =========================================
+   RIVAL EDIT AI V7
+   FREE BROWSER AUTO EDITOR
+========================================= */
 
 
 /* VIDEO */
 
 const videoInput =
-    document.getElementById("videoInput");
+    document.getElementById(
+        "videoInput"
+    );
 
 const videoPreview =
-    document.getElementById("videoPreview");
+    document.getElementById(
+        "videoPreview"
+    );
 
 const fileName =
-    document.getElementById("fileName");
+    document.getElementById(
+        "fileName"
+    );
 
 const videoInfo =
-    document.getElementById("videoInfo");
+    document.getElementById(
+        "videoInfo"
+    );
 
 const durationElement =
-    document.getElementById("duration");
+    document.getElementById(
+        "duration"
+    );
 
 const resolution =
-    document.getElementById("resolution");
+    document.getElementById(
+        "resolution"
+    );
 
 const fileSize =
-    document.getElementById("fileSize");
+    document.getElementById(
+        "fileSize"
+    );
+
+const videoStatus =
+    document.getElementById(
+        "videoStatus"
+    );
+
+
+/* REQUEST */
+
+const editRequest =
+    document.getElementById(
+        "editRequest"
+    );
+
+const generateEdit =
+    document.getElementById(
+        "generateEdit"
+    );
+
+const generationStatus =
+    document.getElementById(
+        "generationStatus"
+    );
+
+
+/* SETTINGS */
+
+const game =
+    document.getElementById(
+        "game"
+    );
+
+const format =
+    document.getElementById(
+        "format"
+    );
+
+const intensity =
+    document.getElementById(
+        "intensity"
+    );
+
+const music =
+    document.getElementById(
+        "music"
+    );
 
 
 /* TIMELINE */
 
-const timelineSection =
-    document.getElementById("timelineSection");
+const timelineCard =
+    document.getElementById(
+        "timelineCard"
+    );
 
 const timeline =
-    document.getElementById("timeline");
+    document.getElementById(
+        "timeline"
+    );
 
-const progress =
-    document.getElementById("progress");
+const timelineProgress =
+    document.getElementById(
+        "timelineProgress"
+    );
 
-const playhead =
-    document.getElementById("playhead");
+const timelinePlayhead =
+    document.getElementById(
+        "timelinePlayhead"
+    );
 
-const currentTimeElement =
-    document.getElementById("currentTime");
+const timelineMarkers =
+    document.getElementById(
+        "timelineMarkers"
+    );
 
 const timelineEnd =
-    document.getElementById("timelineEnd");
+    document.getElementById(
+        "timelineEnd"
+    );
 
-const markerType =
-    document.getElementById("markerType");
+const timelineDuration =
+    document.getElementById(
+        "timelineDuration"
+    );
 
-const addMarkerButton =
-    document.getElementById("addMarker");
-
-const markersContainer =
-    document.getElementById("markers");
-
-const markerList =
-    document.getElementById("markerList");
+const editList =
+    document.getElementById(
+        "editList"
+    );
 
 
-/* EFFECTS */
+/* PREVIEW */
 
-const zoomEffect =
-    document.getElementById("zoomEffect");
+const previewCard =
+    document.getElementById(
+        "previewCard"
+    );
 
-const shakeEffect =
-    document.getElementById("shakeEffect");
+const previewButton =
+    document.getElementById(
+        "previewButton"
+    );
 
-const slowEffect =
-    document.getElementById("slowEffect");
+const stopButton =
+    document.getElementById(
+        "stopButton"
+    );
 
-const textEffect =
-    document.getElementById("textEffect");
+const previewStatus =
+    document.getElementById(
+        "previewStatus"
+    );
 
-const textSettings =
-    document.getElementById("textSettings");
 
-const overlayText =
-    document.getElementById("overlayText");
+/* EXPORT */
 
-const textPosition =
-    document.getElementById("textPosition");
+const exportCard =
+    document.getElementById(
+        "exportCard"
+    );
 
-const editTextOverlay =
-    document.getElementById("editTextOverlay");
+const exportButton =
+    document.getElementById(
+        "exportButton"
+    );
 
-const previewEdit =
-    document.getElementById("previewEdit");
+const exportProgress =
+    document.getElementById(
+        "exportProgress"
+    );
 
-const stopEdit =
-    document.getElementById("stopEdit");
+const renderProgress =
+    document.getElementById(
+        "renderProgress"
+    );
 
-const editorStatus =
-    document.getElementById("editorStatus");
+const renderText =
+    document.getElementById(
+        "renderText"
+    );
+
+const downloadButton =
+    document.getElementById(
+        "downloadButton"
+    );
+
+
+/* PLAN */
+
+const planCard =
+    document.getElementById(
+        "planCard"
+    );
+
+const generatedPlan =
+    document.getElementById(
+        "generatedPlan"
+    );
+
+
+/* TEXT */
+
+const textOverlay =
+    document.getElementById(
+        "textOverlay"
+    );
 
 
 /* STATE */
 
-let videoDuration = 0;
+let videoFile = null;
 
-let selectedTime = 0;
+let videoURL = null;
 
-let markers = [];
+let duration = 0;
 
-let timelineDragging = false;
+let editTimeline = [];
 
-let editingPreview = false;
+let currentTime = 0;
 
-let animationFrame = null;
+let previewRunning = false;
+
+let previewAnimation = null;
+
+let outputURL = null;
 
 
-/* =========================
+/* =========================================
    VIDEO UPLOAD
-========================= */
+========================================= */
 
 videoInput.addEventListener(
     "change",
@@ -132,12 +243,22 @@ videoInput.addEventListener(
         }
 
 
-        fileName.textContent =
-            file.name;
+        videoFile = file;
 
 
-        const videoURL =
-            URL.createObjectURL(file);
+        if (videoURL) {
+
+            URL.revokeObjectURL(
+                videoURL
+            );
+
+        }
+
+
+        videoURL =
+            URL.createObjectURL(
+                file
+            );
 
 
         videoPreview.src =
@@ -148,12 +269,8 @@ videoInput.addEventListener(
             false;
 
 
-        videoInfo.hidden =
-            false;
-
-
-        timelineSection.hidden =
-            false;
+        fileName.textContent =
+            file.name;
 
 
         fileSize.textContent =
@@ -162,23 +279,25 @@ videoInput.addEventListener(
             );
 
 
+        videoInfo.hidden =
+            false;
+
+
+        videoStatus.textContent =
+            "Video ready";
+
+
         videoPreview.addEventListener(
             "loadedmetadata",
             function () {
 
-                videoDuration =
+                duration =
                     videoPreview.duration;
 
 
                 durationElement.textContent =
                     formatTime(
-                        videoDuration
-                    );
-
-
-                timelineEnd.textContent =
-                    formatTime(
-                        videoDuration
+                        duration
                     );
 
 
@@ -190,15 +309,16 @@ videoInput.addEventListener(
                     videoPreview.videoHeight;
 
 
-                markers = [];
+                timelineEnd.textContent =
+                    formatTime(
+                        duration
+                    );
 
-                selectedTime = 0;
 
-                updateTimeline();
-
-                renderMarkers();
-
-                resetEffects();
+                timelineDuration.textContent =
+                    formatTime(
+                        duration
+                    );
 
             },
             {
@@ -210,381 +330,599 @@ videoInput.addEventListener(
 );
 
 
-/* =========================
-   VIDEO TIME
-========================= */
-
-videoPreview.addEventListener(
-    "timeupdate",
-    function () {
-
-        if (!videoDuration) {
-            return;
-        }
-
-
-        selectedTime =
-            videoPreview.currentTime;
-
-
-        updateTimeline();
-
-    }
-);
-
-
-/* =========================
-   TIMELINE
-========================= */
-
-function updateTimeline() {
-
-    if (!videoDuration) {
-        return;
-    }
-
-
-    const percentage =
-        (
-            selectedTime /
-            videoDuration
-        ) * 100;
-
-
-    progress.style.width =
-        percentage + "%";
-
-
-    playhead.style.left =
-        percentage + "%";
-
-
-    currentTimeElement.textContent =
-        formatTime(
-            selectedTime
-        );
-
-}
-
-
-/* =========================
-   TIMELINE POINTER
-========================= */
-
-timeline.addEventListener(
-    "pointerdown",
-    function (event) {
-
-        event.preventDefault();
-
-        timelineDragging = true;
-
-        timeline.setPointerCapture(
-            event.pointerId
-        );
-
-        moveTimeline(event);
-
-    }
-);
-
-
-timeline.addEventListener(
-    "pointermove",
-    function (event) {
-
-        if (!timelineDragging) {
-            return;
-        }
-
-        event.preventDefault();
-
-        moveTimeline(event);
-
-    }
-);
-
-
-timeline.addEventListener(
-    "pointerup",
-    function (event) {
-
-        timelineDragging = false;
-
-        try {
-
-            timeline.releasePointerCapture(
-                event.pointerId
-            );
-
-        } catch (error) {}
-
-    }
-);
-
-
-timeline.addEventListener(
-    "pointercancel",
-    function () {
-
-        timelineDragging = false;
-
-    }
-);
-
-
-/* =========================
-   MOVE TIMELINE
-========================= */
-
-function moveTimeline(event) {
-
-    if (!videoDuration) {
-        return;
-    }
-
-
-    const rect =
-        timeline.getBoundingClientRect();
-
-
-    let position =
-        event.clientX -
-        rect.left;
-
-
-    position =
-        Math.max(
-            0,
-            Math.min(
-                rect.width,
-                position
-            )
-        );
-
-
-    selectedTime =
-        (
-            position /
-            rect.width
-        ) *
-        videoDuration;
-
-
-    videoPreview.currentTime =
-        selectedTime;
-
-
-    updateTimeline();
-
-}
-
-
-/* =========================
-   ADD MARKER
-========================= */
-
-addMarkerButton.addEventListener(
-    "click",
-    function () {
-
-        if (!videoDuration) {
-
-            editorStatus.textContent =
-                "Choose a video first.";
-
-            return;
-        }
-
-
-        const type =
-            markerType.value;
-
-
-        markers.push({
-
-            time:
-                selectedTime,
-
-            type:
-                type,
-
-            text:
-                type === "text"
-                    ? (
-                        overlayText.value.trim()
-                        ||
-                        "TEXT"
-                    )
-                    : ""
-
-        });
-
-
-        markers.sort(
-            function (a, b) {
-
-                return a.time - b.time;
-
-            }
-        );
-
-
-        renderMarkers();
-
-
-        editorStatus.textContent =
-            capitalize(type) +
-            " added at " +
-            formatTime(selectedTime);
-
-    }
-);
-
-
-/* =========================
-   RENDER MARKERS
-========================= */
-
-function renderMarkers() {
-
-    markersContainer.innerHTML =
-        "";
-
-    markerList.innerHTML =
-        "";
-
-
-    if (markers.length === 0) {
-
-        markerList.innerHTML = `
-
-            <p class="empty">
-                No effects yet.
-            </p>
-
-        `;
-
-        return;
-    }
-
-
-    markers.forEach(
-        function (marker, index) {
-
-            const percentage =
-                (
-                    marker.time /
-                    videoDuration
-                ) * 100;
-
-
-            const markerElement =
-                document.createElement(
-                    "div"
-                );
-
-
-            markerElement.className =
-                "marker " +
-                marker.type;
-
-
-            markerElement.style.left =
-                percentage + "%";
-
-
-            markerElement.title =
-                capitalize(marker.type)
-                +
-                " — "
-                +
-                formatTime(marker.time);
-
-
-            markerElement.addEventListener(
-                "pointerdown",
-                function (event) {
-
-                    event.stopPropagation();
-
-                    selectedTime =
-                        marker.time;
-
-                    videoPreview.currentTime =
-                        marker.time;
-
-                    updateTimeline();
+/* =========================================
+   QUICK OPTIONS
+========================================= */
+
+document
+    .querySelectorAll(
+        ".quick-option"
+    )
+    .forEach(
+        function (button) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    editRequest.value =
+                        button.dataset.text;
 
                 }
             );
 
-
-            markersContainer.appendChild(
-                markerElement
-            );
+        }
+    );
 
 
-            const item =
+/* =========================================
+   GENERATE
+========================================= */
+
+generateEdit.addEventListener(
+    "click",
+    function () {
+
+        if (!videoFile) {
+
+            generationStatus.textContent =
+                "⚠️ Choose a video first.";
+
+            return;
+
+        }
+
+
+        if (!duration) {
+
+            generationStatus.textContent =
+                "⚠️ The video is still loading.";
+
+            return;
+
+        }
+
+
+        generationStatus.textContent =
+            "🤖 Building your automatic edit...";
+
+
+        setTimeout(
+            function () {
+
+                buildAutomaticEdit();
+
+            },
+            300
+        );
+
+    }
+);
+
+
+/* =========================================
+   BUILD AUTOMATIC EDIT
+========================================= */
+
+function buildAutomaticEdit() {
+
+    const request =
+        editRequest.value
+            .trim()
+            .toLowerCase();
+
+
+    editTimeline = [];
+
+
+    const strong =
+        intensity.value === "high";
+
+
+    const medium =
+        intensity.value === "medium";
+
+
+    /*
+        Detect requested effects.
+    */
+
+    const wantsZoom =
+        request.includes("zoom")
+        ||
+        request.includes("punch")
+        ||
+        request.includes("impact")
+        ||
+        strong;
+
+
+    const wantsShake =
+        request.includes("shake")
+        ||
+        request.includes("camera shake")
+        ||
+        strong;
+
+
+    const wantsSlowmo =
+        request.includes("slow")
+        ||
+        request.includes("slow-mo")
+        ||
+        request.includes("slow motion")
+        ||
+        request.includes("cinematic");
+
+
+    const wantsText =
+        request.includes("text")
+        ||
+        request.includes("caption")
+        ||
+        request.includes("title");
+
+
+    const wantsCut =
+        request.includes("cut")
+        ||
+        request.includes("fast")
+        ||
+        request.includes("aggressive");
+
+
+    const wantsTransition =
+        request.includes("transition")
+        ||
+        request.includes("smooth");
+
+
+    /*
+        Determine text.
+    */
+
+    let customText =
+        extractQuotedText(
+            editRequest.value
+        );
+
+
+    if (!customText) {
+
+        if (
+            request.includes(
+                "insane"
+            )
+        ) {
+
+            customText =
+                "INSANE";
+
+        } else if (
+            request.includes(
+                "headshot"
+            )
+        ) {
+
+            customText =
+                "HEADSHOT";
+
+        } else {
+
+            customText =
+                "RIVALS";
+
+        }
+
+    }
+
+
+    /*
+        Automatic important moments.
+
+        We distribute moments across
+        the clip because this V7 does
+        not yet use computer vision.
+    */
+
+    const moments =
+        generateMoments(
+            duration,
+            strong
+        );
+
+
+    /*
+        Intro.
+    */
+
+    editTimeline.push({
+
+        time: 0,
+
+        type: "cut",
+
+        label:
+            "Start / Hook",
+
+        duration:
+            Math.min(
+                1.2,
+                duration
+            )
+
+    });
+
+
+    /*
+        Main effects.
+    */
+
+    moments.forEach(
+        function (time, index) {
+
+            if (wantsCut) {
+
+                editTimeline.push({
+
+                    time:
+                        Math.max(
+                            0,
+                            time - 0.4
+                        ),
+
+                    type:
+                        "cut",
+
+                    label:
+                        "Fast Cut",
+
+                    duration:
+                        0.4
+
+                });
+
+            }
+
+
+            if (wantsZoom) {
+
+                editTimeline.push({
+
+                    time:
+                        time,
+
+                    type:
+                        "zoom",
+
+                    label:
+                        "Strong Zoom",
+
+                    duration:
+                        strong
+                            ? 0.8
+                            : 0.6
+
+                });
+
+            }
+
+
+            if (wantsShake) {
+
+                editTimeline.push({
+
+                    time:
+                        time,
+
+                    type:
+                        "shake",
+
+                    label:
+                        "Impact Shake",
+
+                    duration:
+                        0.45
+
+                });
+
+            }
+
+
+            /*
+                Slow motion is placed
+                only around the final
+                important moment.
+            */
+
+            if (
+                wantsSlowmo
+                &&
+                index ===
+                moments.length - 1
+            ) {
+
+                editTimeline.push({
+
+                    time:
+                        time,
+
+                    type:
+                        "slowmo",
+
+                    label:
+                        "Final Slow Motion",
+
+                    duration:
+                        1.5
+
+                });
+
+            }
+
+
+            if (
+                wantsText
+                &&
+                index === 0
+            ) {
+
+                editTimeline.push({
+
+                    time:
+                        time,
+
+                    type:
+                        "text",
+
+                    label:
+                        customText,
+
+                    duration:
+                        1.2,
+
+                    text:
+                        customText
+
+                });
+
+            }
+
+        }
+    );
+
+
+    /*
+        Transition near the middle.
+    */
+
+    if (wantsTransition) {
+
+        editTimeline.push({
+
+            time:
+                duration * 0.5,
+
+            type:
+                "transition",
+
+            label:
+                "Smooth Transition",
+
+            duration:
+                0.5
+
+        });
+
+    }
+
+
+    /*
+        Final moment.
+    */
+
+    editTimeline.push({
+
+        time:
+            Math.max(
+                0,
+                duration - 1
+            ),
+
+        type:
+            "cut",
+
+        label:
+            "Final Cut",
+
+        duration:
+            1
+
+    });
+
+
+    editTimeline.sort(
+        function (a, b) {
+
+            return a.time - b.time;
+
+        }
+    );
+
+
+    renderAutomaticTimeline();
+
+
+    renderPlan();
+
+
+    timelineCard.hidden =
+        false;
+
+    previewCard.hidden =
+        false;
+
+    exportCard.hidden =
+        false;
+
+    planCard.hidden =
+        false;
+
+
+    generationStatus.textContent =
+        "✅ Automatic edit generated.";
+
+}
+
+
+/* =========================================
+   GENERATE MOMENTS
+========================================= */
+
+function generateMoments(
+    length,
+    strong
+) {
+
+    if (length <= 3) {
+
+        return [
+            length * 0.5
+        ];
+
+    }
+
+
+    if (length <= 10) {
+
+        return [
+            length * 0.35,
+            length * 0.7
+        ];
+
+    }
+
+
+    const result = [];
+
+
+    const count =
+        strong
+            ? 5
+            : 4;
+
+
+    for (
+        let i = 1;
+        i <= count;
+        i++
+    ) {
+
+        result.push(
+            (
+                length *
+                i /
+                (count + 1)
+            )
+        );
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =========================================
+   RENDER TIMELINE
+========================================= */
+
+function renderAutomaticTimeline() {
+
+    timelineMarkers.innerHTML =
+        "";
+
+    editList.innerHTML =
+        "";
+
+
+    editTimeline.forEach(
+        function (item) {
+
+            const percentage =
+                (
+                    item.time /
+                    duration
+                ) * 100;
+
+
+            const marker =
                 document.createElement(
                     "div"
                 );
 
 
-            item.className =
-                "marker-item";
+            marker.className =
+                "auto-marker " +
+                item.type;
 
 
-            const label =
-                marker.type === "text"
-                    ? marker.text
-                    : capitalize(marker.type);
+            marker.style.left =
+                percentage + "%";
 
 
-            item.innerHTML = `
+            marker.title =
+                item.label
+                +
+                " — "
+                +
+                formatTime(
+                    item.time
+                );
+
+
+            timelineMarkers.appendChild(
+                marker
+            );
+
+
+            const listItem =
+                document.createElement(
+                    "div"
+                );
+
+
+            listItem.className =
+                "edit-item";
+
+
+            listItem.innerHTML = `
+
+                <div>
+
+                    <strong>
+                        ${getEmoji(item.type)}
+                        ${item.label}
+                    </strong>
+
+                    <br>
+
+                    <span>
+                        ${formatTime(item.time)}
+                    </span>
+
+                </div>
 
                 <span>
-
-                    ${getMarkerEmoji(
-                        marker.type
-                    )}
-
-                    ${label}
-
-                    —
-
-                    ${formatTime(
-                        marker.time
-                    )}
-
+                    ${item.duration.toFixed(1)}s
                 </span>
-
-                <button>
-                    Remove
-                </button>
 
             `;
 
 
-            item
-                .querySelector("button")
-                .addEventListener(
-                    "click",
-                    function () {
-
-                        markers.splice(
-                            index,
-                            1
-                        );
-
-                        renderMarkers();
-
-                    }
-                );
-
-
-            markerList.appendChild(
-                item
+            editList.appendChild(
+                listItem
             );
 
         }
@@ -593,120 +931,405 @@ function renderMarkers() {
 }
 
 
-/* =========================
-   EFFECT SETTINGS
-========================= */
+/* =========================================
+   TIMELINE CLICK
+========================================= */
 
-textEffect.addEventListener(
-    "change",
+timeline.addEventListener(
+    "pointerdown",
+    function (event) {
+
+        if (!duration) {
+            return;
+        }
+
+
+        const rect =
+            timeline.getBoundingClientRect();
+
+
+        const position =
+            Math.max(
+                0,
+                Math.min(
+                    rect.width,
+                    event.clientX -
+                    rect.left
+                )
+            );
+
+
+        currentTime =
+            (
+                position /
+                rect.width
+            ) *
+            duration;
+
+
+        videoPreview.currentTime =
+            currentTime;
+
+
+        updatePlayhead();
+
+    }
+);
+
+
+/* =========================================
+   VIDEO TIME
+========================================= */
+
+videoPreview.addEventListener(
+    "timeupdate",
     function () {
 
-        textSettings.hidden =
-            !textEffect.checked;
+        if (!duration) {
+            return;
+        }
 
-        updateText();
+
+        currentTime =
+            videoPreview.currentTime;
+
+
+        updatePlayhead();
 
     }
 );
 
 
-overlayText.addEventListener(
-    "input",
-    updateText
-);
+/* =========================================
+   PLAYHEAD
+========================================= */
 
+function updatePlayhead() {
 
-textPosition.addEventListener(
-    "change",
-    updateText
-);
-
-
-function updateText() {
-
-    if (!textEffect.checked) {
-
-        editTextOverlay.hidden =
-            true;
-
+    if (!duration) {
         return;
-
     }
 
 
-    const text =
-        overlayText.value.trim();
+    const percentage =
+        (
+            currentTime /
+            duration
+        ) * 100;
 
 
-    if (!text) {
-
-        editTextOverlay.hidden =
-            true;
-
-        return;
-
-    }
+    timelinePlayhead.style.left =
+        percentage + "%";
 
 
-    editTextOverlay.hidden =
-        false;
+    timelineProgress.style.width =
+        percentage + "%";
 
 
-    editTextOverlay.textContent =
-        text;
-
-
-    editTextOverlay.className =
-        "edit-text-overlay " +
-        textPosition.value;
+    applyPreviewEffects(
+        currentTime
+    );
 
 }
 
 
-/* =========================
+/* =========================================
    PREVIEW
-========================= */
+========================================= */
 
-previewEdit.addEventListener(
+previewButton.addEventListener(
     "click",
     function () {
 
-        if (!videoDuration) {
-
-            editorStatus.textContent =
-                "Choose a video first.";
-
+        if (!duration) {
             return;
-
         }
 
 
-        editingPreview = true;
+        stopPreview();
+
+
+        previewRunning =
+            true;
 
 
         videoPreview.currentTime =
             0;
 
 
-
         videoPreview.play();
 
 
-        startEffects();
+        previewStatus.textContent =
+            "▶ Playing automatic edit...";
 
 
-        editorStatus.textContent =
-            "▶ Previewing your edit...";
+        previewAnimation =
+            requestAnimationFrame(
+                previewLoop
+            );
 
     }
 );
 
 
-/* =========================
-   STOP
-========================= */
+/* =========================================
+   PREVIEW LOOP
+========================================= */
 
-stopEdit.addEventListener(
+function previewLoop() {
+
+    if (!previewRunning) {
+        return;
+    }
+
+
+    const time =
+        videoPreview.currentTime;
+
+
+    applyPreviewEffects(
+        time
+    );
+
+
+    if (
+        time >=
+        duration - 0.05
+    ) {
+
+        stopPreview();
+
+        return;
+
+    }
+
+
+    previewAnimation =
+        requestAnimationFrame(
+            previewLoop
+        );
+
+}
+
+
+/* =========================================
+   EFFECT ENGINE
+========================================= */
+
+function applyPreviewEffects(
+    time
+) {
+
+    let scale = 1;
+
+    let x = 0;
+
+    let y = 0;
+
+    let rotation = 0;
+
+
+    let playback =
+        1;
+
+
+    let text =
+        "";
+
+
+    editTimeline.forEach(
+        function (item) {
+
+            const distance =
+                Math.abs(
+                    time -
+                    item.time
+                );
+
+
+            if (
+                item.type ===
+                "zoom"
+                &&
+                distance <=
+                item.duration / 2
+            ) {
+
+                const strength =
+                    1 -
+                    (
+                        distance /
+                        (
+                            item.duration /
+                            2
+                        )
+                    );
+
+
+                /*
+                    Stronger zoom:
+                    up to 1.45x.
+                */
+
+                scale =
+                    Math.max(
+                        scale,
+                        1 +
+                        (
+                            0.45 *
+                            strength
+                        )
+                    );
+
+            }
+
+
+            if (
+                item.type ===
+                "shake"
+                &&
+                distance <=
+                item.duration / 2
+            ) {
+
+                const strength =
+                    1 -
+                    (
+                        distance /
+                        (
+                            item.duration /
+                            2
+                        )
+                    );
+
+
+                x =
+                    (
+                        Math.random()
+                        -
+                        0.5
+                    )
+                    *
+                    20
+                    *
+                    strength;
+
+
+                y =
+                    (
+                        Math.random()
+                        -
+                        0.5
+                    )
+                    *
+                    20
+                    *
+                    strength;
+
+
+                rotation =
+                    (
+                        Math.random()
+                        -
+                        0.5
+                    )
+                    *
+                    4
+                    *
+                    strength;
+
+            }
+
+
+            /*
+                Slow motion is ONLY
+                active around its marker.
+            */
+
+            if (
+                item.type ===
+                "slowmo"
+                &&
+                distance <=
+                item.duration / 2
+            ) {
+
+                playback =
+                    0.4;
+
+            }
+
+
+            if (
+                item.type ===
+                "text"
+                &&
+                time >=
+                item.time
+                &&
+                time <=
+                item.time +
+                item.duration
+            ) {
+
+                text =
+                    item.text;
+
+            }
+
+        }
+    );
+
+
+    videoPreview.playbackRate =
+        playback;
+
+
+    videoPreview.style.transform =
+        `
+        translate(
+            ${x}px,
+            ${y}px
+        )
+        scale(
+            ${scale}
+        )
+        rotate(
+            ${rotation}deg
+        )
+        `;
+
+
+    if (text) {
+
+        textOverlay.hidden =
+            false;
+
+        textOverlay.textContent =
+            text;
+
+        textOverlay.style.top =
+            "50%";
+
+        textOverlay.style.transform =
+            "translate(-50%, -50%)";
+
+    } else {
+
+        textOverlay.hidden =
+            true;
+
+    }
+
+}
+
+
+/* =========================================
+   STOP PREVIEW
+========================================= */
+
+stopButton.addEventListener(
     "click",
     stopPreview
 );
@@ -714,630 +1337,846 @@ stopEdit.addEventListener(
 
 function stopPreview() {
 
-    editingPreview = false;
+    previewRunning =
+        false;
+
+
+    if (previewAnimation) {
+
+        cancelAnimationFrame(
+            previewAnimation
+        );
+
+        previewAnimation =
+            null;
+
+    }
+
 
     videoPreview.pause();
 
-    stopEffects();
-
-    resetEffects();
-
-    editorStatus.textContent =
-        "Preview stopped.";
-
-}
-
-
-/* =========================
-   EFFECT ENGINE
-========================= */
-
-function startEffects() {
-
-    stopEffects();
-
-
-    function animate() {
-
-        if (!editingPreview) {
-            return;
-        }
-
-
-        let scale = 1;
-
-        let x = 0;
-
-        let y = 0;
-
-        let rotation = 0;
-
-
-        const time =
-            videoPreview.currentTime;
-
-
-        /* GLOBAL ZOOM */
-
-        if (zoomEffect.checked) {
-
-            scale = 1.12;
-
-        }
-
-
-        /* GLOBAL SHAKE */
-
-        if (shakeEffect.checked) {
-
-            x =
-                (
-                    Math.random() -
-                    0.5
-                ) * 7;
-
-
-            y =
-                (
-                    Math.random() -
-                    0.5
-                ) * 7;
-
-
-            rotation =
-                (
-                    Math.random() -
-                    0.5
-                ) * 1.5;
-
-        }
-
-
-        /* TIMELINE EFFECTS */
-videoPreview.playbackRate = 1;
-       markers.forEach(
-    function (marker) {
-
-        const distance =
-            Math.abs(
-                time -
-                marker.time
-            );
-
-
-        /*
-            ZOOM
-            Strong zoom only around
-            the selected marker.
-        */
-
-        if (
-            marker.type === "zoom" &&
-            distance <= 0.6
-        ) {
-
-            const intensity =
-                1 -
-                (
-                    distance / 0.6
-                );
-
-            scale =
-                1 +
-                (
-                    0.40 *
-                    intensity
-                );
-
-        }
-
-
-        /*
-            SHAKE
-        */
-
-        if (
-            marker.type === "shake" &&
-            distance <= 0.45
-        ) {
-
-            const intensity =
-                1 -
-                (
-                    distance / 0.45
-                );
-
-
-            x =
-                (
-                    Math.random() -
-                    0.5
-                ) *
-                18 *
-                intensity;
-
-
-            y =
-                (
-                    Math.random() -
-                    0.5
-                ) *
-                18 *
-                intensity;
-
-
-            rotation =
-                (
-                    Math.random() -
-                    0.5
-                ) *
-                4 *
-                intensity;
-
-        }
-
-
-        /*
-            SLOW MOTION
-            Only active around
-            the slowmo marker.
-        */
-
-        if (
-            marker.type === "slowmo" &&
-            distance <= 1.0
-        ) {
-
-            videoPreview.playbackRate =
-                0.4;
-
-        }
-
-    }
-);
-
-
-/* =========================
-   STOP EFFECTS
-========================= */
-
-function stopEffects() {
-
-    if (animationFrame) {
-
-        cancelAnimationFrame(
-            animationFrame
-        );
-
-        animationFrame = null;
-
-    }
-
-}
-
-
-/* =========================
-   RESET
-========================= */
-
-function resetEffects() {
-
-    videoPreview.style.transform =
-        "translate(0,0) scale(1) rotate(0deg)";
 
     videoPreview.playbackRate =
         1;
 
+
+    videoPreview.style.transform =
+        "translate(0,0) scale(1) rotate(0deg)";
+
+
+    textOverlay.hidden =
+        true;
+
+
+    previewStatus.textContent =
+        "Ready.";
+
 }
 
 
-/* =========================
-   GENERATOR
-========================= */
+/* =========================================
+   RENDER PLAN
+========================================= */
 
-generateButton.addEventListener(
+function renderPlan() {
+
+    generatedPlan.innerHTML =
+        "";
+
+
+    editTimeline.forEach(
+        function (item) {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "plan-item";
+
+
+            div.innerHTML = `
+
+                <strong>
+
+                    ${getEmoji(item.type)}
+
+                    ${item.label}
+
+                </strong>
+
+                <br>
+
+                <span>
+
+                    ${formatTime(item.time)}
+                    →
+                    ${formatTime(
+                        item.time +
+                        item.duration
+                    )}
+
+                </span>
+
+            `;
+
+
+            generatedPlan.appendChild(
+                div
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================
+   EXPORT
+========================================= */
+
+exportButton.addEventListener(
     "click",
-    generateEdit
+    renderEditedVideo
 );
 
 
-function generateEdit() {
+async function renderEditedVideo() {
 
-    const clip =
-        document
-        .getElementById("clip")
-        .value
-        .trim();
-
-
-    const game =
-        document
-        .getElementById("game")
-        .value;
-
-
-    const music =
-        document
-        .getElementById("music")
-        .value;
-
-
-    const intensity =
-        document
-        .getElementById("intensity")
-        .value;
-
-
-    const format =
-        document
-        .getElementById("format")
-        .value;
-
-
-    const text =
-        document
-        .getElementById("text")
-        .checked;
-
-
-    const kills =
-        document
-        .getElementById("kills")
-        .checked;
-
-
-    const transitions =
-        document
-        .getElementById("transitions")
-        .checked;
-
-
-    const camera =
-        document
-        .getElementById("camera")
-        .checked;
-
-
-    const slowmo =
-        document
-        .getElementById("slowmo")
-        .checked;
-
-
-    if (!clip) {
-
-        montage.innerHTML = `
-
-            <p class="empty">
-                ⚠️ Describe your clip first.
-            </p>
-
-        `;
+    if (!videoFile) {
 
         return;
 
     }
 
 
-    let steps = [];
+    exportProgress.hidden =
+        false;
+
+    downloadButton.hidden =
+        true;
 
 
-    steps.push(`
-        <div class="step">
-
-            <strong>
-                00:00 — HOOK
-            </strong>
-
-            <br>
-
-            <span>
-                Start with the strongest
-                part of the clip.
-            </span>
-
-        </div>
-    `);
+    renderText.textContent =
+        "Preparing video...";
 
 
-    markers.forEach(
-        function (marker) {
+    renderProgress.style.width =
+        "0%";
 
-            steps.push(`
 
-                <div class="step">
+    /*
+        Canvas renderer.
 
-                    <strong>
+        This creates a new video locally
+        without uploading the user's clip.
+    */
 
-                        ${formatTime(
-                            marker.time
-                        )}
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
 
-                        —
 
-                        ${getMarkerEmoji(
-                            marker.type
-                        )}
+    const ctx =
+        canvas.getContext(
+            "2d"
+        );
 
-                        ${capitalize(
-                            marker.type
-                        )}
 
-                    </strong>
+    setupCanvas(
+        canvas
+    );
 
-                    <br>
 
-                    <span>
+    const stream =
+        canvas.captureStream(
+            30
+        );
 
-                        ${getMarkerInstruction(
-                            marker.type
-                        )}
 
-                    </span>
+    /*
+        Try to preserve audio.
+    */
 
-                </div>
+    try {
 
-            `);
+        if (
+            typeof videoPreview
+                .captureStream ===
+            "function"
+        ) {
+
+            const sourceStream =
+                videoPreview
+                    .captureStream();
+
+
+            sourceStream
+                .getAudioTracks()
+                .forEach(
+                    function (track) {
+
+                        stream.addTrack(
+                            track
+                        );
+
+                    }
+                );
+
+        }
+
+    } catch (error) {
+
+        console.log(
+            "Audio capture unavailable."
+        );
+
+    }
+
+
+    const mimeType =
+        getSupportedMimeType();
+
+
+    if (!mimeType) {
+
+        renderText.textContent =
+            "Your browser does not support video export.";
+
+        return;
+
+    }
+
+
+    const recorder =
+        new MediaRecorder(
+            stream,
+            {
+                mimeType:
+                    mimeType,
+
+                videoBitsPerSecond:
+                    6000000
+            }
+        );
+
+
+    const chunks = [];
+
+
+    recorder.ondataavailable =
+        function (event) {
+
+            if (
+                event.data.size >
+                0
+            ) {
+
+                chunks.push(
+                    event.data
+                );
+
+            }
+
+        };
+
+
+    const finished =
+        new Promise(
+            function (resolve) {
+
+                recorder.onstop =
+                    resolve;
+
+            }
+        );
+
+
+    stopPreview();
+
+
+    videoPreview.currentTime =
+        0;
+
+
+    videoPreview.muted =
+        false;
+
+
+    recorder.start(
+        250
+    );
+
+
+    videoPreview.play();
+
+
+    let lastFrame =
+        -1;
+
+
+    function drawFrame() {
+
+        if (
+            videoPreview.paused
+            ||
+            videoPreview.ended
+        ) {
+
+            recorder.stop();
+
+            return;
+
+        }
+
+
+        const now =
+            videoPreview.currentTime;
+
+
+        if (
+            Math.abs(
+                now -
+                lastFrame
+            ) >
+            0.02
+        ) {
+
+            drawVideoFrame(
+                ctx,
+                canvas,
+                now
+            );
+
+
+            lastFrame =
+                now;
+
+        }
+
+
+        const percentage =
+            (
+                now /
+                duration
+            ) * 100;
+
+
+        renderProgress.style.width =
+            percentage + "%";
+
+
+        renderText.textContent =
+            "Rendering " +
+            Math.round(
+                percentage
+            ) +
+            "%";
+
+
+        requestAnimationFrame(
+            drawFrame
+        );
+
+    }
+
+
+    drawFrame();
+
+
+    await finished;
+
+
+    videoPreview.pause();
+
+    videoPreview.currentTime =
+        0;
+
+
+    const blob =
+        new Blob(
+            chunks,
+            {
+                type:
+                    mimeType
+            }
+        );
+
+
+    if (outputURL) {
+
+        URL.revokeObjectURL(
+            outputURL
+        );
+
+    }
+
+
+    outputURL =
+        URL.createObjectURL(
+            blob
+        );
+
+
+    downloadButton.href =
+        outputURL;
+
+
+    downloadButton.download =
+        "rival-edit-v7.webm";
+
+
+    downloadButton.hidden =
+        false;
+
+
+    renderProgress.style.width =
+        "100%";
+
+
+    renderText.textContent =
+        "✅ Edit exported successfully!";
+
+}
+
+
+/* =========================================
+   CANVAS
+========================================= */
+
+function setupCanvas(canvas) {
+
+    const sourceWidth =
+        videoPreview.videoWidth ||
+        1920;
+
+
+    const sourceHeight =
+        videoPreview.videoHeight ||
+        1080;
+
+
+    if (
+        format.value ===
+        "vertical"
+    ) {
+
+        canvas.width =
+            720;
+
+        canvas.height =
+            1280;
+
+    } else if (
+        format.value ===
+        "square"
+    ) {
+
+        canvas.width =
+            1080;
+
+        canvas.height =
+            1080;
+
+    } else {
+
+        canvas.width =
+            1280;
+
+        canvas.height =
+            720;
+
+    }
+
+}
+
+
+function drawVideoFrame(
+    ctx,
+    canvas,
+    time
+) {
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    const sourceWidth =
+        videoPreview.videoWidth;
+
+
+    const sourceHeight =
+        videoPreview.videoHeight;
+
+
+    const canvasRatio =
+        canvas.width /
+        canvas.height;
+
+
+    const sourceRatio =
+        sourceWidth /
+        sourceHeight;
+
+
+    let drawWidth =
+        canvas.width;
+
+
+    let drawHeight =
+        canvas.height;
+
+
+    if (
+        sourceRatio >
+        canvasRatio
+    ) {
+
+        drawHeight =
+            canvas.height;
+
+        drawWidth =
+            drawHeight *
+            sourceRatio;
+
+    } else {
+
+        drawWidth =
+            canvas.width;
+
+        drawHeight =
+            drawWidth /
+            sourceRatio;
+
+    }
+
+
+    /*
+        Center crop.
+    */
+
+    const baseX =
+        (
+            canvas.width -
+            drawWidth
+        ) / 2;
+
+
+    const baseY =
+        (
+            canvas.height -
+            drawHeight
+        ) / 2;
+
+
+    /*
+        Calculate current effects.
+    */
+
+    let scale =
+        1;
+
+
+    let shakeX =
+        0;
+
+
+    let shakeY =
+        0;
+
+
+    let rotation =
+        0;
+
+
+    let text =
+        "";
+
+
+    editTimeline.forEach(
+        function (item) {
+
+            const distance =
+                Math.abs(
+                    time -
+                    item.time
+                );
+
+
+            if (
+                item.type ===
+                "zoom"
+                &&
+                distance <=
+                item.duration / 2
+            ) {
+
+                const strength =
+                    1 -
+                    distance /
+                    (
+                        item.duration /
+                        2
+                    );
+
+
+                scale =
+                    Math.max(
+                        scale,
+                        1 +
+                        0.45 *
+                        strength
+                    );
+
+            }
+
+
+            if (
+                item.type ===
+                "shake"
+                &&
+                distance <=
+                item.duration / 2
+            ) {
+
+                const strength =
+                    1 -
+                    distance /
+                    (
+                        item.duration /
+                        2
+                    );
+
+
+                shakeX =
+                    (
+                        Math.random()
+                        -
+                        0.5
+                    )
+                    *
+                    20
+                    *
+                    strength;
+
+
+                shakeY =
+                    (
+                        Math.random()
+                        -
+                        0.5
+                    )
+                    *
+                    20
+                    *
+                    strength;
+
+
+                rotation =
+                    (
+                        Math.random()
+                        -
+                        0.5
+                    )
+                    *
+                    0.04
+                    *
+                    strength;
+
+            }
+
+
+            if (
+                item.type ===
+                "text"
+                &&
+                time >=
+                item.time
+                &&
+                time <=
+                item.time +
+                item.duration
+            ) {
+
+                text =
+                    item.text;
+
+            }
 
         }
     );
 
 
-    if (kills) {
+    ctx.save();
 
-        steps.push(`
-            <div class="step">
 
-                <strong>
-                    💥 KILL EFFECTS
-                </strong>
+    ctx.translate(
+        canvas.width / 2 +
+        shakeX,
+        canvas.height / 2 +
+        shakeY
+    );
 
-                <br>
 
-                <span>
-                    Add quick zooms,
-                    impact effects and
-                    subtle shake on kills.
-                </span>
+    ctx.rotate(
+        rotation
+    );
 
-            </div>
-        `);
 
-    }
+    ctx.scale(
+        scale,
+        scale
+    );
 
+
+    ctx.drawImage(
+        videoPreview,
+        -drawWidth / 2,
+        -drawHeight / 2,
+        drawWidth,
+        drawHeight
+    );
+
+
+    ctx.restore();
+
+
+    /*
+        Text.
+    */
 
     if (text) {
 
-        steps.push(`
-            <div class="step">
-
-                <strong>
-                    📝 TEXT
-                </strong>
-
-                <br>
-
-                <span>
-                    Add short animated
-                    captions to important
-                    moments.
-                </span>
-
-            </div>
-        `);
-
-    }
+        ctx.save();
 
 
-    if (transitions) {
-
-        steps.push(`
-            <div class="step">
-
-                <strong>
-                    🔄 TRANSITIONS
-                </strong>
-
-                <br>
-
-                <span>
-                    Use fast transitions
-                    between important sections.
-                </span>
-
-            </div>
-        `);
-
-    }
+        ctx.font =
+            "900 64px Arial";
 
 
-    if (camera) {
-
-        steps.push(`
-            <div class="step">
-
-                <strong>
-                    🎥 CAMERA
-                </strong>
-
-                <br>
-
-                <span>
-                    Use subtle zoom and
-                    movement to emphasize
-                    gameplay.
-                </span>
-
-            </div>
-        `);
-
-    }
+        ctx.textAlign =
+            "center";
 
 
-    if (slowmo) {
+        ctx.textBaseline =
+            "middle";
 
-        steps.push(`
-            <div class="step">
 
-                <strong>
-                    🐌 SLOW MOTION
-                </strong>
+        const x =
+            canvas.width / 2;
 
-                <br>
 
-                <span>
-                    Slow the strongest moment
-                    briefly before the final action.
-                </span>
+        const y =
+            canvas.height / 2;
 
-            </div>
-        `);
+
+        const metrics =
+            ctx.measureText(
+                text
+            );
+
+
+        const padding =
+            25;
+
+
+        ctx.fillStyle =
+            "rgba(0,0,0,0.65)";
+
+
+        ctx.fillRect(
+            x -
+            metrics.width / 2 -
+            padding,
+
+            y - 45,
+
+            metrics.width +
+            padding * 2,
+
+            90
+        );
+
+
+        ctx.fillStyle =
+            "white";
+
+
+        ctx.fillText(
+            text,
+            x,
+            y
+        );
+
+
+        ctx.restore();
 
     }
-
-
-    steps.push(`
-        <div class="step">
-
-            <strong>
-                🎵 MUSIC
-            </strong>
-
-            <br>
-
-            <span>
-                Use ${music} and synchronize
-                important actions with the beat.
-            </span>
-
-        </div>
-    `);
-
-
-    steps.push(`
-        <div class="step">
-
-            <strong>
-                🏁 ENDING
-            </strong>
-
-            <br>
-
-            <span>
-                Cut immediately after
-                the strongest final moment.
-            </span>
-
-        </div>
-    `);
-
-
-    montage.innerHTML = `
-
-        <h3>
-            ⚡ ${game.toUpperCase()} Edit Plan
-        </h3>
-
-        ${steps.join("")}
-
-        <div class="summary">
-
-            <strong>
-                🎯 Clip Information
-            </strong>
-
-            <br><br>
-
-            🎮 Game:
-            ${game}
-
-            <br>
-
-            ⏱️ Duration:
-            ${
-                videoDuration
-                    ? formatTime(videoDuration)
-                    : "Unknown"
-            }
-
-            <br>
-
-            🎵 Music:
-            ${music}
-
-            <br>
-
-            ⚡ Intensity:
-            ${intensity}
-
-            <br>
-
-            📱 Format:
-            ${format}
-
-            <br>
-
-            📍 Timeline Effects:
-            ${markers.length}
-
-        </div>
-
-    `;
 
 }
 
 
-/* =========================
-   COPY
-========================= */
+/* =========================================
+   MIME TYPE
+========================================= */
 
-copyButton.addEventListener(
-    "click",
-    function () {
+function getSupportedMimeType() {
 
-        const text =
-            montage.innerText;
+    const types = [
+
+        "video/webm;codecs=vp9,opus",
+
+        "video/webm;codecs=vp8,opus",
+
+        "video/webm"
+
+    ];
 
 
-        if (!text.trim()) {
-            return;
+    for (
+        const type of types
+    ) {
+
+        if (
+            MediaRecorder
+                .isTypeSupported(
+                    type
+                )
+        ) {
+
+            return type;
+
         }
 
-
-        navigator.clipboard
-            .writeText(text)
-            .then(
-                function () {
-
-                    copyButton.textContent =
-                        "Copied!";
-
-
-                    setTimeout(
-                        function () {
-
-                            copyButton.textContent =
-                                "Copy";
-
-                        },
-                        1500
-                    );
-
-                }
-            );
-
     }
-);
 
 
-/* =========================
+    return "";
+
+}
+
+
+/* =========================================
    HELPERS
-========================= */
+========================================= */
 
-function formatTime(seconds) {
+function formatTime(
+    seconds
+) {
 
-    if (!isFinite(seconds)) {
+    if (
+        !isFinite(seconds)
+    ) {
+
         return "00:00";
+
     }
 
 
@@ -1347,7 +2186,7 @@ function formatTime(seconds) {
         );
 
 
-    const remainingSeconds =
+    const secs =
         Math.floor(
             seconds % 60
         );
@@ -1359,14 +2198,16 @@ function formatTime(seconds) {
         +
         ":"
         +
-        String(remainingSeconds)
+        String(secs)
             .padStart(2, "0")
     );
 
 }
 
 
-function formatFileSize(bytes) {
+function formatFileSize(
+    bytes
+) {
 
     if (
         bytes <
@@ -1375,7 +2216,8 @@ function formatFileSize(bytes) {
 
         return (
             (
-                bytes / 1024
+                bytes /
+                1024
             ).toFixed(1)
             +
             " KB"
@@ -1397,22 +2239,33 @@ function formatFileSize(bytes) {
 }
 
 
-function capitalize(text) {
+function extractQuotedText(
+    text
+) {
 
-    return (
-        text.charAt(0).toUpperCase()
-        +
-        text.slice(1)
-    );
+    const match =
+        text.match(
+            /["“](.*?)["”]/
+        );
+
+
+    if (match) {
+
+        return match[1];
+
+    }
+
+
+    return "";
 
 }
 
 
-function getMarkerEmoji(type) {
+function getEmoji(type) {
 
     const emojis = {
 
-        kill: "💥",
+        cut: "✂️",
 
         zoom: "🔍",
 
@@ -1422,50 +2275,15 @@ function getMarkerEmoji(type) {
 
         text: "📝",
 
-        transition: "🔄",
-
-        important: "⭐"
-
-    };
-
-
-    return emojis[type] || "📍";
-
-}
-
-
-function getMarkerInstruction(type) {
-
-    const instructions = {
-
-        kill:
-            "Add a quick zoom, shake and impact effect at this moment.",
-
-        zoom:
-            "Zoom into this moment to make the action stand out.",
-
-        shake:
-            "Add a short camera shake around this moment.",
-
-        slowmo:
-            "Slow the footage briefly around this important moment.",
-
-        text:
-            "Add an animated text overlay here.",
-
-        transition:
-            "Use a fast transition into the next section.",
-
-        important:
-            "Make this moment visually stand out."
+        transition: "🔄"
 
     };
 
 
     return (
-        instructions[type]
+        emojis[type]
         ||
-        "Highlight this moment in the edit."
+        "✨"
     );
 
 }
