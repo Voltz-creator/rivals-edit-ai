@@ -3,21 +3,32 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>Rival Edit AI</title>
+    <title>Rival Edit AI V7</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
 
 <body>
 
 <header>
 
+    <div class="badge">
+        V7 • FREE AUTO EDITOR
+    </div>
+
     <h1>⚡ Rival Edit AI</h1>
 
     <p>
-        Turn your RIVALS clips into an edit plan.
+        Describe the edit you want.
+        The editor builds it automatically.
     </p>
 
 </header>
@@ -26,28 +37,50 @@
 <main>
 
 
-    <!-- =========================
-         VIDEO UPLOAD
-    ========================== -->
+    <!-- VIDEO -->
 
     <section class="card">
 
-        <h2>🎥 Your Clip</h2>
+        <div class="section-heading">
+
+            <div>
+
+                <h2>🎥 Your Video</h2>
+
+                <p>
+                    Upload your RIVALS clip.
+                </p>
+
+            </div>
+
+            <span
+                id="videoStatus"
+                class="status-badge"
+            >
+                No video
+            </span>
+
+        </div>
+
 
         <label class="upload-button">
 
-            Choose your clip
+            Choose video
 
             <input
-                type="file"
                 id="videoInput"
+                type="file"
                 accept="video/*"
                 hidden
             >
 
         </label>
 
-        <p id="fileName">
+
+        <p
+            id="fileName"
+            class="muted"
+        >
             No video selected.
         </p>
 
@@ -58,22 +91,31 @@
             hidden
         >
 
-            <span>
-                ⏱️ <strong id="duration">00:00</strong>
-            </span>
+            <div>
+                Duration
+                <strong id="duration">
+                    00:00
+                </strong>
+            </div>
 
-            <span>
-                📐 <strong id="resolution">-</strong>
-            </span>
+            <div>
+                Resolution
+                <strong id="resolution">
+                    -
+                </strong>
+            </div>
 
-            <span>
-                💾 <strong id="fileSize">-</strong>
-            </span>
+            <div>
+                File size
+                <strong id="fileSize">
+                    -
+                </strong>
+            </div>
 
         </div>
 
 
-        <div class="video-wrapper">
+        <div class="video-container">
 
             <video
                 id="videoPreview"
@@ -83,8 +125,8 @@
             ></video>
 
             <div
-                id="editTextOverlay"
-                class="edit-text-overlay center"
+                id="textOverlay"
+                class="text-overlay"
                 hidden
             ></div>
 
@@ -94,306 +136,70 @@
 
 
 
-    <!-- =========================
-         TIMELINE
-    ========================== -->
+    <!-- AUTO EDIT -->
 
-    <section
-        class="card"
-        id="timelineSection"
-        hidden
-    >
+    <section class="card">
 
-        <div class="section-title">
+        <div class="section-heading">
 
             <div>
 
-                <h2>🎞️ Edit Timeline</h2>
+                <h2>🤖 Automatic Editor</h2>
 
                 <p>
-                    Click or drag the playhead to place an effect.
+                    Tell the editor exactly what you want.
                 </p>
 
             </div>
 
-            <strong id="currentTime">
-                00:00
-            </strong>
-
         </div>
-
-
-        <div
-            class="timeline"
-            id="timeline"
-        >
-
-            <div
-                class="progress"
-                id="progress"
-            ></div>
-
-            <div
-                class="markers"
-                id="markers"
-            ></div>
-
-            <div
-                class="playhead"
-                id="playhead"
-            ></div>
-
-        </div>
-
-
-        <div class="timeline-times">
-
-            <span>00:00</span>
-
-            <span id="timelineEnd">
-                00:00
-            </span>
-
-        </div>
-
-
-        <!-- Marker controls -->
-
-        <div class="marker-controls">
-
-            <select id="markerType">
-
-                <option value="kill">
-                    💥 Kill
-                </option>
-
-                <option value="zoom">
-                    🔍 Zoom
-                </option>
-
-                <option value="shake">
-                    📳 Shake
-                </option>
-
-                <option value="slowmo">
-                    🐌 Slow Motion
-                </option>
-
-                <option value="text">
-                    📝 Text
-                </option>
-
-                <option value="transition">
-                    🔄 Transition
-                </option>
-
-                <option value="important">
-                    ⭐ Important
-                </option>
-
-            </select>
-
-
-            <button
-                id="addMarker"
-                class="primary-button"
-            >
-                + Add Effect Here
-            </button>
-
-        </div>
-
-
-        <div
-            id="markerList"
-            class="marker-list"
-        >
-
-            <p class="empty">
-                No effects yet.
-            </p>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =========================
-         EFFECT SETTINGS
-    ========================== -->
-
-    <section class="card">
-
-        <h2>⚡ Edit Effects</h2>
-
-        <div class="effects-grid">
-
-
-            <label class="effect-option">
-
-                <input
-                    type="checkbox"
-                    id="zoomEffect"
-                >
-
-                <span>
-                    🔍 Zoom
-                </span>
-
-            </label>
-
-
-            <label class="effect-option">
-
-                <input
-                    type="checkbox"
-                    id="shakeEffect"
-                >
-
-                <span>
-                    📳 Shake
-                </span>
-
-            </label>
-
-
-            <label class="effect-option">
-
-                <input
-                    type="checkbox"
-                    id="slowEffect"
-                >
-
-                <span>
-                    🐌 Slow Motion
-                </span>
-
-            </label>
-
-
-            <label class="effect-option">
-
-                <input
-                    type="checkbox"
-                    id="textEffect"
-                >
-
-                <span>
-                    📝 Text
-                </span>
-
-            </label>
-
-        </div>
-
-
-        <div
-            id="textSettings"
-            class="text-settings"
-            hidden
-        >
-
-            <input
-                type="text"
-                id="overlayText"
-                placeholder="Enter your text..."
-                maxlength="40"
-            >
-
-
-            <select id="textPosition">
-
-                <option value="top">
-                    Top
-                </option>
-
-                <option value="center" selected>
-                    Center
-                </option>
-
-                <option value="bottom">
-                    Bottom
-                </option>
-
-            </select>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =========================
-         PREVIEW
-    ========================== -->
-
-    <section class="card">
-
-        <h2>▶️ Edit Preview</h2>
-
-        <p>
-            Preview your effects directly on the video.
-        </p>
-
-
-        <div class="preview-buttons">
-
-            <button
-                id="previewEdit"
-                class="primary-button"
-            >
-                ▶ Preview Edit
-            </button>
-
-
-            <button
-                id="stopEdit"
-                class="secondary-button"
-            >
-                ■ Stop
-            </button>
-
-        </div>
-
-
-        <p
-            id="editorStatus"
-            class="status"
-        >
-            Ready.
-        </p>
-
-    </section>
-
-
-
-    <!-- =========================
-         AI EDIT GENERATOR
-    ========================== -->
-
-    <section class="card">
-
-        <h2>🤖 Edit Plan Generator</h2>
-
-        <p>
-            Describe your clip and generate a complete editing plan.
-        </p>
 
 
         <textarea
-            id="clip"
-            placeholder="Example: I got three fast kills with a sniper and the last kill was very clean..."
+            id="editRequest"
+            placeholder="Example: Make a fast RIVALS edit for YouTube Shorts. Use strong zooms on important moments, shake effects, slow motion near the end and add the text INSANE."
         ></textarea>
 
 
-        <div class="form-grid">
+        <div class="quick-options">
 
+            <button
+                class="quick-option"
+                data-text="Make a fast aggressive RIVALS edit with strong zooms and shake effects."
+            >
+                ⚡ Fast
+            </button>
+
+            <button
+                class="quick-option"
+                data-text="Make a cinematic edit with zooms and slow motion."
+            >
+                🎬 Cinematic
+            </button>
+
+            <button
+                class="quick-option"
+                data-text="Make a TikTok style edit with strong zooms, shake and animated text."
+            >
+                📱 TikTok
+            </button>
+
+            <button
+                class="quick-option"
+                data-text="Make a clean edit with subtle zooms and smooth transitions."
+            >
+                ✨ Clean
+            </button>
+
+        </div>
+
+
+        <div class="settings-grid">
 
             <div>
 
                 <label>
-                    Game
+                    🎮 Game
                 </label>
 
                 <select id="game">
@@ -422,75 +228,78 @@
             <div>
 
                 <label>
-                    Music
-                </label>
-
-                <select id="music">
-
-                    <option value="Phonk">
-                        Phonk
-                    </option>
-
-                    <option value="Trap">
-                        Trap
-                    </option>
-
-                    <option value="Drill">
-                        Drill
-                    </option>
-
-                    <option value="Chill">
-                        Chill
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div>
-
-                <label>
-                    Intensity
-                </label>
-
-                <select id="intensity">
-
-                    <option value="Low">
-                        Low
-                    </option>
-
-                    <option value="Medium" selected>
-                        Medium
-                    </option>
-
-                    <option value="High">
-                        High
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div>
-
-                <label>
-                    Format
+                    📱 Format
                 </label>
 
                 <select id="format">
 
-                    <option value="9:16">
-                        9:16 Shorts
+                    <option value="vertical">
+                        YouTube Short / TikTok
                     </option>
 
-                    <option value="16:9">
-                        16:9 YouTube
+                    <option value="horizontal">
+                        YouTube 16:9
                     </option>
 
-                    <option value="1:1">
-                        1:1 Square
+                    <option value="square">
+                        Square 1:1
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label>
+                    ⚡ Intensity
+                </label>
+
+                <select id="intensity">
+
+                    <option value="low">
+                        Chill
+                    </option>
+
+                    <option
+                        value="medium"
+                        selected
+                    >
+                        Medium
+                    </option>
+
+                    <option value="high">
+                        Insane
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label>
+                    🎵 Music style
+                </label>
+
+                <select id="music">
+
+                    <option value="phonk">
+                        Phonk
+                    </option>
+
+                    <option value="trap">
+                        Trap
+                    </option>
+
+                    <option value="drill">
+                        Drill
+                    </option>
+
+                    <option value="none">
+                        No music
                     </option>
 
                 </select>
@@ -500,78 +309,209 @@
         </div>
 
 
-        <div class="checkbox-grid">
-
-            <label>
-                <input
-                    type="checkbox"
-                    id="text"
-                >
-                Text
-            </label>
-
-
-            <label>
-                <input
-                    type="checkbox"
-                    id="kills"
-                    checked
-                >
-                Kill Effects
-            </label>
-
-
-            <label>
-                <input
-                    type="checkbox"
-                    id="transitions"
-                    checked
-                >
-                Transitions
-            </label>
-
-
-            <label>
-                <input
-                    type="checkbox"
-                    id="camera"
-                    checked
-                >
-                Camera Effects
-            </label>
-
-
-            <label>
-                <input
-                    type="checkbox"
-                    id="slowmo"
-                >
-                Slow Motion
-            </label>
-
-        </div>
-
-
         <button
-            id="generate"
-            class="primary-button generate-button"
+            id="generateEdit"
+            class="primary-button main-button"
         >
-            ⚡ Generate Edit Plan
+            ✨ Generate Automatic Edit
         </button>
 
 
         <div
-            id="montage"
-            class="montage"
+            id="generationStatus"
+            class="generation-status"
+        >
+            Ready.
+        </div>
+
+    </section>
+
+
+
+    <!-- AUTOMATIC TIMELINE -->
+
+    <section
+        id="timelineCard"
+        class="card"
+        hidden
+    >
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>🎞️ Automatic Timeline</h2>
+
+                <p>
+                    Your edit has been generated automatically.
+                </p>
+
+            </div>
+
+            <strong id="timelineDuration">
+                00:00
+            </strong>
+
+        </div>
+
+
+        <div
+            id="timeline"
+            class="timeline"
+        >
+
+            <div
+                id="timelineProgress"
+                class="timeline-progress"
+            ></div>
+
+            <div
+                id="timelineMarkers"
+                class="timeline-markers"
+            ></div>
+
+            <div
+                id="timelinePlayhead"
+                class="timeline-playhead"
+            ></div>
+
+        </div>
+
+
+        <div class="timeline-labels">
+
+            <span>00:00</span>
+
+            <span id="timelineEnd">
+                00:00
+            </span>
+
+        </div>
+
+
+        <div
+            id="editList"
+            class="edit-list"
         ></div>
+
+    </section>
+
+
+
+    <!-- PREVIEW -->
+
+    <section
+        id="previewCard"
+        class="card"
+        hidden
+    >
+
+        <h2>▶️ Automatic Preview</h2>
+
+        <p>
+            Preview the generated edit directly in your browser.
+        </p>
+
+
+        <div class="preview-buttons">
+
+            <button
+                id="previewButton"
+                class="primary-button"
+            >
+                ▶ Preview Edit
+            </button>
+
+
+            <button
+                id="stopButton"
+                class="secondary-button"
+            >
+                ■ Stop
+            </button>
+
+        </div>
+
+
+        <div
+            id="previewStatus"
+            class="generation-status"
+        >
+            Ready.
+        </div>
+
+    </section>
+
+
+
+    <!-- EXPORT -->
+
+    <section
+        id="exportCard"
+        class="card"
+        hidden
+    >
+
+        <h2>📤 Export</h2>
+
+        <p>
+            Render the automatic edit directly in your browser.
+        </p>
 
 
         <button
-            id="copy"
-            class="secondary-button"
+            id="exportButton"
+            class="primary-button main-button"
         >
-            Copy
+            🎬 Render & Export Edit
         </button>
+
+
+        <div
+            id="exportProgress"
+            class="progress-box"
+            hidden
+        >
+
+            <div class="progress-track">
+
+                <div
+                    id="renderProgress"
+                    class="render-progress"
+                ></div>
+
+            </div>
+
+            <p id="renderText">
+                Preparing...
+            </p>
+
+        </div>
+
+
+        <a
+            id="downloadButton"
+            class="download-button"
+            hidden
+        >
+            ⬇️ Download Edited Video
+        </a>
+
+    </section>
+
+
+
+    <!-- PLAN -->
+
+    <section
+        id="planCard"
+        class="card"
+        hidden
+    >
+
+        <h2>🧠 Generated Edit</h2>
+
+        <div id="generatedPlan"></div>
 
     </section>
 
@@ -580,7 +520,7 @@
 
 <footer>
 
-    Rival Edit AI — V6.2
+    Rival Edit AI V7 • Free browser editor
 
 </footer>
 
