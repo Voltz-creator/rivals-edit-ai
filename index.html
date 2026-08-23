@@ -3,12 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Rival Edit AI V7</title>
+    <title>Rival Edit AI V8</title>
 
     <link
         rel="stylesheet"
@@ -18,514 +19,509 @@
 
 <body>
 
-<header>
+    <header class="topbar">
 
-    <div class="badge">
-        V7 • FREE AUTO EDITOR
-    </div>
-
-    <h1>⚡ Rival Edit AI</h1>
-
-    <p>
-        Describe the edit you want.
-        The editor builds it automatically.
-    </p>
-
-</header>
-
-
-<main>
-
-
-    <!-- VIDEO -->
-
-    <section class="card">
-
-        <div class="section-heading">
-
-            <div>
-
-                <h2>🎥 Your Video</h2>
-
-                <p>
-                    Upload your RIVALS clip.
-                </p>
-
-            </div>
-
-            <span
-                id="videoStatus"
-                class="status-badge"
-            >
-                No video
-            </span>
-
+        <div>
+            <h1>⚡ Rival Edit AI</h1>
+            <p>Automatic gaming video editor</p>
         </div>
 
+        <div class="version">
+            V8
+        </div>
 
-        <label class="upload-button">
+    </header>
 
-            Choose video
+
+    <main class="container">
+
+
+        <!-- ================= VIDEO ================= -->
+
+        <section class="card">
+
+            <h2>🎬 Your Clip</h2>
+
+            <label
+                class="upload-box"
+                for="videoInput"
+            >
+
+                <span class="upload-icon">
+                    📁
+                </span>
+
+                <strong>
+                    Choose a video
+                </strong>
+
+                <small>
+                    MP4, WebM or MOV
+                </small>
+
+            </label>
 
             <input
-                id="videoInput"
                 type="file"
+                id="videoInput"
                 accept="video/*"
-                hidden
             >
 
-        </label>
-
-
-        <p
-            id="fileName"
-            class="muted"
-        >
-            No video selected.
-        </p>
-
-
-        <div
-            id="videoInfo"
-            class="video-info"
-            hidden
-        >
-
-            <div>
-                Duration
-                <strong id="duration">
-                    00:00
-                </strong>
-            </div>
-
-            <div>
-                Resolution
-                <strong id="resolution">
-                    -
-                </strong>
-            </div>
-
-            <div>
-                File size
-                <strong id="fileSize">
-                    -
-                </strong>
-            </div>
-
-        </div>
-
-
-        <div class="video-container">
-
-            <video
-                id="videoPreview"
-                controls
-                playsinline
-                hidden
-            ></video>
 
             <div
-                id="textOverlay"
-                class="text-overlay"
+                id="videoError"
+                class="error"
                 hidden
             ></div>
 
-        </div>
-
-    </section>
-
-
-
-    <!-- AUTO EDIT -->
-
-    <section class="card">
-
-        <div class="section-heading">
-
-            <div>
-
-                <h2>🤖 Automatic Editor</h2>
-
-                <p>
-                    Tell the editor exactly what you want.
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <textarea
-            id="editRequest"
-            placeholder="Example: Make a fast RIVALS edit for YouTube Shorts. Use strong zooms on important moments, shake effects, slow motion near the end and add the text INSANE."
-        ></textarea>
-
-
-        <div class="quick-options">
-
-            <button
-                class="quick-option"
-                data-text="Make a fast aggressive RIVALS edit with strong zooms and shake effects."
-            >
-                ⚡ Fast
-            </button>
-
-            <button
-                class="quick-option"
-                data-text="Make a cinematic edit with zooms and slow motion."
-            >
-                🎬 Cinematic
-            </button>
-
-            <button
-                class="quick-option"
-                data-text="Make a TikTok style edit with strong zooms, shake and animated text."
-            >
-                📱 TikTok
-            </button>
-
-            <button
-                class="quick-option"
-                data-text="Make a clean edit with subtle zooms and smooth transitions."
-            >
-                ✨ Clean
-            </button>
-
-        </div>
-
-
-        <div class="settings-grid">
-
-            <div>
-
-                <label>
-                    🎮 Game
-                </label>
-
-                <select id="game">
-
-                    <option value="RIVALS">
-                        RIVALS
-                    </option>
-
-                    <option value="Fortnite">
-                        Fortnite
-                    </option>
-
-                    <option value="Brawl Stars">
-                        Brawl Stars
-                    </option>
-
-                    <option value="Other">
-                        Other
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div>
-
-                <label>
-                    📱 Format
-                </label>
-
-                <select id="format">
-
-                    <option value="vertical">
-                        YouTube Short / TikTok
-                    </option>
-
-                    <option value="horizontal">
-                        YouTube 16:9
-                    </option>
-
-                    <option value="square">
-                        Square 1:1
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div>
-
-                <label>
-                    ⚡ Intensity
-                </label>
-
-                <select id="intensity">
-
-                    <option value="low">
-                        Chill
-                    </option>
-
-                    <option
-                        value="medium"
-                        selected
-                    >
-                        Medium
-                    </option>
-
-                    <option value="high">
-                        Insane
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div>
-
-                <label>
-                    🎵 Music style
-                </label>
-
-                <select id="music">
-
-                    <option value="phonk">
-                        Phonk
-                    </option>
-
-                    <option value="trap">
-                        Trap
-                    </option>
-
-                    <option value="drill">
-                        Drill
-                    </option>
-
-                    <option value="none">
-                        No music
-                    </option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-
-        <button
-            id="generateEdit"
-            class="primary-button main-button"
-        >
-            ✨ Generate Automatic Edit
-        </button>
-
-
-        <div
-            id="generationStatus"
-            class="generation-status"
-        >
-            Ready.
-        </div>
-
-    </section>
-
-
-
-    <!-- AUTOMATIC TIMELINE -->
-
-    <section
-        id="timelineCard"
-        class="card"
-        hidden
-    >
-
-        <div class="section-heading">
-
-            <div>
-
-                <h2>🎞️ Automatic Timeline</h2>
-
-                <p>
-                    Your edit has been generated automatically.
-                </p>
-
-            </div>
-
-            <strong id="timelineDuration">
-                00:00
-            </strong>
-
-        </div>
-
-
-        <div
-            id="timeline"
-            class="timeline"
-        >
 
             <div
-                id="timelineProgress"
-                class="timeline-progress"
-            ></div>
+                id="videoArea"
+                hidden
+            >
+
+                <video
+                    id="videoPreview"
+                    controls
+                    playsinline
+                    preload="metadata"
+                ></video>
+
+                <div class="video-name">
+                    <span id="fileName">
+                        No file
+                    </span>
+                </div>
+
+            </div>
+
 
             <div
-                id="timelineMarkers"
-                class="timeline-markers"
-            ></div>
+                id="videoInfo"
+                class="info-grid"
+                hidden
+            >
 
-            <div
-                id="timelinePlayhead"
-                class="timeline-playhead"
-            ></div>
+                <div>
+                    <span>Duration</span>
+                    <strong id="duration">
+                        00:00
+                    </strong>
+                </div>
 
-        </div>
+                <div>
+                    <span>Resolution</span>
+                    <strong id="resolution">
+                        -
+                    </strong>
+                </div>
 
+                <div>
+                    <span>File size</span>
+                    <strong id="fileSize">
+                        -
+                    </strong>
+                </div>
 
-        <div class="timeline-labels">
+            </div>
 
-            <span>00:00</span>
-
-            <span id="timelineEnd">
-                00:00
-            </span>
-
-        </div>
-
-
-        <div
-            id="editList"
-            class="edit-list"
-        ></div>
-
-    </section>
-
-
-
-    <!-- PREVIEW -->
-
-    <section
-        id="previewCard"
-        class="card"
-        hidden
-    >
-
-        <h2>▶️ Automatic Preview</h2>
-
-        <p>
-            Preview the generated edit directly in your browser.
-        </p>
+        </section>
 
 
-        <div class="preview-buttons">
+
+        <!-- ================= REQUEST ================= -->
+
+        <section class="card">
+
+            <div class="section-title">
+
+                <div>
+                    <h2>🤖 Auto Edit</h2>
+
+                    <p>
+                        Tell the editor what you want.
+                    </p>
+                </div>
+
+                <span class="badge">
+                    FREE
+                </span>
+
+            </div>
+
+
+            <label for="editRequest">
+                Describe your montage
+            </label>
+
+            <textarea
+                id="editRequest"
+                placeholder="Example: Make a fast Rival edit with strong zooms on kills, slow motion on the final kill, shake effects, animated text and fast transitions."
+            ></textarea>
+
+
+            <div class="options-grid">
+
+                <div>
+
+                    <label for="game">
+                        🎮 Game
+                    </label>
+
+                    <select id="game">
+
+                        <option value="RIVALS">
+                            RIVALS
+                        </option>
+
+                        <option value="Fortnite">
+                            Fortnite
+                        </option>
+
+                        <option value="Brawl Stars">
+                            Brawl Stars
+                        </option>
+
+                        <option value="FR Legends">
+                            FR Legends
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <label for="music">
+                        🎵 Music
+                    </label>
+
+                    <select id="music">
+
+                        <option value="Phonk">
+                            Phonk
+                        </option>
+
+                        <option value="Trap">
+                            Trap
+                        </option>
+
+                        <option value="Drill">
+                            Drill
+                        </option>
+
+                        <option value="Energetic">
+                            Energetic
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <label for="intensity">
+                        ⚡ Intensity
+                    </label>
+
+                    <select id="intensity">
+
+                        <option value="Chill">
+                            Chill
+                        </option>
+
+                        <option value="Medium">
+                            Medium
+                        </option>
+
+                        <option value="High">
+                            High
+                        </option>
+
+                        <option value="Insane">
+                            Insane
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <label for="format">
+                        📱 Format
+                    </label>
+
+                    <select id="format">
+
+                        <option value="YouTube Short">
+                            YouTube Short
+                        </option>
+
+                        <option value="TikTok">
+                            TikTok
+                        </option>
+
+                        <option value="YouTube">
+                            YouTube
+                        </option>
+
+                        <option value="16:9">
+                            16:9
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
 
             <button
-                id="previewButton"
+                id="generateButton"
                 class="primary-button"
             >
-                ▶ Preview Edit
+                ✨ Create Automatic Edit
             </button>
 
-
-            <button
-                id="stopButton"
-                class="secondary-button"
-            >
-                ■ Stop
-            </button>
-
-        </div>
-
-
-        <div
-            id="previewStatus"
-            class="generation-status"
-        >
-            Ready.
-        </div>
-
-    </section>
+        </section>
 
 
 
-    <!-- EXPORT -->
+        <!-- ================= PLAN ================= -->
 
-    <section
-        id="exportCard"
-        class="card"
-        hidden
-    >
-
-        <h2>📤 Export</h2>
-
-        <p>
-            Render the automatic edit directly in your browser.
-        </p>
-
-
-        <button
-            id="exportButton"
-            class="primary-button main-button"
-        >
-            🎬 Render & Export Edit
-        </button>
-
-
-        <div
-            id="exportProgress"
-            class="progress-box"
+        <section
+            id="planSection"
+            class="card"
             hidden
         >
 
-            <div class="progress-track">
+            <div class="section-title">
+
+                <div>
+
+                    <h2>
+                        🧠 Generated Edit
+                    </h2>
+
+                    <p>
+                        Your automatic editing plan.
+                    </p>
+
+                </div>
+
+                <span
+                    id="editCount"
+                    class="badge"
+                >
+                    0 edits
+                </span>
+
+            </div>
+
+
+            <div
+                id="plan"
+                class="plan"
+            ></div>
+
+
+            <button
+                id="applyButton"
+                class="primary-button"
+            >
+                ▶ Apply Edit To Preview
+            </button>
+
+        </section>
+
+
+
+        <!-- ================= EDITOR ================= -->
+
+        <section
+            id="editorSection"
+            class="card"
+            hidden
+        >
+
+            <div class="section-title">
+
+                <div>
+
+                    <h2>
+                        🎞️ Automatic Editor
+                    </h2>
+
+                    <p>
+                        Preview the generated montage.
+                    </p>
+
+                </div>
+
+                <span
+                    id="editorStatus"
+                    class="status"
+                >
+                    Ready
+                </span>
+
+            </div>
+
+
+            <div class="canvas-wrapper">
+
+                <canvas
+                    id="editCanvas"
+                ></canvas>
+
+            </div>
+
+
+            <div class="editor-controls">
+
+                <button
+                    id="playEdit"
+                    class="control-button"
+                >
+                    ▶ Play Edit
+                </button>
+
+                <button
+                    id="pauseEdit"
+                    class="control-button"
+                >
+                    ⏸ Pause
+                </button>
+
+                <button
+                    id="restartEdit"
+                    class="control-button"
+                >
+                    ↻ Restart
+                </button>
+
+            </div>
+
+
+            <div class="render-progress">
 
                 <div
                     id="renderProgress"
-                    class="render-progress"
+                    class="render-progress-bar"
                 ></div>
 
             </div>
 
-            <p id="renderText">
-                Preparing...
+
+            <p
+                id="renderText"
+                class="render-text"
+            >
+                Ready to preview.
             </p>
 
-        </div>
+
+            <button
+                id="exportButton"
+                class="primary-button export"
+            >
+                🎥 Export Edited Video
+            </button>
 
 
-        <a
-            id="downloadButton"
-            class="download-button"
+            <a
+                id="downloadLink"
+                class="download-button"
+                hidden
+            >
+                ⬇ Download Edited Video
+            </a>
+
+        </section>
+
+
+
+        <!-- ================= TIMELINE ================= -->
+
+        <section
+            id="timelineSection"
+            class="card"
             hidden
         >
-            ⬇️ Download Edited Video
-        </a>
 
-    </section>
+            <div class="section-title">
 
+                <div>
 
+                    <h2>
+                        📍 Edit Timeline
+                    </h2>
 
-    <!-- PLAN -->
+                    <p>
+                        Automatic edit points.
+                    </p>
 
-    <section
-        id="planCard"
-        class="card"
-        hidden
-    >
+                </div>
 
-        <h2>🧠 Generated Edit</h2>
+                <span id="timelineTime">
+                    00:00
+                </span>
 
-        <div id="generatedPlan"></div>
-
-    </section>
-
-</main>
+            </div>
 
 
-<footer>
+            <div
+                id="timeline"
+                class="timeline"
+            >
 
-    Rival Edit AI V7 • Free browser editor
+                <div
+                    id="timelineProgress"
+                    class="timeline-progress"
+                ></div>
 
-</footer>
+                <div
+                    id="timelineMarkers"
+                    class="timeline-markers"
+                ></div>
+
+                <div
+                    id="timelinePlayhead"
+                    class="timeline-playhead"
+                ></div>
+
+            </div>
 
 
-<script src="script.js"></script>
+            <div class="timeline-labels">
+
+                <span>
+                    00:00
+                </span>
+
+                <span id="timelineEnd">
+                    00:00
+                </span>
+
+            </div>
+
+
+            <div
+                id="segmentList"
+                class="segment-list"
+            ></div>
+
+        </section>
+
+
+    </main>
+
+
+    <script src="script.js"></script>
 
 </body>
 
