@@ -1,241 +1,158 @@
-/* =========================================
-   RIVAL EDIT AI V7
-   FREE BROWSER AUTO EDITOR
-========================================= */
+/* =========================================================
+   RIVAL EDIT AI V8
+   Automatic browser video editor
+   ========================================================= */
 
 
-/* VIDEO */
+/* =========================
+   ELEMENTS
+========================= */
 
 const videoInput =
-    document.getElementById(
-        "videoInput"
-    );
+    document.getElementById("videoInput");
 
 const videoPreview =
-    document.getElementById(
-        "videoPreview"
-    );
+    document.getElementById("videoPreview");
 
-const fileName =
-    document.getElementById(
-        "fileName"
-    );
+const videoArea =
+    document.getElementById("videoArea");
 
 const videoInfo =
-    document.getElementById(
-        "videoInfo"
-    );
+    document.getElementById("videoInfo");
+
+const videoError =
+    document.getElementById("videoError");
+
+const fileName =
+    document.getElementById("fileName");
 
 const durationElement =
-    document.getElementById(
-        "duration"
-    );
+    document.getElementById("duration");
 
-const resolution =
-    document.getElementById(
-        "resolution"
-    );
+const resolutionElement =
+    document.getElementById("resolution");
 
-const fileSize =
-    document.getElementById(
-        "fileSize"
-    );
+const fileSizeElement =
+    document.getElementById("fileSize");
 
-const videoStatus =
-    document.getElementById(
-        "videoStatus"
-    );
-
-
-/* REQUEST */
 
 const editRequest =
-    document.getElementById(
-        "editRequest"
-    );
-
-const generateEdit =
-    document.getElementById(
-        "generateEdit"
-    );
-
-const generationStatus =
-    document.getElementById(
-        "generationStatus"
-    );
-
-
-/* SETTINGS */
+    document.getElementById("editRequest");
 
 const game =
-    document.getElementById(
-        "game"
-    );
-
-const format =
-    document.getElementById(
-        "format"
-    );
-
-const intensity =
-    document.getElementById(
-        "intensity"
-    );
+    document.getElementById("game");
 
 const music =
-    document.getElementById(
-        "music"
-    );
+    document.getElementById("music");
+
+const intensity =
+    document.getElementById("intensity");
+
+const format =
+    document.getElementById("format");
 
 
-/* TIMELINE */
+const generateButton =
+    document.getElementById("generateButton");
 
-const timelineCard =
-    document.getElementById(
-        "timelineCard"
-    );
+const planSection =
+    document.getElementById("planSection");
 
-const timeline =
-    document.getElementById(
-        "timeline"
-    );
+const plan =
+    document.getElementById("plan");
 
-const timelineProgress =
-    document.getElementById(
-        "timelineProgress"
-    );
+const editCount =
+    document.getElementById("editCount");
 
-const timelinePlayhead =
-    document.getElementById(
-        "timelinePlayhead"
-    );
-
-const timelineMarkers =
-    document.getElementById(
-        "timelineMarkers"
-    );
-
-const timelineEnd =
-    document.getElementById(
-        "timelineEnd"
-    );
-
-const timelineDuration =
-    document.getElementById(
-        "timelineDuration"
-    );
-
-const editList =
-    document.getElementById(
-        "editList"
-    );
+const applyButton =
+    document.getElementById("applyButton");
 
 
-/* PREVIEW */
+const editorSection =
+    document.getElementById("editorSection");
 
-const previewCard =
-    document.getElementById(
-        "previewCard"
-    );
+const editCanvas =
+    document.getElementById("editCanvas");
 
-const previewButton =
-    document.getElementById(
-        "previewButton"
-    );
+const playEdit =
+    document.getElementById("playEdit");
 
-const stopButton =
-    document.getElementById(
-        "stopButton"
-    );
+const pauseEdit =
+    document.getElementById("pauseEdit");
 
-const previewStatus =
-    document.getElementById(
-        "previewStatus"
-    );
+const restartEdit =
+    document.getElementById("restartEdit");
 
-
-/* EXPORT */
-
-const exportCard =
-    document.getElementById(
-        "exportCard"
-    );
-
-const exportButton =
-    document.getElementById(
-        "exportButton"
-    );
-
-const exportProgress =
-    document.getElementById(
-        "exportProgress"
-    );
+const editorStatus =
+    document.getElementById("editorStatus");
 
 const renderProgress =
-    document.getElementById(
-        "renderProgress"
-    );
+    document.getElementById("renderProgress");
 
 const renderText =
-    document.getElementById(
-        "renderText"
-    );
+    document.getElementById("renderText");
 
-const downloadButton =
-    document.getElementById(
-        "downloadButton"
-    );
+const exportButton =
+    document.getElementById("exportButton");
 
-
-/* PLAN */
-
-const planCard =
-    document.getElementById(
-        "planCard"
-    );
-
-const generatedPlan =
-    document.getElementById(
-        "generatedPlan"
-    );
+const downloadLink =
+    document.getElementById("downloadLink");
 
 
-/* TEXT */
+const timelineSection =
+    document.getElementById("timelineSection");
 
-const textOverlay =
-    document.getElementById(
-        "textOverlay"
-    );
+const timeline =
+    document.getElementById("timeline");
+
+const timelineProgress =
+    document.getElementById("timelineProgress");
+
+const timelineMarkers =
+    document.getElementById("timelineMarkers");
+
+const timelinePlayhead =
+    document.getElementById("timelinePlayhead");
+
+const timelineTime =
+    document.getElementById("timelineTime");
+
+const timelineEnd =
+    document.getElementById("timelineEnd");
+
+const segmentList =
+    document.getElementById("segmentList");
 
 
-/* STATE */
-
-let videoFile = null;
+/* =========================
+   VARIABLES
+========================= */
 
 let videoURL = null;
 
-let duration = 0;
+let videoDuration = 0;
 
-let editTimeline = [];
+let editSegments = [];
 
-let currentTime = 0;
+let editRunning = false;
 
-let previewRunning = false;
+let animationFrame = null;
 
-let previewAnimation = null;
+let currentSegmentIndex = 0;
 
-let outputURL = null;
+let exportURL = null;
 
 
-/* =========================================
+/* =========================
    VIDEO UPLOAD
-========================================= */
+========================= */
 
 videoInput.addEventListener(
     "change",
     function () {
 
         const file =
+            videoInput.files &&
             videoInput.files[0];
 
         if (!file) {
@@ -243,8 +160,26 @@ videoInput.addEventListener(
         }
 
 
-        videoFile = file;
+        /*
+            Reset old state.
+        */
 
+        videoError.hidden = true;
+
+        videoArea.hidden = false;
+
+        videoInfo.hidden = true;
+
+        planSection.hidden = true;
+
+        editorSection.hidden = true;
+
+        timelineSection.hidden = true;
+
+
+        /*
+            Revoke old object URL.
+        */
 
         if (videoURL) {
 
@@ -255,156 +190,236 @@ videoInput.addEventListener(
         }
 
 
+        /*
+            Create a NEW local URL.
+        */
+
         videoURL =
             URL.createObjectURL(
                 file
             );
 
 
+        /*
+            Important:
+            reset src before loading.
+        */
+
+        videoPreview.pause();
+
+        videoPreview.removeAttribute(
+            "src"
+        );
+
+        videoPreview.load();
+
+
+        /*
+            Set the new video.
+        */
+
         videoPreview.src =
             videoURL;
-
-
-        videoPreview.hidden =
-            false;
 
 
         fileName.textContent =
             file.name;
 
 
-        fileSize.textContent =
+        fileSizeElement.textContent =
             formatFileSize(
                 file.size
             );
 
 
-        videoInfo.hidden =
-            false;
+        /*
+            Ask the browser to load
+            the video metadata.
+        */
+
+        videoPreview.load();
 
 
-        videoStatus.textContent =
-            "Video ready";
-
-
-        videoPreview.addEventListener(
-            "loadedmetadata",
+        videoPreview.onloadedmetadata =
             function () {
 
-                duration =
+                videoDuration =
                     videoPreview.duration;
+
+
+                if (
+                    !isFinite(
+                        videoDuration
+                    ) ||
+                    videoDuration <= 0
+                ) {
+
+                    showVideoError(
+                        "The browser could not read the video duration."
+                    );
+
+                    return;
+
+                }
 
 
                 durationElement.textContent =
                     formatTime(
-                        duration
+                        videoDuration
                     );
 
 
-                resolution.textContent =
-                    videoPreview.videoWidth
-                    +
-                    " × "
-                    +
+                resolutionElement.textContent =
+                    videoPreview.videoWidth +
+                    " × " +
                     videoPreview.videoHeight;
 
 
                 timelineEnd.textContent =
                     formatTime(
-                        duration
+                        videoDuration
                     );
 
 
-                timelineDuration.textContent =
-                    formatTime(
-                        duration
-                    );
+                videoInfo.hidden = false;
 
-            },
-            {
-                once: true
-            }
-        );
+                timelineSection.hidden = false;
+
+
+                /*
+                    Resize canvas.
+                */
+
+                setupCanvas();
+
+
+                /*
+                    Show first frame.
+                */
+
+                videoPreview.currentTime = 0;
+
+
+                updateTimeline();
+
+
+                renderTimeline();
+
+
+                renderFirstFrame();
+
+            };
+
+
+        videoPreview.onerror =
+            function () {
+
+                showVideoError(
+                    "This video could not be loaded. Try an MP4/H.264 video."
+                );
+
+            };
 
     }
 );
 
 
-/* =========================================
-   QUICK OPTIONS
-========================================= */
+/* =========================
+   VIDEO ERROR
+========================= */
 
-document
-    .querySelectorAll(
-        ".quick-option"
-    )
-    .forEach(
-        function (button) {
+function showVideoError(message) {
 
-            button.addEventListener(
-                "click",
-                function () {
+    videoError.textContent =
+        message;
 
-                    editRequest.value =
-                        button.dataset.text;
+    videoError.hidden = false;
 
-                }
-            );
+}
 
-        }
+
+/* =========================
+   CANVAS
+========================= */
+
+function setupCanvas() {
+
+    if (
+        !videoPreview.videoWidth ||
+        !videoPreview.videoHeight
+    ) {
+        return;
+    }
+
+
+    editCanvas.width =
+        videoPreview.videoWidth;
+
+    editCanvas.height =
+        videoPreview.videoHeight;
+
+}
+
+
+/* =========================
+   FIRST FRAME
+========================= */
+
+function renderFirstFrame() {
+
+    const ctx =
+        editCanvas.getContext("2d");
+
+    if (
+        !videoPreview.videoWidth
+    ) {
+        return;
+    }
+
+
+    ctx.clearRect(
+        0,
+        0,
+        editCanvas.width,
+        editCanvas.height
     );
 
 
-/* =========================================
-   GENERATE
-========================================= */
+    drawVideoFrame(
+        ctx,
+        videoPreview,
+        {
+            zoom: 1,
+            shake: false,
+            text: ""
+        }
+    );
 
-generateEdit.addEventListener(
+}
+
+
+/* =========================
+   GENERATE EDIT
+========================= */
+
+generateButton.addEventListener(
     "click",
-    function () {
-
-        if (!videoFile) {
-
-            generationStatus.textContent =
-                "⚠️ Choose a video first.";
-
-            return;
-
-        }
-
-
-        if (!duration) {
-
-            generationStatus.textContent =
-                "⚠️ The video is still loading.";
-
-            return;
-
-        }
-
-
-        generationStatus.textContent =
-            "🤖 Building your automatic edit...";
-
-
-        setTimeout(
-            function () {
-
-                buildAutomaticEdit();
-
-            },
-            300
-        );
-
-    }
+    generateAutomaticEdit
 );
 
 
-/* =========================================
-   BUILD AUTOMATIC EDIT
-========================================= */
+function generateAutomaticEdit() {
 
-function buildAutomaticEdit() {
+    if (!videoDuration) {
+
+        showVideoError(
+            "Choose a video before creating an edit."
+        );
+
+        return;
+
+    }
+
 
     const request =
         editRequest.value
@@ -412,448 +427,1161 @@ function buildAutomaticEdit() {
             .toLowerCase();
 
 
-    editTimeline = [];
-
-
-    const strong =
-        intensity.value === "high";
-
-
-    const medium =
-        intensity.value === "medium";
-
-
     /*
-        Detect requested effects.
+        If the user gives no description,
+        we still create a default edit.
     */
 
-    const wantsZoom =
-        request.includes("zoom")
-        ||
-        request.includes("punch")
-        ||
-        request.includes("impact")
-        ||
-        strong;
-
-
-    const wantsShake =
-        request.includes("shake")
-        ||
-        request.includes("camera shake")
-        ||
-        strong;
-
-
-    const wantsSlowmo =
-        request.includes("slow")
-        ||
-        request.includes("slow-mo")
-        ||
-        request.includes("slow motion")
-        ||
-        request.includes("cinematic");
-
-
-    const wantsText =
-        request.includes("text")
-        ||
-        request.includes("caption")
-        ||
-        request.includes("title");
-
-
-    const wantsCut =
-        request.includes("cut")
-        ||
-        request.includes("fast")
-        ||
-        request.includes("aggressive");
-
-
-    const wantsTransition =
-        request.includes("transition")
-        ||
-        request.includes("smooth");
-
-
-    /*
-        Determine text.
-    */
-
-    let customText =
-        extractQuotedText(
-            editRequest.value
+    editSegments =
+        createAutomaticSegments(
+            request
         );
-
-
-    if (!customText) {
-
-        if (
-            request.includes(
-                "insane"
-            )
-        ) {
-
-            customText =
-                "INSANE";
-
-        } else if (
-            request.includes(
-                "headshot"
-            )
-        ) {
-
-            customText =
-                "HEADSHOT";
-
-        } else {
-
-            customText =
-                "RIVALS";
-
-        }
-
-    }
-
-
-    /*
-        Automatic important moments.
-
-        We distribute moments across
-        the clip because this V7 does
-        not yet use computer vision.
-    */
-
-    const moments =
-        generateMoments(
-            duration,
-            strong
-        );
-
-
-    /*
-        Intro.
-    */
-
-    editTimeline.push({
-
-        time: 0,
-
-        type: "cut",
-
-        label:
-            "Start / Hook",
-
-        duration:
-            Math.min(
-                1.2,
-                duration
-            )
-
-    });
-
-
-    /*
-        Main effects.
-    */
-
-    moments.forEach(
-        function (time, index) {
-
-            if (wantsCut) {
-
-                editTimeline.push({
-
-                    time:
-                        Math.max(
-                            0,
-                            time - 0.4
-                        ),
-
-                    type:
-                        "cut",
-
-                    label:
-                        "Fast Cut",
-
-                    duration:
-                        0.4
-
-                });
-
-            }
-
-
-            if (wantsZoom) {
-
-                editTimeline.push({
-
-                    time:
-                        time,
-
-                    type:
-                        "zoom",
-
-                    label:
-                        "Strong Zoom",
-
-                    duration:
-                        strong
-                            ? 0.8
-                            : 0.6
-
-                });
-
-            }
-
-
-            if (wantsShake) {
-
-                editTimeline.push({
-
-                    time:
-                        time,
-
-                    type:
-                        "shake",
-
-                    label:
-                        "Impact Shake",
-
-                    duration:
-                        0.45
-
-                });
-
-            }
-
-
-            /*
-                Slow motion is placed
-                only around the final
-                important moment.
-            */
-
-            if (
-                wantsSlowmo
-                &&
-                index ===
-                moments.length - 1
-            ) {
-
-                editTimeline.push({
-
-                    time:
-                        time,
-
-                    type:
-                        "slowmo",
-
-                    label:
-                        "Final Slow Motion",
-
-                    duration:
-                        1.5
-
-                });
-
-            }
-
-
-            if (
-                wantsText
-                &&
-                index === 0
-            ) {
-
-                editTimeline.push({
-
-                    time:
-                        time,
-
-                    type:
-                        "text",
-
-                    label:
-                        customText,
-
-                    duration:
-                        1.2,
-
-                    text:
-                        customText
-
-                });
-
-            }
-
-        }
-    );
-
-
-    /*
-        Transition near the middle.
-    */
-
-    if (wantsTransition) {
-
-        editTimeline.push({
-
-            time:
-                duration * 0.5,
-
-            type:
-                "transition",
-
-            label:
-                "Smooth Transition",
-
-            duration:
-                0.5
-
-        });
-
-    }
-
-
-    /*
-        Final moment.
-    */
-
-    editTimeline.push({
-
-        time:
-            Math.max(
-                0,
-                duration - 1
-            ),
-
-        type:
-            "cut",
-
-        label:
-            "Final Cut",
-
-        duration:
-            1
-
-    });
-
-
-    editTimeline.sort(
-        function (a, b) {
-
-            return a.time - b.time;
-
-        }
-    );
-
-
-    renderAutomaticTimeline();
 
 
     renderPlan();
 
+    renderTimeline();
 
-    timelineCard.hidden =
-        false;
-
-    previewCard.hidden =
-        false;
-
-    exportCard.hidden =
-        false;
-
-    planCard.hidden =
-        false;
-
-
-    generationStatus.textContent =
-        "✅ Automatic edit generated.";
+    planSection.hidden = false;
 
 }
 
 
-/* =========================================
-   GENERATE MOMENTS
-========================================= */
+/* =========================
+   AUTO SEGMENTS
+========================= */
 
-function generateMoments(
-    length,
-    strong
+function createAutomaticSegments(
+    request
 ) {
 
-    if (length <= 3) {
-
-        return [
-            length * 0.5
-        ];
-
-    }
+    const duration =
+        videoDuration;
 
 
-    if (length <= 10) {
-
-        return [
-            length * 0.35,
-            length * 0.7
-        ];
-
-    }
+    const segments = [];
 
 
-    const result = [];
+    /*
+        Detect requested effects.
+        English + French keywords.
+    */
+
+    const wantsSlowmo =
+        containsAny(
+            request,
+            [
+                "slow motion",
+                "slowmo",
+                "slow-mo",
+                "slow",
+                "ralenti"
+            ]
+        );
 
 
-    const count =
-        strong
-            ? 5
-            : 4;
+    const wantsZoom =
+        containsAny(
+            request,
+            [
+                "zoom",
+                "zoom in",
+                "punch zoom"
+            ]
+        );
 
 
-    for (
-        let i = 1;
-        i <= count;
-        i++
-    ) {
+    const wantsShake =
+        containsAny(
+            request,
+            [
+                "shake",
+                "camera shake",
+                "screen shake",
+                "tremble"
+            ]
+        );
 
-        result.push(
-            (
-                length *
-                i /
-                (count + 1)
-            )
+
+    const wantsText =
+        containsAny(
+            request,
+            [
+                "text",
+                "caption",
+                "subtitle",
+                "texte",
+                "sous-titre"
+            ]
+        );
+
+
+    const wantsTransition =
+        containsAny(
+            request,
+            [
+                "transition",
+                "transitions",
+                "cut",
+                "coupure"
+            ]
+        );
+
+
+    const wantsFast =
+        containsAny(
+            request,
+            [
+                "fast",
+                "quick",
+                "rapid",
+                "rapide",
+                "dynamic"
+            ]
+        );
+
+
+    const wantsStrong =
+        containsAny(
+            request,
+            [
+                "strong",
+                "hard",
+                "powerful",
+                "intense",
+                "insane",
+                "fort",
+                "puissant"
+            ]
+        );
+
+
+    /*
+        Base montage.
+
+        We split the video into sections
+        instead of putting effects on
+        the whole clip.
+    */
+
+    const introEnd =
+        Math.min(
+            duration * 0.18,
+            4
+        );
+
+
+    const middleStart =
+        duration * 0.38;
+
+
+    const middleEnd =
+        duration * 0.62;
+
+
+    const finalStart =
+        Math.max(
+            duration * 0.78,
+            duration - 4
+        );
+
+
+    /*
+        INTRO
+    */
+
+    segments.push({
+
+        start: 0,
+
+        end: introEnd,
+
+        type: "hook",
+
+        zoom:
+            wantsZoom
+                ? 1.25
+                : 1.0,
+
+        shake:
+            false,
+
+        slowmo:
+            false,
+
+        text:
+            wantsText
+                ? "WATCH THIS"
+                : "",
+
+        transition:
+            false
+
+    });
+
+
+    /*
+        MAIN ACTION
+    */
+
+    segments.push({
+
+        start: introEnd,
+
+        end: middleStart,
+
+        type: "action",
+
+        zoom:
+            wantsZoom
+                ? (
+                    wantsStrong
+                        ? 1.48
+                        : 1.35
+                )
+                : 1,
+
+        shake:
+            wantsShake,
+
+        slowmo:
+            false,
+
+        text:
+            wantsText
+                ? "CLUTCH"
+                : "",
+
+        transition:
+            wantsTransition
+
+    });
+
+
+    /*
+        SECOND ACTION
+    */
+
+    segments.push({
+
+        start: middleStart,
+
+        end: middleEnd,
+
+        type: "action",
+
+        zoom:
+            wantsZoom
+                ? (
+                    wantsStrong
+                        ? 1.55
+                        : 1.4
+                )
+                : 1,
+
+        shake:
+            wantsShake,
+
+        slowmo:
+            false,
+
+        text:
+            wantsText
+                ? "INSANE"
+                : "",
+
+        transition:
+            wantsTransition
+
+    });
+
+
+    /*
+        FINAL MOMENT
+    */
+
+    segments.push({
+
+        start: middleEnd,
+
+        end: finalStart,
+
+        type: "build",
+
+        zoom:
+            wantsZoom
+                ? 1.32
+                : 1,
+
+        shake:
+            false,
+
+        slowmo:
+            false,
+
+        text: "",
+
+        transition:
+            wantsTransition
+
+    });
+
+
+    /*
+        FINAL KILL / MOMENT
+
+        IMPORTANT:
+        slow motion is ONLY here.
+
+        It does NOT affect the whole video.
+    */
+
+    segments.push({
+
+        start: finalStart,
+
+        end: duration,
+
+        type: "final",
+
+        zoom:
+            wantsZoom
+                ? (
+                    wantsStrong
+                        ? 1.65
+                        : 1.48
+                )
+                : 1,
+
+        shake:
+            wantsShake,
+
+        slowmo:
+            wantsSlowmo,
+
+        text:
+            wantsText
+                ? "FINAL"
+                : "",
+
+        transition:
+            false
+
+    });
+
+
+    /*
+        Fast intensity makes the
+        montage cuts more aggressive.
+    */
+
+    if (wantsFast) {
+
+        segments.forEach(
+            function (segment) {
+
+                segment.zoom =
+                    Math.min(
+                        segment.zoom + 0.08,
+                        1.75
+                    );
+
+            }
         );
 
     }
 
 
-    return result;
+    return segments;
 
 }
 
 
-/* =========================================
-   RENDER TIMELINE
-========================================= */
+/* =========================
+   RENDER PLAN
+========================= */
 
-function renderAutomaticTimeline() {
+function renderPlan() {
+
+    plan.innerHTML = "";
+
+
+    editCount.textContent =
+        editSegments.length +
+        " sections";
+
+
+    editSegments.forEach(
+        function (
+            segment,
+            index
+        ) {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "edit-step";
+
+
+            const effects =
+                [];
+
+
+            if (
+                segment.zoom > 1
+            ) {
+
+                effects.push(
+                    "🔥 Strong Zoom"
+                );
+
+            }
+
+
+            if (
+                segment.shake
+            ) {
+
+                effects.push(
+                    "💥 Shake"
+                );
+
+            }
+
+
+            if (
+                segment.slowmo
+            ) {
+
+                effects.push(
+                    "🐌 Slow Motion"
+                );
+
+            }
+
+
+            if (
+                segment.text
+            ) {
+
+                effects.push(
+                    "📝 Animated Text"
+                );
+
+            }
+
+
+            if (
+                segment.transition
+            ) {
+
+                effects.push(
+                    "🔄 Transition"
+                );
+
+            }
+
+
+            if (
+                effects.length === 0
+            ) {
+
+                effects.push(
+                    "🎬 Normal footage"
+                );
+
+            }
+
+
+            div.innerHTML = `
+
+                <strong>
+                    ${index + 1}.
+                    ${capitalize(segment.type)}
+                </strong>
+
+                <p>
+                    ${formatTime(segment.start)}
+                    →
+                    ${formatTime(segment.end)}
+                    <br>
+                    ${effects.join(" · ")}
+                </p>
+
+            `;
+
+
+            plan.appendChild(div);
+
+        }
+    );
+
+}
+
+
+/* =========================
+   APPLY EDIT
+========================= */
+
+applyButton.addEventListener(
+    "click",
+    function () {
+
+        editorSection.hidden =
+            false;
+
+        editorStatus.textContent =
+            "Edit ready";
+
+        editorStatus.style.color =
+            "#70df8a";
+
+        currentSegmentIndex = 0;
+
+        renderFirstFrame();
+
+        editorSection.scrollIntoView(
+            {
+                behavior: "smooth"
+            }
+        );
+
+    }
+);
+
+
+/* =========================
+   PLAY AUTOMATIC EDIT
+========================= */
+
+playEdit.addEventListener(
+    "click",
+    playAutomaticEdit
+);
+
+
+async function playAutomaticEdit() {
+
+    if (
+        !editSegments.length
+    ) {
+
+        return;
+
+    }
+
+
+    if (editRunning) {
+
+        return;
+
+    }
+
+
+    editRunning = true;
+
+
+    currentSegmentIndex = 0;
+
+
+    videoPreview.pause();
+
+
+    await playCurrentSegment();
+
+
+}
+
+
+/* =========================
+   PLAY SEGMENT
+========================= */
+
+async function playCurrentSegment() {
+
+    if (
+        !editRunning
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        currentSegmentIndex >=
+        editSegments.length
+    ) {
+
+        stopAutomaticEdit();
+
+        return;
+
+    }
+
+
+    const segment =
+        editSegments[
+            currentSegmentIndex
+        ];
+
+
+    /*
+        Start at this segment only.
+    */
+
+    videoPreview.currentTime =
+        segment.start;
+
+
+    /*
+        Slow motion ONLY inside
+        this segment.
+    */
+
+    videoPreview.playbackRate =
+        segment.slowmo
+            ? 0.45
+            : 1;
+
+
+    try {
+
+        await videoPreview.play();
+
+    } catch (error) {
+
+        console.log(
+            "Playback waiting for user interaction."
+        );
+
+    }
+
+
+    drawEditorLoop();
+
+}
+
+
+/* =========================
+   EDITOR LOOP
+========================= */
+
+function drawEditorLoop() {
+
+    if (
+        !editRunning
+    ) {
+
+        return;
+
+    }
+
+
+    const segment =
+        editSegments[
+            currentSegmentIndex
+        ];
+
+
+    if (!segment) {
+
+        stopAutomaticEdit();
+
+        return;
+
+    }
+
+
+    /*
+        Stop the current segment
+        at its END.
+
+        This is what makes
+        slow motion local.
+    */
+
+    if (
+        videoPreview.currentTime >=
+        segment.end
+    ) {
+
+        videoPreview.pause();
+
+        currentSegmentIndex++;
+
+        playCurrentSegment();
+
+        return;
+
+    }
+
+
+    drawVideoFrame(
+        editCanvas.getContext("2d"),
+        videoPreview,
+        {
+
+            zoom:
+                segment.zoom,
+
+            shake:
+                segment.shake,
+
+            text:
+                segment.text
+
+        }
+    );
+
+
+    updateEditorProgress(
+        segment
+    );
+
+
+    animationFrame =
+        requestAnimationFrame(
+            drawEditorLoop
+        );
+
+}
+
+
+/* =========================
+   DRAW VIDEO
+========================= */
+
+function drawVideoFrame(
+    ctx,
+    video,
+    effects
+) {
+
+    const canvas =
+        ctx.canvas;
+
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    const zoom =
+        effects.zoom || 1;
+
+
+    const shake =
+        effects.shake;
+
+
+    let shakeX = 0;
+
+    let shakeY = 0;
+
+
+    /*
+        Strong shake effect.
+    */
+
+    if (shake) {
+
+        shakeX =
+            (Math.random() - 0.5)
+            * 35;
+
+        shakeY =
+            (Math.random() - 0.5)
+            * 35;
+
+    }
+
+
+    const scale =
+        Math.max(
+            canvas.width /
+                video.videoWidth,
+
+            canvas.height /
+                video.videoHeight
+        );
+
+
+    const width =
+        video.videoWidth *
+        scale *
+        zoom;
+
+
+    const height =
+        video.videoHeight *
+        scale *
+        zoom;
+
+
+    const x =
+        (
+            canvas.width -
+            width
+        ) / 2 +
+        shakeX;
+
+
+    const y =
+        (
+            canvas.height -
+            height
+        ) / 2 +
+        shakeY;
+
+
+    ctx.save();
+
+
+    ctx.drawImage(
+        video,
+        x,
+        y,
+        width,
+        height
+    );
+
+
+    ctx.restore();
+
+
+    /*
+        Text animation.
+    */
+
+    if (
+        effects.text
+    ) {
+
+        const progress =
+            video.currentTime %
+            0.8;
+
+
+        const alpha =
+            Math.min(
+                progress / 0.15,
+                1
+            );
+
+
+        ctx.save();
+
+        ctx.globalAlpha =
+            alpha;
+
+        ctx.textAlign =
+            "center";
+
+        ctx.textBaseline =
+            "middle";
+
+        ctx.font =
+            "900 70px Arial";
+
+
+        /*
+            Shadow.
+        */
+
+        ctx.shadowColor =
+            "black";
+
+        ctx.shadowBlur =
+            15;
+
+
+        ctx.fillStyle =
+            "white";
+
+
+        ctx.fillText(
+            effects.text,
+            canvas.width / 2,
+            canvas.height * 0.18
+        );
+
+
+        ctx.restore();
+
+    }
+
+}
+
+
+/* =========================
+   PAUSE
+========================= */
+
+pauseEdit.addEventListener(
+    "click",
+    function () {
+
+        videoPreview.pause();
+
+        editRunning = false;
+
+        if (
+            animationFrame
+        ) {
+
+            cancelAnimationFrame(
+                animationFrame
+            );
+
+        }
+
+
+        editorStatus.textContent =
+            "Paused";
+
+    }
+);
+
+
+/* =========================
+   RESTART
+========================= */
+
+restartEdit.addEventListener(
+    "click",
+    function () {
+
+        videoPreview.pause();
+
+        editRunning = false;
+
+
+        if (
+            animationFrame
+        ) {
+
+            cancelAnimationFrame(
+                animationFrame
+            );
+
+        }
+
+
+        currentSegmentIndex = 0;
+
+        videoPreview.currentTime = 0;
+
+        videoPreview.playbackRate = 1;
+
+        renderFirstFrame();
+
+        updateTimeline();
+
+        editorStatus.textContent =
+            "Ready";
+
+    }
+);
+
+
+/* =========================
+   STOP
+========================= */
+
+function stopAutomaticEdit() {
+
+    editRunning = false;
+
+    videoPreview.pause();
+
+    videoPreview.playbackRate = 1;
+
+
+    if (
+        animationFrame
+    ) {
+
+        cancelAnimationFrame(
+            animationFrame
+        );
+
+    }
+
+
+    editorStatus.textContent =
+        "Finished";
+
+}
+
+
+/* =========================
+   EDITOR PROGRESS
+========================= */
+
+function updateEditorProgress(
+    segment
+) {
+
+    const total =
+        videoDuration;
+
+
+    const percentage =
+        (
+            videoPreview.currentTime /
+            total
+        ) * 100;
+
+
+    renderProgress.style.width =
+        percentage + "%";
+
+
+    renderText.textContent =
+        "Editing " +
+        formatTime(
+            videoPreview.currentTime
+        ) +
+        " / " +
+        formatTime(
+            total
+        );
+
+
+    updateTimeline();
+
+}
+
+
+/* =========================
+   TIMELINE CLICK
+========================= */
+
+timeline.addEventListener(
+    "pointerdown",
+    function (event) {
+
+        if (!videoDuration) {
+            return;
+        }
+
+
+        const rect =
+            timeline.getBoundingClientRect();
+
+
+        const position =
+            event.clientX -
+            rect.left;
+
+
+        const percentage =
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    position /
+                    rect.width
+                )
+            );
+
+
+        videoPreview.currentTime =
+            percentage *
+            videoDuration;
+
+
+        videoPreview.pause();
+
+        editRunning = false;
+
+        videoPreview.playbackRate =
+            1;
+
+
+        updateTimeline();
+
+        renderFirstFrame();
+
+    }
+);
+
+
+/* =========================
+   TIMELINE UPDATE
+========================= */
+
+function updateTimeline() {
+
+    if (
+        !videoDuration
+    ) {
+
+        return;
+
+    }
+
+
+    const percentage =
+        (
+            videoPreview.currentTime /
+            videoDuration
+        ) * 100;
+
+
+    timelineProgress.style.width =
+        percentage + "%";
+
+
+    timelinePlayhead.style.left =
+        percentage + "%";
+
+
+    timelineTime.textContent =
+        formatTime(
+            videoPreview.currentTime
+        );
+
+}
+
+
+/* =========================
+   TIMELINE MARKERS
+========================= */
+
+function renderTimeline() {
 
     timelineMarkers.innerHTML =
         "";
 
-    editList.innerHTML =
+    segmentList.innerHTML =
         "";
 
 
-    editTimeline.forEach(
-        function (item) {
+    editSegments.forEach(
+        function (
+            segment
+        ) {
 
-            const percentage =
+            const start =
                 (
-                    item.time /
-                    duration
+                    segment.start /
+                    videoDuration
+                ) * 100;
+
+
+            const end =
+                (
+                    segment.end /
+                    videoDuration
                 ) * 100;
 
 
@@ -864,22 +1592,60 @@ function renderAutomaticTimeline() {
 
 
             marker.className =
-                "auto-marker " +
-                item.type;
+                "timeline-marker";
+
+
+            if (
+                segment.slowmo
+            ) {
+
+                marker.classList.add(
+                    "slowmo"
+                );
+
+            }
+
+            else if (
+                segment.zoom > 1
+            ) {
+
+                marker.classList.add(
+                    "zoom"
+                );
+
+            }
+
+            else if (
+                segment.text
+            ) {
+
+                marker.classList.add(
+                    "text"
+                );
+
+            }
+
+            else if (
+                segment.shake
+            ) {
+
+                marker.classList.add(
+                    "shake"
+                );
+
+            }
 
 
             marker.style.left =
-                percentage + "%";
+                start + "%";
 
 
-            marker.title =
-                item.label
-                +
-                " — "
-                +
-                formatTime(
-                    item.time
-                );
+            marker.style.height =
+                "calc(" +
+                (
+                    (end - start)
+                ) +
+                "%)";
 
 
             timelineMarkers.appendChild(
@@ -887,544 +1653,33 @@ function renderAutomaticTimeline() {
             );
 
 
-            const listItem =
+            const item =
                 document.createElement(
                     "div"
                 );
 
 
-            listItem.className =
-                "edit-item";
+            item.className =
+                "segment";
 
 
-            listItem.innerHTML = `
-
-                <div>
-
-                    <strong>
-                        ${getEmoji(item.type)}
-                        ${item.label}
-                    </strong>
-
-                    <br>
-
-                    <span>
-                        ${formatTime(item.time)}
-                    </span>
-
-                </div>
+            item.innerHTML = `
 
                 <span>
-                    ${item.duration.toFixed(1)}s
-                </span>
-
-            `;
-
-
-            editList.appendChild(
-                listItem
-            );
-
-        }
-    );
-
-}
-
-
-/* =========================================
-   TIMELINE CLICK
-========================================= */
-
-timeline.addEventListener(
-    "pointerdown",
-    function (event) {
-
-        if (!duration) {
-            return;
-        }
-
-
-        const rect =
-            timeline.getBoundingClientRect();
-
-
-        const position =
-            Math.max(
-                0,
-                Math.min(
-                    rect.width,
-                    event.clientX -
-                    rect.left
-                )
-            );
-
-
-        currentTime =
-            (
-                position /
-                rect.width
-            ) *
-            duration;
-
-
-        videoPreview.currentTime =
-            currentTime;
-
-
-        updatePlayhead();
-
-    }
-);
-
-
-/* =========================================
-   VIDEO TIME
-========================================= */
-
-videoPreview.addEventListener(
-    "timeupdate",
-    function () {
-
-        if (!duration) {
-            return;
-        }
-
-
-        currentTime =
-            videoPreview.currentTime;
-
-
-        updatePlayhead();
-
-    }
-);
-
-
-/* =========================================
-   PLAYHEAD
-========================================= */
-
-function updatePlayhead() {
-
-    if (!duration) {
-        return;
-    }
-
-
-    const percentage =
-        (
-            currentTime /
-            duration
-        ) * 100;
-
-
-    timelinePlayhead.style.left =
-        percentage + "%";
-
-
-    timelineProgress.style.width =
-        percentage + "%";
-
-
-    applyPreviewEffects(
-        currentTime
-    );
-
-}
-
-
-/* =========================================
-   PREVIEW
-========================================= */
-
-previewButton.addEventListener(
-    "click",
-    function () {
-
-        if (!duration) {
-            return;
-        }
-
-
-        stopPreview();
-
-
-        previewRunning =
-            true;
-
-
-        videoPreview.currentTime =
-            0;
-
-
-        videoPreview.play();
-
-
-        previewStatus.textContent =
-            "▶ Playing automatic edit...";
-
-
-        previewAnimation =
-            requestAnimationFrame(
-                previewLoop
-            );
-
-    }
-);
-
-
-/* =========================================
-   PREVIEW LOOP
-========================================= */
-
-function previewLoop() {
-
-    if (!previewRunning) {
-        return;
-    }
-
-
-    const time =
-        videoPreview.currentTime;
-
-
-    applyPreviewEffects(
-        time
-    );
-
-
-    if (
-        time >=
-        duration - 0.05
-    ) {
-
-        stopPreview();
-
-        return;
-
-    }
-
-
-    previewAnimation =
-        requestAnimationFrame(
-            previewLoop
-        );
-
-}
-
-
-/* =========================================
-   EFFECT ENGINE
-========================================= */
-
-function applyPreviewEffects(
-    time
-) {
-
-    let scale = 1;
-
-    let x = 0;
-
-    let y = 0;
-
-    let rotation = 0;
-
-
-    let playback =
-        1;
-
-
-    let text =
-        "";
-
-
-    editTimeline.forEach(
-        function (item) {
-
-            const distance =
-                Math.abs(
-                    time -
-                    item.time
-                );
-
-
-            if (
-                item.type ===
-                "zoom"
-                &&
-                distance <=
-                item.duration / 2
-            ) {
-
-                const strength =
-                    1 -
-                    (
-                        distance /
-                        (
-                            item.duration /
-                            2
-                        )
-                    );
-
-
-                /*
-                    Stronger zoom:
-                    up to 1.45x.
-                */
-
-                scale =
-                    Math.max(
-                        scale,
-                        1 +
-                        (
-                            0.45 *
-                            strength
-                        )
-                    );
-
-            }
-
-
-            if (
-                item.type ===
-                "shake"
-                &&
-                distance <=
-                item.duration / 2
-            ) {
-
-                const strength =
-                    1 -
-                    (
-                        distance /
-                        (
-                            item.duration /
-                            2
-                        )
-                    );
-
-
-                x =
-                    (
-                        Math.random()
-                        -
-                        0.5
-                    )
-                    *
-                    20
-                    *
-                    strength;
-
-
-                y =
-                    (
-                        Math.random()
-                        -
-                        0.5
-                    )
-                    *
-                    20
-                    *
-                    strength;
-
-
-                rotation =
-                    (
-                        Math.random()
-                        -
-                        0.5
-                    )
-                    *
-                    4
-                    *
-                    strength;
-
-            }
-
-
-            /*
-                Slow motion is ONLY
-                active around its marker.
-            */
-
-            if (
-                item.type ===
-                "slowmo"
-                &&
-                distance <=
-                item.duration / 2
-            ) {
-
-                playback =
-                    0.4;
-
-            }
-
-
-            if (
-                item.type ===
-                "text"
-                &&
-                time >=
-                item.time
-                &&
-                time <=
-                item.time +
-                item.duration
-            ) {
-
-                text =
-                    item.text;
-
-            }
-
-        }
-    );
-
-
-    videoPreview.playbackRate =
-        playback;
-
-
-    videoPreview.style.transform =
-        `
-        translate(
-            ${x}px,
-            ${y}px
-        )
-        scale(
-            ${scale}
-        )
-        rotate(
-            ${rotation}deg
-        )
-        `;
-
-
-    if (text) {
-
-        textOverlay.hidden =
-            false;
-
-        textOverlay.textContent =
-            text;
-
-        textOverlay.style.top =
-            "50%";
-
-        textOverlay.style.transform =
-            "translate(-50%, -50%)";
-
-    } else {
-
-        textOverlay.hidden =
-            true;
-
-    }
-
-}
-
-
-/* =========================================
-   STOP PREVIEW
-========================================= */
-
-stopButton.addEventListener(
-    "click",
-    stopPreview
-);
-
-
-function stopPreview() {
-
-    previewRunning =
-        false;
-
-
-    if (previewAnimation) {
-
-        cancelAnimationFrame(
-            previewAnimation
-        );
-
-        previewAnimation =
-            null;
-
-    }
-
-
-    videoPreview.pause();
-
-
-    videoPreview.playbackRate =
-        1;
-
-
-    videoPreview.style.transform =
-        "translate(0,0) scale(1) rotate(0deg)";
-
-
-    textOverlay.hidden =
-        true;
-
-
-    previewStatus.textContent =
-        "Ready.";
-
-}
-
-
-/* =========================================
-   RENDER PLAN
-========================================= */
-
-function renderPlan() {
-
-    generatedPlan.innerHTML =
-        "";
-
-
-    editTimeline.forEach(
-        function (item) {
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-
-            div.className =
-                "plan-item";
-
-
-            div.innerHTML = `
-
-                <strong>
-
-                    ${getEmoji(item.type)}
-
-                    ${item.label}
-
-                </strong>
-
-                <br>
-
-                <span>
-
-                    ${formatTime(item.time)}
+                    ${formatTime(segment.start)}
                     →
-                    ${formatTime(
-                        item.time +
-                        item.duration
-                    )}
+                    ${formatTime(segment.end)}
+                </span>
 
+                <span class="segment-type">
+                    ${capitalize(segment.type)}
                 </span>
 
             `;
 
 
-            generatedPlan.appendChild(
-                div
+            segmentList.appendChild(
+                item
             );
 
         }
@@ -1433,34 +1688,54 @@ function renderPlan() {
 }
 
 
-/* =========================================
+/* =========================
    EXPORT
-========================================= */
+========================= */
 
 exportButton.addEventListener(
     "click",
-    renderEditedVideo
+    exportEditedVideo
 );
 
 
-async function renderEditedVideo() {
+async function exportEditedVideo() {
 
-    if (!videoFile) {
+    if (
+        !editSegments.length
+    ) {
+
+        alert(
+            "Create an automatic edit first."
+        );
 
         return;
 
     }
 
 
-    exportProgress.hidden =
-        false;
+    if (
+        !editCanvas.captureStream
+    ) {
 
-    downloadButton.hidden =
+        alert(
+            "Your browser does not support video export."
+        );
+
+        return;
+
+    }
+
+
+    exportButton.disabled =
+        true;
+
+
+    downloadLink.hidden =
         true;
 
 
     renderText.textContent =
-        "Preparing video...";
+        "Preparing export...";
 
 
     renderProgress.style.width =
@@ -1468,63 +1743,47 @@ async function renderEditedVideo() {
 
 
     /*
-        Canvas renderer.
-
-        This creates a new video locally
-        without uploading the user's clip.
+        Canvas video stream.
     */
 
-    const canvas =
-        document.createElement(
-            "canvas"
-        );
-
-
-    const ctx =
-        canvas.getContext(
-            "2d"
-        );
-
-
-    setupCanvas(
-        canvas
-    );
-
-
-    const stream =
-        canvas.captureStream(
+    const canvasStream =
+        editCanvas.captureStream(
             30
         );
 
 
     /*
-        Try to preserve audio.
+        Try to capture the video's
+        audio stream too.
     */
+
+    let finalStream =
+        canvasStream;
+
 
     try {
 
         if (
-            typeof videoPreview
-                .captureStream ===
-            "function"
+            videoPreview.captureStream
         ) {
 
             const sourceStream =
-                videoPreview
-                    .captureStream();
+                videoPreview.captureStream();
 
 
-            sourceStream
-                .getAudioTracks()
-                .forEach(
-                    function (track) {
+            const audioTracks =
+                sourceStream.getAudioTracks();
 
-                        stream.addTrack(
-                            track
-                        );
 
-                    }
-                );
+            audioTracks.forEach(
+                function (track) {
+
+                    canvasStream.addTrack(
+                        track
+                    );
+
+                }
+            );
 
         }
 
@@ -1537,14 +1796,54 @@ async function renderEditedVideo() {
     }
 
 
-    const mimeType =
-        getSupportedMimeType();
+    /*
+        Select supported codec.
+    */
+
+    const mimeTypes = [
+
+        "video/webm;codecs=vp9,opus",
+
+        "video/webm;codecs=vp8,opus",
+
+        "video/webm"
+
+    ];
+
+
+    let mimeType =
+        "";
+
+
+    for (
+        const type
+        of mimeTypes
+    ) {
+
+        if (
+            MediaRecorder.isTypeSupported(
+                type
+            )
+        ) {
+
+            mimeType =
+                type;
+
+            break;
+
+        }
+
+    }
 
 
     if (!mimeType) {
 
-        renderText.textContent =
-            "Your browser does not support video export.";
+        alert(
+            "Your browser does not support video recording."
+        );
+
+        exportButton.disabled =
+            false;
 
         return;
 
@@ -1553,13 +1852,9 @@ async function renderEditedVideo() {
 
     const recorder =
         new MediaRecorder(
-            stream,
+            finalStream,
             {
-                mimeType:
-                    mimeType,
-
-                videoBitsPerSecond:
-                    6000000
+                mimeType
             }
         );
 
@@ -1571,8 +1866,8 @@ async function renderEditedVideo() {
         function (event) {
 
             if (
-                event.data.size >
-                0
+                event.data &&
+                event.data.size > 0
             ) {
 
                 chunks.push(
@@ -1584,588 +1879,312 @@ async function renderEditedVideo() {
         };
 
 
-    const finished =
-        new Promise(
-            function (resolve) {
-
-                recorder.onstop =
-                    resolve;
-
-            }
-        );
-
-
-    stopPreview();
-
-
-    videoPreview.currentTime =
-        0;
-
-
-    videoPreview.muted =
-        false;
-
-
-    recorder.start(
-        250
-    );
-
-
-    videoPreview.play();
-
-
-    let lastFrame =
-        -1;
-
-
-    function drawFrame() {
-
-        if (
-            videoPreview.paused
-            ||
-            videoPreview.ended
-        ) {
-
-            recorder.stop();
-
-            return;
-
-        }
-
-
-        const now =
-            videoPreview.currentTime;
-
-
-        if (
-            Math.abs(
-                now -
-                lastFrame
-            ) >
-            0.02
-        ) {
-
-            drawVideoFrame(
-                ctx,
-                canvas,
-                now
-            );
-
-
-            lastFrame =
-                now;
-
-        }
-
-
-        const percentage =
-            (
-                now /
-                duration
-            ) * 100;
-
-
-        renderProgress.style.width =
-            percentage + "%";
-
-
-        renderText.textContent =
-            "Rendering " +
-            Math.round(
-                percentage
-            ) +
-            "%";
-
-
-        requestAnimationFrame(
-            drawFrame
-        );
-
-    }
-
-
-    drawFrame();
-
-
-    await finished;
-
-
-    videoPreview.pause();
-
-    videoPreview.currentTime =
-        0;
-
-
-    const blob =
-        new Blob(
-            chunks,
-            {
-                type:
-                    mimeType
-            }
-        );
-
-
-    if (outputURL) {
-
-        URL.revokeObjectURL(
-            outputURL
-        );
-
-    }
-
-
-    outputURL =
-        URL.createObjectURL(
-            blob
-        );
-
-
-    downloadButton.href =
-        outputURL;
-
-
-    downloadButton.download =
-        "rival-edit-v7.webm";
-
-
-    downloadButton.hidden =
-        false;
-
-
-    renderProgress.style.width =
-        "100%";
-
-
-    renderText.textContent =
-        "✅ Edit exported successfully!";
-
-}
-
-
-/* =========================================
-   CANVAS
-========================================= */
-
-function setupCanvas(canvas) {
-
-    const sourceWidth =
-        videoPreview.videoWidth ||
-        1920;
-
-
-    const sourceHeight =
-        videoPreview.videoHeight ||
-        1080;
-
-
-    if (
-        format.value ===
-        "vertical"
-    ) {
-
-        canvas.width =
-            720;
-
-        canvas.height =
-            1280;
-
-    } else if (
-        format.value ===
-        "square"
-    ) {
-
-        canvas.width =
-            1080;
-
-        canvas.height =
-            1080;
-
-    } else {
-
-        canvas.width =
-            1280;
-
-        canvas.height =
-            720;
-
-    }
-
-}
-
-
-function drawVideoFrame(
-    ctx,
-    canvas,
-    time
-) {
-
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-
-    const sourceWidth =
-        videoPreview.videoWidth;
-
-
-    const sourceHeight =
-        videoPreview.videoHeight;
-
-
-    const canvasRatio =
-        canvas.width /
-        canvas.height;
-
-
-    const sourceRatio =
-        sourceWidth /
-        sourceHeight;
-
-
-    let drawWidth =
-        canvas.width;
-
-
-    let drawHeight =
-        canvas.height;
-
-
-    if (
-        sourceRatio >
-        canvasRatio
-    ) {
-
-        drawHeight =
-            canvas.height;
-
-        drawWidth =
-            drawHeight *
-            sourceRatio;
-
-    } else {
-
-        drawWidth =
-            canvas.width;
-
-        drawHeight =
-            drawWidth /
-            sourceRatio;
-
-    }
-
-
-    /*
-        Center crop.
-    */
-
-    const baseX =
-        (
-            canvas.width -
-            drawWidth
-        ) / 2;
-
-
-    const baseY =
-        (
-            canvas.height -
-            drawHeight
-        ) / 2;
-
-
-    /*
-        Calculate current effects.
-    */
-
-    let scale =
-        1;
-
-
-    let shakeX =
-        0;
-
-
-    let shakeY =
-        0;
-
-
-    let rotation =
-        0;
-
-
-    let text =
-        "";
-
-
-    editTimeline.forEach(
-        function (item) {
-
-            const distance =
-                Math.abs(
-                    time -
-                    item.time
+    recorder.onstop =
+        function () {
+
+            const blob =
+                new Blob(
+                    chunks,
+                    {
+                        type: mimeType
+                    }
                 );
 
 
             if (
-                item.type ===
-                "zoom"
-                &&
-                distance <=
-                item.duration / 2
+                exportURL
             ) {
 
-                const strength =
-                    1 -
-                    distance /
-                    (
-                        item.duration /
-                        2
-                    );
-
-
-                scale =
-                    Math.max(
-                        scale,
-                        1 +
-                        0.45 *
-                        strength
-                    );
+                URL.revokeObjectURL(
+                    exportURL
+                );
 
             }
 
 
-            if (
-                item.type ===
-                "shake"
-                &&
-                distance <=
-                item.duration / 2
-            ) {
-
-                const strength =
-                    1 -
-                    distance /
-                    (
-                        item.duration /
-                        2
-                    );
+            exportURL =
+                URL.createObjectURL(
+                    blob
+                );
 
 
-                shakeX =
-                    (
-                        Math.random()
-                        -
-                        0.5
-                    )
-                    *
-                    20
-                    *
-                    strength;
+            downloadLink.href =
+                exportURL;
 
 
-                shakeY =
-                    (
-                        Math.random()
-                        -
-                        0.5
-                    )
-                    *
-                    20
-                    *
-                    strength;
+            downloadLink.download =
+                "rival-edit-v8.webm";
 
 
-                rotation =
-                    (
-                        Math.random()
-                        -
-                        0.5
-                    )
-                    *
-                    0.04
-                    *
-                    strength;
-
-            }
+            downloadLink.hidden =
+                false;
 
 
-            if (
-                item.type ===
-                "text"
-                &&
-                time >=
-                item.time
-                &&
-                time <=
-                item.time +
-                item.duration
-            ) {
-
-                text =
-                    item.text;
-
-            }
-
-        }
-    );
+            renderText.textContent =
+                "Export finished!";
 
 
-    ctx.save();
+            renderProgress.style.width =
+                "100%";
 
 
-    ctx.translate(
-        canvas.width / 2 +
-        shakeX,
-        canvas.height / 2 +
-        shakeY
-    );
+            exportButton.disabled =
+                false;
 
-
-    ctx.rotate(
-        rotation
-    );
-
-
-    ctx.scale(
-        scale,
-        scale
-    );
-
-
-    ctx.drawImage(
-        videoPreview,
-        -drawWidth / 2,
-        -drawHeight / 2,
-        drawWidth,
-        drawHeight
-    );
-
-
-    ctx.restore();
+        };
 
 
     /*
-        Text.
+        Start recording.
     */
 
-    if (text) {
-
-        ctx.save();
+    recorder.start();
 
 
-        ctx.font =
-            "900 64px Arial";
+    /*
+        Render every segment.
+    */
+
+    await renderExportSegments();
 
 
-        ctx.textAlign =
-            "center";
-
-
-        ctx.textBaseline =
-            "middle";
-
-
-        const x =
-            canvas.width / 2;
-
-
-        const y =
-            canvas.height / 2;
-
-
-        const metrics =
-            ctx.measureText(
-                text
-            );
-
-
-        const padding =
-            25;
-
-
-        ctx.fillStyle =
-            "rgba(0,0,0,0.65)";
-
-
-        ctx.fillRect(
-            x -
-            metrics.width / 2 -
-            padding,
-
-            y - 45,
-
-            metrics.width +
-            padding * 2,
-
-            90
-        );
-
-
-        ctx.fillStyle =
-            "white";
-
-
-        ctx.fillText(
-            text,
-            x,
-            y
-        );
-
-
-        ctx.restore();
-
-    }
+    recorder.stop();
 
 }
 
 
-/* =========================================
-   MIME TYPE
-========================================= */
+/* =========================
+   RENDER EXPORT SEGMENTS
+========================= */
 
-function getSupportedMimeType() {
+async function renderExportSegments() {
 
-    const types = [
+    videoPreview.pause();
 
-        "video/webm;codecs=vp9,opus",
-
-        "video/webm;codecs=vp8,opus",
-
-        "video/webm"
-
-    ];
+    videoPreview.playbackRate =
+        1;
 
 
     for (
-        const type of types
+        let i = 0;
+        i < editSegments.length;
+        i++
     ) {
 
-        if (
-            MediaRecorder
-                .isTypeSupported(
-                    type
-                )
-        ) {
+        const segment =
+            editSegments[i];
 
-            return type;
 
-        }
+        currentSegmentIndex =
+            i;
+
+
+        videoPreview.currentTime =
+            segment.start;
+
+
+        await waitForSeek();
+
+
+        videoPreview.playbackRate =
+            segment.slowmo
+                ? 0.45
+                : 1;
+
+
+        await playExportSegment(
+            segment
+        );
+
+
+        videoPreview.pause();
 
     }
 
 
-    return "";
+    videoPreview.playbackRate =
+        1;
 
 }
 
 
-/* =========================================
-   HELPERS
-========================================= */
+/* =========================
+   EXPORT SEGMENT
+========================= */
+
+function playExportSegment(
+    segment
+) {
+
+    return new Promise(
+        async function (resolve) {
+
+            try {
+
+                await videoPreview.play();
+
+            } catch (error) {
+
+                console.log(
+                    error
+                );
+
+            }
+
+
+            function draw() {
+
+                if (
+                    videoPreview.currentTime >=
+                    segment.end
+                ) {
+
+                    cancelAnimationFrame(
+                        frame
+                    );
+
+                    resolve();
+
+                    return;
+
+                }
+
+
+                drawVideoFrame(
+                    editCanvas.getContext(
+                        "2d"
+                    ),
+                    videoPreview,
+                    {
+                        zoom:
+                            segment.zoom,
+
+                        shake:
+                            segment.shake,
+
+                        text:
+                            segment.text
+                    }
+                );
+
+
+                const percentage =
+                    (
+                        videoPreview.currentTime /
+                        videoDuration
+                    ) * 100;
+
+
+                renderProgress.style.width =
+                    percentage + "%";
+
+
+                renderText.textContent =
+                    "Exporting: " +
+                    Math.round(
+                        percentage
+                    ) +
+                    "%";
+
+
+                frame =
+                    requestAnimationFrame(
+                        draw
+                    );
+
+            }
+
+
+            let frame;
+
+            draw();
+
+        }
+    );
+
+}
+
+
+/* =========================
+   SEEK WAIT
+========================= */
+
+function waitForSeek() {
+
+    return new Promise(
+        function (resolve) {
+
+            if (
+                !videoPreview.seeking
+            ) {
+
+                resolve();
+
+                return;
+
+            }
+
+
+            videoPreview.addEventListener(
+                "seeked",
+                function () {
+
+                    resolve();
+
+                },
+                {
+                    once: true
+                }
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================
+   KEYWORDS
+========================= */
+
+function containsAny(
+    text,
+    words
+) {
+
+    return words.some(
+        function (word) {
+
+            return text.includes(
+                word
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================
+   CAPITALIZE
+========================= */
+
+function capitalize(
+    text
+) {
+
+    return (
+        text.charAt(0)
+            .toUpperCase() +
+        text.slice(1)
+    );
+
+}
+
+
+/* =========================
+   FORMAT TIME
+========================= */
 
 function formatTime(
     seconds
@@ -2186,7 +2205,7 @@ function formatTime(
         );
 
 
-    const secs =
+    const remaining =
         Math.floor(
             seconds % 60
         );
@@ -2198,12 +2217,16 @@ function formatTime(
         +
         ":"
         +
-        String(secs)
+        String(remaining)
             .padStart(2, "0")
     );
 
 }
 
+
+/* =========================
+   FILE SIZE
+========================= */
 
 function formatFileSize(
     bytes
@@ -2216,8 +2239,7 @@ function formatFileSize(
 
         return (
             (
-                bytes /
-                1024
+                bytes / 1024
             ).toFixed(1)
             +
             " KB"
@@ -2239,51 +2261,48 @@ function formatFileSize(
 }
 
 
-function extractQuotedText(
-    text
-) {
+/* =========================
+   VIDEO TIME UPDATE
+========================= */
 
-    const match =
-        text.match(
-            /["“](.*?)["”]/
-        );
+videoPreview.addEventListener(
+    "timeupdate",
+    function () {
 
-
-    if (match) {
-
-        return match[1];
+        updateTimeline();
 
     }
+);
 
 
-    return "";
+/* =========================
+   CLEANUP
+========================= */
 
-}
+window.addEventListener(
+    "beforeunload",
+    function () {
 
+        if (
+            videoURL
+        ) {
 
-function getEmoji(type) {
+            URL.revokeObjectURL(
+                videoURL
+            );
 
-    const emojis = {
-
-        cut: "✂️",
-
-        zoom: "🔍",
-
-        shake: "📳",
-
-        slowmo: "🐌",
-
-        text: "📝",
-
-        transition: "🔄"
-
-    };
+        }
 
 
-    return (
-        emojis[type]
-        ||
-        "✨"
-    );
+        if (
+            exportURL
+        ) {
 
-}
+            URL.revokeObjectURL(
+                exportURL
+            );
+
+        }
+
+    }
+);
